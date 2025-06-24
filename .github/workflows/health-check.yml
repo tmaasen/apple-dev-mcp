@@ -1,0 +1,130 @@
+name: Daily Health Check
+
+on:
+  schedule:
+    # Run every day at 6 AM UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  scraper-health:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build project
+      run: npm run build
+
+    - name: Test Apple HIG accessibility
+      run: |
+        node -e "
+        const https = require('https');
+        const url = 'https://developer.apple.com/design/human-interface-guidelines/';
+        
+        https.get(url, (res) => {
+          console.log('Status:', res.statusCode);
+          console.log('Headers:', res.headers);
+          
+          if (res.statusCode === 200) {
+            console.log('✅ Apple HIG is accessible');
+            process.exit(0);
+          } else {
+            console.log('❌ Apple HIG returned non-200 status');
+            process.exit(1);
+          }
+        }).on('error', (err) => {
+          console.log('❌ Error accessing Apple HIG:', err.message);
+          process.exit(1);
+        });
+        "
+
+    - name: Test scraper functionality
+      run: npm run health-check
+
+    - name: Create issue if health check fails
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const { repo, owner } = context.repo;
+          const title = `🚨 Health Check Failed - ${new Date().toISOString().split('T')[0]}`;
+          const body = `
+          ## Health Check Failure Report
+          
+          The daily health check for the Apple HIG MCP server has failed.
+          
+          **Date:** ${new Date().toISOString()}
+          **Workflow:** ${{ github.workflow }}
+          **Run ID:** ${{ github.run_id }}
+          
+          ### Possible Issues
+          - Apple's HIG website may be temporarily unavailable
+          - Website structure may have changed, requiring scraper updates
+          - Network connectivity issues
+          
+          ### Action Required
+          Please investigate the failure and update the scraper logic if necessary.
+          
+          **Link to failed run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          `;
+          
+          // Check if there's already an open issue for today
+          const existingIssues = await github.rest.issues.listForRepo({
+            owner,
+            repo,
+            state: 'open',
+            labels: ['health-check', 'automated'],
+            sort: 'created',
+            direction: 'desc'
+          });
+          
+          const today = new Date().toISOString().split('T')[0];
+          const existingIssue = existingIssues.data.find(issue => 
+            issue.title.includes(today)
+          );
+          
+          if (!existingIssue) {
+            await github.rest.issues.create({
+              owner,
+              repo,
+              title,
+              body,
+              labels: ['health-check', 'automated', 'bug']
+            });
+          }
+
+  dependency-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+
+    - name: Check for outdated dependencies
+      run: |
+        npm outdated || true
+        echo "Checking for security vulnerabilities..."
+        npm audit --audit-level moderate
+
+    - name: Update dependencies (automated PR)
+      if: success()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          console.log('Dependency check completed successfully');
+          // In a real implementation, this could create automated dependency update PRs
