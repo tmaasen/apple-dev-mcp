@@ -20,53 +20,90 @@ describe('HIGScraper', () => {
   });
 
   describe('Content Scraping', () => {
-    test('should discover HIG sections', async () => {
-      const mockHtml = `
-        <html>
-          <body>
-            <nav>
-              <a href="/design/human-interface-guidelines/ios">iOS Guidelines</a>
-              <a href="/design/human-interface-guidelines/macos">macOS Guidelines</a>
-            </nav>
-          </body>
-        </html>
-      `;
-
+    test('should discover HIG sections from curated list', async () => {
+      // Mock the verification request that the scraper makes
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        text: () => Promise.resolve(mockHtml)
+        text: () => Promise.resolve('<html><body>Apple HIG</body></html>')
       } as any);
 
       const sections = await scraper.discoverSections();
       
-      expect(sections).toHaveLength(2);
-      expect(sections[0].platform).toBe('iOS');
-      expect(sections[1].platform).toBe('macOS');
+      // Should return the full curated list (22 sections)
+      expect(sections.length).toBeGreaterThan(20);
+      
+      // Check that we have sections for different platforms
+      const platforms = [...new Set(sections.map(s => s.platform))];
+      expect(platforms).toContain('iOS');
+      expect(platforms).toContain('macOS');
+      expect(platforms).toContain('watchOS');
+      expect(platforms).toContain('tvOS');
+      expect(platforms).toContain('visionOS');
+      expect(platforms).toContain('universal');
+      
+      // Check that sections have required properties
+      sections.forEach(section => {
+        expect(section).toHaveProperty('id');
+        expect(section).toHaveProperty('title');
+        expect(section).toHaveProperty('url');
+        expect(section).toHaveProperty('platform');
+        expect(section).toHaveProperty('category');
+        expect(section).toHaveProperty('lastUpdated');
+      });
     });
 
-    test('should handle network errors gracefully', async () => {
+    test('should handle network errors gracefully and still return sections', async () => {
+      // Mock network error for the verification request
       mockFetch.mockRejectedValue(new Error('Network error'));
 
       const sections = await scraper.discoverSections();
-      expect(sections).toEqual([]);
+      
+      // Should still return curated sections even if verification fails
+      expect(sections.length).toBeGreaterThan(20);
+      expect(sections[0]).toHaveProperty('title');
+      expect(sections[0]).toHaveProperty('url');
     });
 
-    test('should extract platform from URL and text', async () => {
-      const mockHtml = `
-        <html>
-          <body>
-            <a href="/design/human-interface-guidelines/watchos/buttons">watchOS Buttons</a>
-          </body>
-        </html>
-      `;
-
+    test('should include expected platform-specific sections', async () => {
+      // Mock successful verification
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        text: () => Promise.resolve(mockHtml)
+        text: () => Promise.resolve('<html><body>Apple HIG</body></html>')
       } as any);
 
       const sections = await scraper.discoverSections();
-      expect(sections[0].platform).toBe('watchOS');
+      
+      // Check for specific expected sections
+      const iosSections = sections.filter(s => s.platform === 'iOS');
+      const macOSSections = sections.filter(s => s.platform === 'macOS');
+      const watchOSSections = sections.filter(s => s.platform === 'watchOS');
+      
+      expect(iosSections.length).toBeGreaterThan(5);
+      expect(macOSSections.length).toBeGreaterThan(2);
+      expect(watchOSSections.length).toBeGreaterThan(1);
+      
+      // Check for specific known sections
+      expect(sections.some(s => s.title === 'iOS Overview')).toBe(true);
+      expect(sections.some(s => s.title === 'macOS Overview')).toBe(true);
+      expect(sections.some(s => s.title === 'watchOS Overview')).toBe(true);
+    });
+
+    test('should cache discovered sections', async () => {
+      // Mock successful verification
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        text: () => Promise.resolve('<html><body>Apple HIG</body></html>')
+      } as any);
+
+      // First call should make network request
+      const sections1 = await scraper.discoverSections();
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+
+      // Second call should use cache
+      const sections2 = await scraper.discoverSections();
+      expect(mockFetch).toHaveBeenCalledTimes(1); // No additional calls
+      
+      expect(sections1).toEqual(sections2);
     });
   });
 
