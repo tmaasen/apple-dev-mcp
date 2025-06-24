@@ -27,7 +27,7 @@ jobs:
       run: npm test
       
     - name: Build project
-      run: npm run build
+      run: npm run clean:build
       
     - name: Run health check
       run: npm run health-check

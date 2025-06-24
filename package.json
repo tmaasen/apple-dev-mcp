@@ -9,6 +9,8 @@
   },
   "scripts": {
     "build": "tsc",
+    "clean": "rm -rf dist",
+    "clean:build": "npm run clean && npm run build",
     "dev": "tsx src/server.ts",
     "start": "node dist/server.js",
     "lint": "eslint src --ext .ts",

@@ -29,8 +29,8 @@ jobs:
     - name: Run linter
       run: npm run lint
 
-    - name: Build project
-      run: npm run build
+    - name: Clean and build project
+      run: npm run clean:build
 
     - name: Run tests
       run: npm test
@@ -51,8 +51,8 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - name: Build project
-      run: npm run build
+    - name: Clean and build project
+      run: npm run clean:build
 
     - name: Run health check
       run: npm run health-check
