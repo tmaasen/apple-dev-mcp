@@ -81,17 +81,13 @@ Apple occasionally updates their website structure, breaking our content extract
 **How to fix scrapers:**
 
 1. Identify the broken URL by checking the failing tests or issues
-2. Open the URL in your browser and inspect the HTML structure
-3. Update the selectors in `src/scraper.ts`:
+2. Open the URL in your browser to verify if it exists
+3. Update the URLs in the `knownSections` array in `src/scraper.ts`:
    ```typescript
-   // Add new selectors as fallbacks
-   const linkSelectors = [
-     'a[href*="/design/human-interface-guidelines/"]',
-     '.navigation a',
-     'nav a',
-     '.sidebar a',
-     '[data-nav] a',
-     '.new-selector-here' // Add your new selector
+   // Update or add new HIG section URLs
+   const knownSections = [
+     { title: 'iOS Navigation', url: 'https://developer.apple.com/design/human-interface-guidelines/ios/app-architecture/navigation', platform: 'iOS', category: 'navigation' },
+     // Add new sections here
    ];
    ```
 
@@ -101,7 +97,9 @@ Apple occasionally updates their website structure, breaking our content extract
    npm run health-check
    ```
 
-5. Submit a PR with the scraper fix
+5. Submit a PR with the updated URLs
+
+**Note**: Since Apple's HIG website is now a Single Page Application (SPA), we maintain a curated list of stable URLs rather than scraping dynamically.
 
 ### 🆕 New Features
 

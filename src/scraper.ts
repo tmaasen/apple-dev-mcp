@@ -148,6 +148,10 @@ export class HIGScraper {
 
   /**
    * Discover HIG sections and their URLs
+   * 
+   * Note: Apple's HIG website is now a SPA (Single Page Application) that loads content
+   * dynamically with JavaScript. Instead of trying to scrape the dynamic content,
+   * we use a curated list of known HIG sections and URLs that are stable.
    */
   async discoverSections(): Promise<HIGSection[]> {
     const cacheKey = 'hig:sections:all';
@@ -158,64 +162,70 @@ export class HIGScraper {
       return cached;
     }
 
+    console.log('[HIGScraper] Loading known HIG sections...');
+    
+    // Curated list of stable Apple HIG sections
+    // These URLs are well-established and unlikely to change frequently
+    const knownSections: Omit<HIGSection, 'id' | 'lastUpdated'>[] = [
+      // iOS Guidelines
+      { title: 'iOS Overview', url: 'https://developer.apple.com/design/human-interface-guidelines/ios', platform: 'iOS', category: 'foundations' },
+      { title: 'iOS Accessibility', url: 'https://developer.apple.com/design/human-interface-guidelines/accessibility', platform: 'iOS', category: 'foundations' },
+      { title: 'iOS App Icons', url: 'https://developer.apple.com/design/human-interface-guidelines/app-icons', platform: 'iOS', category: 'icons-and-images' },
+      { title: 'iOS Color', url: 'https://developer.apple.com/design/human-interface-guidelines/color', platform: 'iOS', category: 'color-and-materials' },
+      { title: 'iOS Typography', url: 'https://developer.apple.com/design/human-interface-guidelines/typography', platform: 'iOS', category: 'typography' },
+      { title: 'iOS Layout', url: 'https://developer.apple.com/design/human-interface-guidelines/layout', platform: 'iOS', category: 'layout' },
+      { title: 'iOS Navigation', url: 'https://developer.apple.com/design/human-interface-guidelines/ios/app-architecture/navigation', platform: 'iOS', category: 'navigation' },
+      { title: 'iOS Buttons', url: 'https://developer.apple.com/design/human-interface-guidelines/buttons', platform: 'iOS', category: 'visual-design' },
+      
+      // macOS Guidelines
+      { title: 'macOS Overview', url: 'https://developer.apple.com/design/human-interface-guidelines/macos', platform: 'macOS', category: 'foundations' },
+      { title: 'macOS Windows', url: 'https://developer.apple.com/design/human-interface-guidelines/windows', platform: 'macOS', category: 'layout' },
+      { title: 'macOS Menus', url: 'https://developer.apple.com/design/human-interface-guidelines/menus', platform: 'macOS', category: 'navigation' },
+      
+      // watchOS Guidelines  
+      { title: 'watchOS Overview', url: 'https://developer.apple.com/design/human-interface-guidelines/watchos', platform: 'watchOS', category: 'foundations' },
+      { title: 'watchOS Complications', url: 'https://developer.apple.com/design/human-interface-guidelines/complications', platform: 'watchOS', category: 'visual-design' },
+      
+      // tvOS Guidelines
+      { title: 'tvOS Overview', url: 'https://developer.apple.com/design/human-interface-guidelines/tvos', platform: 'tvOS', category: 'foundations' },
+      { title: 'tvOS Focus and Selection', url: 'https://developer.apple.com/design/human-interface-guidelines/focus-and-selection', platform: 'tvOS', category: 'selection-and-input' },
+      
+      // visionOS Guidelines
+      { title: 'visionOS Overview', url: 'https://developer.apple.com/design/human-interface-guidelines/visionos', platform: 'visionOS', category: 'foundations' },
+      { title: 'visionOS Spatial Design', url: 'https://developer.apple.com/design/human-interface-guidelines/spatial-design', platform: 'visionOS', category: 'layout' },
+      
+      // Universal Guidelines
+      { title: 'Design Principles', url: 'https://developer.apple.com/design/human-interface-guidelines/designing-for-ios', platform: 'universal', category: 'foundations' },
+      { title: 'Privacy', url: 'https://developer.apple.com/design/human-interface-guidelines/privacy', platform: 'universal', category: 'system-capabilities' },
+      { title: 'Inclusion', url: 'https://developer.apple.com/design/human-interface-guidelines/inclusion', platform: 'universal', category: 'foundations' },
+      
+      // Liquid Glass and Modern Design
+      { title: 'Materials', url: 'https://developer.apple.com/design/human-interface-guidelines/materials', platform: 'universal', category: 'color-and-materials' },
+      { title: 'Visual Effects', url: 'https://developer.apple.com/design/human-interface-guidelines/visual-effects', platform: 'universal', category: 'visual-design' }
+    ];
+
+    // Convert to full HIGSection objects
+    const sections: HIGSection[] = knownSections.map(section => ({
+      ...section,
+      id: this.generateId(section.title, section.platform),
+      lastUpdated: new Date()
+    }));
+
+    // Verify accessibility of a few key URLs to ensure the base URLs are still valid
     try {
-      console.log('[HIGScraper] Discovering HIG sections...');
-      const html = await this.makeRequest(this.config.baseUrl);
-      const $ = load(html);
-      
-      const sections: HIGSection[] = [];
-      
-      // Multiple selectors as fallbacks
-      const linkSelectors = [
-        'a[href*="/design/human-interface-guidelines/"]',
-        '.navigation a',
-        'nav a',
-        '.sidebar a',
-        '[data-nav] a'
-      ];
-
-      for (const selector of linkSelectors) {
-        const links = $(selector);
-        if (links.length > 0) {
-          links.each((_, element) => {
-            const $link = $(element);
-            const href = $link.attr('href');
-            const text = $link.text().trim();
-            
-            if (href && text && href.includes('/design/human-interface-guidelines/')) {
-              const fullUrl = href.startsWith('http') ? href : `https://developer.apple.com${href}`;
-              const platform = this.extractPlatform(href, text);
-              const category = this.extractCategory(href, text);
-              
-              // Avoid duplicates
-              if (!sections.find(s => s.url === fullUrl)) {
-                sections.push({
-                  id: this.generateId(text, platform),
-                  title: text,
-                  url: fullUrl,
-                  platform,
-                  category,
-                  lastUpdated: new Date()
-                });
-              }
-            }
-          });
-          
-          if (sections.length > 0) {
-            break; // Found sections, no need to try other selectors
-          }
-        }
-      }
-
-      // Cache for 4 hours
-      this.cache.set(cacheKey, sections, 14400);
-      console.log(`[HIGScraper] Discovered ${sections.length} HIG sections`);
-      
-      return sections;
+      const testUrl = 'https://developer.apple.com/design/human-interface-guidelines/ios';
+      await this.makeRequest(testUrl);
+      console.log('[HIGScraper] Apple HIG website is accessible');
     } catch (error) {
-      console.error('[HIGScraper] Failed to discover sections:', error);
-      return [];
+      console.warn('[HIGScraper] Warning: Could not verify Apple HIG website accessibility:', error);
+      // Continue anyway with cached/known sections
     }
+
+    // Cache for 4 hours
+    this.cache.set(cacheKey, sections, 14400);
+    console.log(`[HIGScraper] Loaded ${sections.length} known HIG sections`);
+    
+    return sections;
   }
 
   /**
