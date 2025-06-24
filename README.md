@@ -1,8 +1,11 @@
 # 🍎 Apple HIG MCP Server
 
-[![CI](https://github.com/tannermaasen/apple-hig-mcp/workflows/CI/badge.svg)](https://github.com/tannermaasen/apple-hig-mcp/actions)
-[![Health Check](https://github.com/tannermaasen/apple-hig-mcp/workflows/Daily%20Health%20Check/badge.svg)](https://github.com/tannermaasen/apple-hig-mcp/actions)
+[![CI](https://github.com/tannermaasen/apple-hig-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/tannermaasen/apple-hig-mcp/actions/workflows/ci.yml)
+[![Health Check](https://github.com/tannermaasen/apple-hig-mcp/actions/workflows/daily-health-check.yml/badge.svg)](https://github.com/tannermaasen/apple-hig-mcp/actions/workflows/daily-health-check.yml)
+[![npm version](https://img.shields.io/npm/v/apple-hig-mcp.svg)](https://www.npmjs.com/package/apple-hig-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
 
 A [Model Context Protocol](https://modelcontextprotocol.io/) server that provides up-to-date access to Apple's Human Interface Guidelines, including the latest **Liquid Glass design system** introduced at WWDC 2025.
 
