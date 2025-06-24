@@ -44,7 +44,7 @@ describe('HIGResourceProvider', () => {
       expect(resources.length).toBeGreaterThan(0);
       expect(resources.some(r => r.uri === 'hig://ios')).toBe(true);
       expect(resources.some(r => r.uri === 'hig://macos')).toBe(true);
-      expect(resources.some(r => r.uri === 'hig://updates/liquid-glass')).toBe(true);
+      expect(resources.some(r => r.uri === 'hig://updates/latest-design-system')).toBe(true);
     });
 
     test('should include special update resources', async () => {
@@ -52,11 +52,11 @@ describe('HIGResourceProvider', () => {
 
       const resources = await resourceProvider.listResources();
       
-      const liquidGlassResource = resources.find(r => r.uri === 'hig://updates/liquid-glass');
+      const designSystemResource = resources.find(r => r.uri === 'hig://updates/latest-design-system');
       const latestResource = resources.find(r => r.uri === 'hig://updates/latest');
       
-      expect(liquidGlassResource).toBeDefined();
-      expect(liquidGlassResource?.name).toContain('Liquid Glass');
+      expect(designSystemResource).toBeDefined();
+      expect(designSystemResource?.name).toContain('Design System');
       expect(latestResource).toBeDefined();
     });
   });
@@ -112,12 +112,12 @@ describe('HIGResourceProvider', () => {
     });
 
     test('should get Liquid Glass update resource', async () => {
-      const resource = await resourceProvider.getResource('hig://updates/liquid-glass');
+      const resource = await resourceProvider.getResource('hig://updates/latest-design-system');
       
       expect(resource).toBeTruthy();
-      expect(resource?.name).toContain('Liquid Glass');
-      expect(resource?.content).toContain('Liquid Glass Design System');
-      expect(resource?.content).toContain('Translucent Materials');
+      expect(resource?.name).toContain('Design System');
+      expect(resource?.content).toContain('Latest Apple Design System');
+      expect(resource?.content).toContain('advanced materials');
       expect(resource?.content).toContain('Attribution Notice');
     });
 
@@ -127,7 +127,7 @@ describe('HIGResourceProvider', () => {
       expect(resource).toBeTruthy();
       expect(resource?.name).toBe('Latest HIG Updates');
       expect(resource?.content).toContain('Latest HIG Updates');
-      expect(resource?.content).toContain('WWDC 2025');
+      expect(resource?.content).toContain('Recent Updates');
     });
 
     test('should return null for invalid URI', async () => {
@@ -158,7 +158,7 @@ describe('HIGResourceProvider', () => {
       const testCases = [
         { uri: 'hig://ios', expected: { type: 'platform', platform: 'iOS' } },
         { uri: 'hig://macos/layout', expected: { type: 'category', platform: 'macOS', category: 'layout' } },
-        { uri: 'hig://updates/liquid-glass', expected: { type: 'updates', updateType: 'liquid-glass' } },
+        { uri: 'hig://updates/latest-design-system', expected: { type: 'updates', updateType: 'latest-design-system' } },
         { uri: 'hig://updates', expected: { type: 'updates', updateType: 'latest' } }
       ];
 

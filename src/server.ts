@@ -4,7 +4,11 @@
  * Apple Human Interface Guidelines MCP Server
  * 
  * A Model Context Protocol server that provides up-to-date access to Apple's
- * Human Interface Guidelines, including the latest Liquid Glass design system.
+ * Human Interface Guidelines with comprehensive design system coverage.
+ * 
+ * @version 1.0.0
+ * @author Tanner Maasen
+ * @license MIT
  */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -45,6 +49,9 @@ class AppleHIGMCPServer {
       }
     );
 
+    // Validate environment
+    this.validateEnvironment();
+
     // Initialize components
     this.cache = new HIGCache(3600); // 1 hour default TTL
     this.scraper = new HIGScraper(this.cache);
@@ -54,12 +61,60 @@ class AppleHIGMCPServer {
     this.setupHandlers();
   }
 
+  /**
+   * Validate runtime environment and configuration
+   */
+  private validateEnvironment(): void {
+    const requiredNodeVersion = '18.0.0';
+    const currentVersion = process.version.slice(1); // Remove 'v' prefix
+    
+    if (this.compareVersions(currentVersion, requiredNodeVersion) < 0) {
+      throw new Error(`Node.js ${requiredNodeVersion} or higher is required. Current version: ${process.version}`);
+    }
+
+    // Validate dependencies are available
+    try {
+      require('cheerio');
+      require('node-fetch');
+      require('node-cache');
+    } catch (error) {
+      throw new Error(`Missing required dependencies. Run 'npm install' to install dependencies.`);
+    }
+  }
+
+  /**
+   * Compare semantic versions
+   */
+  private compareVersions(version1: string, version2: string): number {
+    const v1Parts = version1.split('.').map(Number);
+    const v2Parts = version2.split('.').map(Number);
+    
+    for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
+      const v1Part = v1Parts[i] || 0;
+      const v2Part = v2Parts[i] || 0;
+      
+      if (v1Part > v2Part) return 1;
+      if (v1Part < v2Part) return -1;
+    }
+    
+    return 0;
+  }
+
+  /**
+   * Set up MCP request handlers with comprehensive error handling
+   */
   private setupHandlers(): void {
     // Resource handlers
     this.server.setRequestHandler(ListResourcesRequestSchema, async () => {
       try {
-        // console.log('[AppleHIGMCP] Listing resources...');
+        const startTime = Date.now();
         const resources = await this.resourceProvider.listResources();
+        const duration = Date.now() - startTime;
+        
+        // Log performance metrics (disabled in production to avoid console pollution)
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[AppleHIGMCP] Listed ${resources.length} resources in ${duration}ms`);
+        }
         
         return {
           resources: resources.map(resource => ({
@@ -70,10 +125,15 @@ class AppleHIGMCPServer {
           }))
         };
       } catch (error) {
-        // console.error('[AppleHIGMCP] Failed to list resources:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.error('[AppleHIGMCP] Failed to list resources:', error);
+        }
+        
         throw new McpError(
           ErrorCode.InternalError,
-          `Failed to list resources: ${error instanceof Error ? error.message : 'Unknown error'}`
+          `Failed to list resources: ${errorMessage}`
         );
       }
     });
@@ -81,12 +141,26 @@ class AppleHIGMCPServer {
     this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
       try {
         const { uri } = request.params;
-        // console.log(`[AppleHIGMCP] Reading resource: ${uri}`);
+        const startTime = Date.now();
+        
+        // Validate URI format
+        if (!uri || typeof uri !== 'string') {
+          throw new McpError(ErrorCode.InvalidRequest, 'Invalid or missing URI parameter');
+        }
+        
+        if (!uri.startsWith('hig://')) {
+          throw new McpError(ErrorCode.InvalidRequest, `Unsupported URI scheme. Expected 'hig://', got: ${uri}`);
+        }
         
         const resource = await this.resourceProvider.getResource(uri);
+        const duration = Date.now() - startTime;
         
         if (!resource) {
           throw new McpError(ErrorCode.InvalidRequest, `Resource not found: ${uri}`);
+        }
+
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[AppleHIGMCP] Read resource ${uri} in ${duration}ms`);
         }
 
         return {
@@ -97,13 +171,19 @@ class AppleHIGMCPServer {
           }]
         };
       } catch (error) {
-        // console.error(`[AppleHIGMCP] Failed to read resource ${request.params.uri}:`, error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.error(`[AppleHIGMCP] Failed to read resource ${request.params.uri}:`, error);
+        }
+        
         if (error instanceof McpError) {
           throw error;
         }
+        
         throw new McpError(
           ErrorCode.InternalError,
-          `Failed to read resource: ${error instanceof Error ? error.message : 'Unknown error'}`
+          `Failed to read resource: ${errorMessage}`
         );
       }
     });
@@ -223,80 +303,108 @@ class AppleHIGMCPServer {
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       try {
         const { name, arguments: args } = request.params;
-        // Disable console logging during tool calls to avoid JSON parsing issues
-        // console.log(`[AppleHIGMCP] Calling tool: ${name}`);
+        const startTime = Date.now();
+        
+        // Validate tool name
+        if (!name || typeof name !== 'string') {
+          throw new McpError(ErrorCode.InvalidRequest, 'Invalid or missing tool name');
+        }
+        
+        // Validate arguments
+        if (args && typeof args !== 'object') {
+          throw new McpError(ErrorCode.InvalidRequest, 'Tool arguments must be an object');
+        }
 
+        let result: any;
+        
         switch (name) {
           case 'search_guidelines': {
-            const result = await this.toolProvider.searchGuidelines(args as any);
-            return {
-              content: [{
-                type: 'text',
-                text: JSON.stringify(result, null, 2),
-              }],
-            };
+            result = await this.toolProvider.searchGuidelines(args as any);
+            break;
           }
 
           case 'get_component_spec': {
-            const result = await this.toolProvider.getComponentSpec(args as any);
-            return {
-              content: [{
-                type: 'text',
-                text: JSON.stringify(result, null, 2),
-              }],
-            };
+            result = await this.toolProvider.getComponentSpec(args as any);
+            break;
           }
 
           case 'compare_platforms': {
-            const result = await this.toolProvider.comparePlatforms(args as any);
-            return {
-              content: [{
-                type: 'text',
-                text: JSON.stringify(result, null, 2),
-              }],
-            };
+            result = await this.toolProvider.comparePlatforms(args as any);
+            break;
           }
 
           case 'get_latest_updates': {
-            const result = await this.toolProvider.getLatestUpdates(args as any);
-            return {
-              content: [{
-                type: 'text',
-                text: JSON.stringify(result, null, 2),
-              }],
-            };
+            result = await this.toolProvider.getLatestUpdates(args as any);
+            break;
           }
 
           default:
             throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
         }
+        
+        const duration = Date.now() - startTime;
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[AppleHIGMCP] Tool '${name}' executed in ${duration}ms`);
+        }
+        
+        return {
+          content: [{
+            type: 'text',
+            text: JSON.stringify(result, null, 2),
+          }],
+        };
       } catch (error) {
-        // console.error(`[AppleHIGMCP] Tool call failed for ${request.params.name}:`, error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.error(`[AppleHIGMCP] Tool call failed for ${request.params.name}:`, error);
+        }
+        
         if (error instanceof McpError) {
           throw error;
         }
+        
         throw new McpError(
           ErrorCode.InternalError,
-          `Tool execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+          `Tool execution failed: ${errorMessage}`
         );
       }
     });
   }
 
+  /**
+   * Start the MCP server with proper error handling and logging
+   */
   async run(): Promise<void> {
-    // Disable startup logging to prevent JSON parsing issues in MCP Inspector
-    // console.log('🍎 Apple Human Interface Guidelines MCP Server starting...');
-    // console.log('📖 Providing up-to-date access to Apple design guidelines');
-    // console.log('✨ Including the latest Liquid Glass design system from WWDC 2025');
-    // console.log('');
-    // console.log('ℹ️  This server respects Apple\'s content and provides fair use access');
-    // console.log('ℹ️  for educational and development purposes.');
-    // console.log('');
+    try {
+      // Development-only startup logging
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🍎 Apple Human Interface Guidelines MCP Server starting...');
+        console.log('📖 Providing up-to-date access to Apple design guidelines');
+        console.log('ℹ️  This server respects Apple\'s content and provides fair use access');
+        console.log('ℹ️  for educational and development purposes.');
+        console.log('');
+      }
 
-    const transport = new StdioServerTransport();
-    await this.server.connect(transport);
-    
-    // console.log('🚀 Apple HIG MCP Server is ready!');
+      const transport = new StdioServerTransport();
+      await this.server.connect(transport);
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🚀 Apple HIG MCP Server is ready!');
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      // Always log startup errors
+      console.error('💥 Failed to start Apple HIG MCP Server:', errorMessage);
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Full error details:', error);
+      }
+      
+      process.exit(1);
+    }
   }
 }
 
@@ -314,7 +422,7 @@ process.on('SIGTERM', async () => {
 // Start the server
 if (import.meta.url === `file://${process.argv[1]}`) {
   const server = new AppleHIGMCPServer();
-  server.run().catch((error) => {
+  server.run().catch((_error) => {
     // console.error('💥 Failed to start Apple HIG MCP Server:', error);
     process.exit(1);
   });

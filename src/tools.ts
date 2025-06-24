@@ -27,7 +27,7 @@ export class HIGToolProvider {
   }
 
   /**
-   * Search HIG content by keywords/topics
+   * Search HIG content by keywords/topics with input validation
    */
   async searchGuidelines(args: SearchGuidelinesArgs): Promise<{
     results: SearchResult[];
@@ -38,46 +38,95 @@ export class HIGToolProvider {
       category?: string;
     };
   }> {
+    // Input validation
+    if (!args || typeof args !== 'object') {
+      throw new Error('Invalid arguments: expected object');
+    }
+    
     const { query, platform, category, limit = 10 } = args;
     
-    // console.log(`[HIGTools] Searching for: "${query}" (platform: ${platform}, category: ${category})`);
+    // Validate required parameters
+    if (!query || typeof query !== 'string' || query.trim().length === 0) {
+      throw new Error('Invalid query: must be a non-empty string');
+    }
+    
+    if (query.length > 100) {
+      throw new Error('Query too long: maximum 100 characters allowed');
+    }
+    
+    // Validate optional parameters
+    if (platform && !['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS', 'universal'].includes(platform)) {
+      throw new Error(`Invalid platform: ${platform}. Must be one of: iOS, macOS, watchOS, tvOS, visionOS, universal`);
+    }
+    
+    if (category && ![
+      'foundations', 'layout', 'navigation', 'presentation',
+      'selection-and-input', 'status', 'system-capabilities',
+      'visual-design', 'icons-and-images', 'color-and-materials',
+      'typography', 'motion', 'technologies'
+    ].includes(category)) {
+      throw new Error(`Invalid category: ${category}`);
+    }
+    
+    if (typeof limit !== 'number' || limit < 1 || limit > 50) {
+      throw new Error('Invalid limit: must be a number between 1 and 50');
+    }
     
     try {
-      const results = await this.scraper.searchContent(query, platform, category, limit);
+      const startTime = Date.now();
+      const results = await this.scraper.searchContent(query.trim(), platform, category, limit);
       
       // Enhance results with additional context
       const enhancedResults = await Promise.all(
         results.map(async (result) => {
-          // Try to get more detailed content
-          const resource = await this.resourceProvider.getResource(`hig://${result.platform.toLowerCase()}`);
-          if (resource && resource.content.toLowerCase().includes(query.toLowerCase())) {
-            // Extract more context from the full resource
-            const enhancedSnippet = this.extractEnhancedSnippet(resource.content, query);
-            if (enhancedSnippet.length > result.snippet.length) {
-              result.snippet = enhancedSnippet;
+          try {
+            // Try to get more detailed content
+            const resource = await this.resourceProvider.getResource(`hig://${result.platform.toLowerCase()}`);
+            if (resource && resource.content.toLowerCase().includes(query.toLowerCase())) {
+              // Extract more context from the full resource
+              const enhancedSnippet = this.extractEnhancedSnippet(resource.content, query);
+              if (enhancedSnippet.length > result.snippet.length) {
+                result.snippet = enhancedSnippet;
+              }
+            }
+          } catch (enhanceError) {
+            // Enhancement failure shouldn't break the search
+            if (process.env.NODE_ENV === 'development') {
+              console.warn(`[HIGTools] Failed to enhance result for ${result.id}:`, enhanceError);
             }
           }
           return result;
         })
       );
+      
+      const duration = Date.now() - startTime;
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[HIGTools] Search for "${query}" completed in ${duration}ms (${enhancedResults.length} results)`);
+      }
 
       return {
         results: enhancedResults,
         total: enhancedResults.length,
-        query,
+        query: query.trim(),
         filters: {
           platform,
           category
         }
       };
     } catch (error) {
-      // console.error('[HIGTools] Search failed:', error);
-      throw new Error(`Search failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[HIGTools] Search failed:', error);
+      }
+      
+      throw new Error(`Search failed: ${errorMessage}`);
     }
   }
 
   /**
-   * Get detailed specifications for a UI component
+   * Get detailed specifications for a UI component with input validation
    */
   async getComponentSpec(args: GetComponentSpecArgs): Promise<{
     component: HIGComponent | null;
@@ -86,11 +135,34 @@ export class HIGToolProvider {
     lastUpdated: string;
     liquidGlassUpdates?: string;
   }> {
+    // Input validation
+    if (!args || typeof args !== 'object') {
+      throw new Error('Invalid arguments: expected object');
+    }
+    
     const { componentName, platform } = args;
     
-    // console.log(`[HIGTools] Getting component spec for: ${componentName} (platform: ${platform})`);
+    // Validate required parameters
+    if (!componentName || typeof componentName !== 'string' || componentName.trim().length === 0) {
+      throw new Error('Invalid componentName: must be a non-empty string');
+    }
+    
+    if (componentName.length > 50) {
+      throw new Error('Component name too long: maximum 50 characters allowed');
+    }
+    
+    // Validate optional parameters
+    if (platform && !['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS', 'universal'].includes(platform)) {
+      throw new Error(`Invalid platform: ${platform}. Must be one of: iOS, macOS, watchOS, tvOS, visionOS, universal`);
+    }
     
     try {
+      const startTime = Date.now();
+      const trimmedComponentName = componentName.trim();
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[HIGTools] Getting component spec for: ${trimmedComponentName} (platform: ${platform || 'any'})`);
+      }
       // Search for the component across guidelines
       const searchResults = await this.scraper.searchContent(componentName, platform);
       
@@ -139,6 +211,12 @@ export class HIGToolProvider {
       // Check for Liquid Glass updates
       const liquidGlassUpdates = this.extractLiquidGlassInfo(sectionWithContent.content || '');
 
+      const duration = Date.now() - startTime;
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[HIGTools] Component spec for "${trimmedComponentName}" retrieved in ${duration}ms`);
+      }
+      
       return {
         component,
         relatedComponents,
@@ -147,8 +225,13 @@ export class HIGToolProvider {
         liquidGlassUpdates
       };
     } catch (error) {
-      // console.error('[HIGTools] Get component spec failed:', error);
-      throw new Error(`Failed to get component specification: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[HIGTools] Get component spec failed:', error);
+      }
+      
+      throw new Error(`Failed to get component specification: ${errorMessage}`);
     }
   }
 
@@ -227,23 +310,23 @@ export class HIGToolProvider {
       url: string;
       liquidGlassRelated: boolean;
     }>;
-    liquidGlassHighlights: string[];
-    wwdc2025Summary: string;
+    designSystemHighlights: string[];
+    currentDesignSummary: string;
   }> {
-    const { since, platform, limit = 20 } = args;
+    const { platform, limit = 20 } = args;
     
     // console.log(`[HIGTools] Getting latest updates (since: ${since}, platform: ${platform})`);
     
     try {
       // Get Liquid Glass information
-      const liquidGlassResource = await this.resourceProvider.getResource('hig://updates/liquid-glass');
-      const liquidGlassContent = liquidGlassResource?.content || '';
+      const designSystemResource = await this.resourceProvider.getResource('hig://updates/latest-design-system');
+      const designSystemContent = designSystemResource?.content || '';
       
-      // Extract highlights from Liquid Glass content
-      const liquidGlassHighlights = this.extractLiquidGlassHighlights(liquidGlassContent);
+      // Extract highlights from current design system content
+      const designSystemHighlights = this.extractDesignSystemHighlights(designSystemContent);
       
-      // WWDC 2025 summary
-      const wwdc2025Summary = `WWDC 2025 introduced Apple's most significant design update with the Liquid Glass design system. This translucent material design language features real-time rendering, adaptive colors, and system-wide implementation across all Apple platforms (iOS 26, macOS 26, watchOS 26, iPadOS 26, tvOS 26, visionOS 26).`;
+      // Current design system summary
+      const currentDesignSummary = `Apple's current design system represents the latest evolution in interface design, featuring advanced materials, adaptive elements, and seamless integration across all Apple platforms with enhanced visual hierarchy and user experience improvements.`;
       
       // Generate mock updates based on current sections (in a real implementation, this would track actual changes)
       const sections = await this.scraper.discoverSections();
@@ -263,32 +346,32 @@ export class HIGToolProvider {
         liquidGlassRelated: true
       }));
 
-      // Add specific Liquid Glass updates
-      const liquidGlassUpdates = [
+      // Add specific design system updates
+      const designSystemUpdates = [
         {
-          title: 'Liquid Glass Design System Released',
-          description: 'New translucent material design language with real-time rendering capabilities',
-          date: '2025-06-09T00:00:00Z',
+          title: 'Enhanced Design System',
+          description: 'Latest design language updates with advanced material effects and improved accessibility',
+          date: new Date().toISOString().split('T')[0] + 'T00:00:00Z',
           platform: 'universal' as ApplePlatform,
-          type: 'new' as const,
+          type: 'updated' as const,
           url: 'https://developer.apple.com/design/human-interface-guidelines/',
-          liquidGlassRelated: true
+          liquidGlassRelated: false
         },
         {
-          title: 'SwiftUI Liquid Glass APIs',
-          description: 'New APIs for implementing Liquid Glass materials in SwiftUI applications',
-          date: '2025-06-09T00:00:00Z',
+          title: 'SwiftUI Enhanced APIs',
+          description: 'Updated APIs for implementing the latest design system features in SwiftUI applications',
+          date: new Date().toISOString().split('T')[0] + 'T00:00:00Z',
           platform: 'universal' as ApplePlatform,
-          type: 'new' as const,
+          type: 'updated' as const,
           url: 'https://developer.apple.com/documentation/swiftui',
-          liquidGlassRelated: true
+          liquidGlassRelated: false
         }
       ];
 
       return {
-        updates: [...liquidGlassUpdates, ...updates].slice(0, limit),
-        liquidGlassHighlights,
-        wwdc2025Summary
+        updates: [...designSystemUpdates, ...updates].slice(0, limit),
+        designSystemHighlights,
+        currentDesignSummary
       };
     } catch (error) {
       // console.error('[HIGTools] Get latest updates failed:', error);
@@ -397,11 +480,12 @@ export class HIGToolProvider {
   }
 
   /**
-   * Extract Liquid Glass information from content
+   * Extract current design system information from content
    */
   private extractLiquidGlassInfo(content: string): string | undefined {
-    const liquidGlassMatch = content.match(/liquid glass[^.]*\./gi);
-    return liquidGlassMatch ? liquidGlassMatch.join(' ') : undefined;
+    // Look for current design system terms
+    const designSystemMatch = content.match(/(design system|advanced material|enhanced interface)[^.]*\./gi);
+    return designSystemMatch ? designSystemMatch.join(' ') : undefined;
   }
 
   /**
@@ -437,15 +521,15 @@ export class HIGToolProvider {
   }
 
   /**
-   * Extract Liquid Glass highlights
+   * Extract current design system highlights
    */
-  private extractLiquidGlassHighlights(_content: string): string[] {
+  private extractDesignSystemHighlights(_content: string): string[] {
     const highlights = [
-      'Translucent materials with real-time rendering',
-      'Adaptive colors that respond to environment',
-      'System-wide implementation across all platforms',
-      'Updated APIs for SwiftUI, UIKit, and AppKit',
-      'Specular highlights that react to movement'
+      'Advanced materials with enhanced visual depth',
+      'Adaptive interface elements that respond to context',
+      'Consistent implementation across all Apple platforms',
+      'Latest APIs for SwiftUI, UIKit, and AppKit',
+      'Improved accessibility and user experience features'
     ];
 
     return highlights;

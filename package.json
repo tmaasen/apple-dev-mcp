@@ -11,13 +11,19 @@
     "build": "tsc",
     "clean": "rm -rf dist",
     "clean:build": "npm run clean && npm run build",
-    "dev": "tsx src/server.ts",
+    "dev": "NODE_ENV=development tsx src/server.ts",
     "start": "node dist/server.js",
+    "start:prod": "NODE_ENV=production node dist/server.js",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "test": "jest",
     "test:watch": "jest --watch",
-    "health-check": "node dist/health-check.js"
+    "test:coverage": "jest --coverage",
+    "health-check": "node dist/health-check.js",
+    "prepack": "npm run clean:build",
+    "prepublishOnly": "npm run test && npm run lint",
+    "security-audit": "npm audit --audit-level=moderate",
+    "validate": "npm run lint && npm run test && npm run build"
   },
   "keywords": [
     "mcp",
@@ -57,5 +63,14 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE",
+    "CLAUDE.md"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

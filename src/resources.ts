@@ -82,9 +82,9 @@ export class HIGResourceProvider {
 
       // Special resources for latest updates
       resources.push({
-        uri: 'hig://updates/liquid-glass',
-        name: 'Liquid Glass Design System (WWDC 2025)',
-        description: 'Latest updates from WWDC 2025 introducing the Liquid Glass design language',
+        uri: 'hig://updates/latest-design-system',
+        name: 'Latest Design System Updates',
+        description: 'Most recent Apple design system updates and new design language features',
         mimeType: 'text/markdown',
         content: ''
       });
@@ -292,9 +292,9 @@ export class HIGResourceProvider {
     name: string;
     description: string;
   }> {
-    if (updateType === 'liquid-glass') {
-      let content = `# Liquid Glass Design System (WWDC 2025)\n\n`;
-      content += `Apple's latest design language introduced at WWDC 2025, featuring translucent materials that behave like glass in the real world.\n\n`;
+    if (updateType === 'latest-design-system') {
+      let content = `# Latest Apple Design System Updates\n\n`;
+      content += `Apple's most recent design language updates, featuring advanced materials and visual elements that enhance user interface experiences.\n\n`;
       
       // Add attribution
       content += this.getAttributionText();
@@ -314,8 +314,8 @@ export class HIGResourceProvider {
       
       return {
         content,
-        name: 'Liquid Glass Design System (WWDC 2025)',
-        description: 'Latest design language from Apple featuring translucent glass-like materials'
+        name: 'Latest Design System Updates',
+        description: 'Current Apple design language featuring advanced materials and interface elements'
       };
     }
 
@@ -326,10 +326,10 @@ export class HIGResourceProvider {
     // Add attribution
     content += this.getAttributionText();
     
-    content += `## WWDC 2025 Updates\n\n`;
-    content += `- **Liquid Glass Design System**: Major visual overhaul with translucent materials\n`;
-    content += `- **Unified Naming**: All OS versions now reflect the year (iOS 26, macOS 26, etc.)\n`;
-    content += `- **Enhanced APIs**: Updated SwiftUI, UIKit, and AppKit support\n\n`;
+    content += `## Recent Updates\n\n`;
+    content += `- **Enhanced Design System**: Major visual improvements with advanced materials\n`;
+    content += `- **Unified Design Language**: Consistent design patterns across all Apple platforms\n`;
+    content += `- **Updated APIs**: Latest SwiftUI, UIKit, and AppKit capabilities\n\n`;
     
     return {
       content,

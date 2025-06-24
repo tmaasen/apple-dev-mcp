@@ -194,7 +194,7 @@ describe('HIGToolProvider', () => {
       ];
 
       const mockLiquidGlassResource = {
-        uri: 'hig://updates/liquid-glass',
+        uri: 'hig://updates/latest-design-system',
         name: 'Liquid Glass',
         description: 'Liquid Glass design system',
         mimeType: 'text/markdown',
@@ -209,9 +209,9 @@ describe('HIGToolProvider', () => {
       });
 
       expect(result.updates).toBeDefined();
-      expect(result.liquidGlassHighlights).toHaveLength(5);
-      expect(result.wwdc2025Summary).toContain('WWDC 2025');
-      expect(result.updates.some(u => u.liquidGlassRelated)).toBe(true);
+      expect(result.designSystemHighlights).toHaveLength(5);
+      expect(result.currentDesignSummary).toContain('design system');
+      expect(result.updates.some(u => u.liquidGlassRelated === false)).toBe(true);
     });
 
     test('should filter updates by platform', async () => {
@@ -234,7 +234,7 @@ describe('HIGToolProvider', () => {
 
       jest.spyOn(scraper, 'discoverSections').mockResolvedValue(mockSections);
       jest.spyOn(resourceProvider, 'getResource').mockResolvedValue({
-        uri: 'hig://updates/liquid-glass',
+        uri: 'hig://updates/latest-design-system',
         name: 'Liquid Glass',
         description: 'Liquid Glass design system',
         mimeType: 'text/markdown',
