@@ -1,0 +1,115 @@
+name: Daily Health Check
+
+on:
+  schedule:
+    # Run daily at 6 AM UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    # Allow manual triggering
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build project
+      run: npm run build
+      
+    - name: Run health check
+      run: npm run health-check
+      env:
+        CI: true
+        
+    - name: Create issue on failure
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const title = '🚨 Daily Health Check Failed';
+          const body = `
+          The daily health check for Apple HIG MCP Server has failed.
+          
+          **Failed at:** ${new Date().toISOString()}
+          **Workflow:** ${context.workflow}
+          **Run ID:** ${context.runId}
+          
+          This could indicate:
+          - Apple's HIG website structure has changed
+          - Network connectivity issues
+          - Server configuration problems
+          
+          Please investigate the logs and update the scraper if necessary.
+          
+          **Action Items:**
+          - [ ] Check Apple's HIG website for structural changes
+          - [ ] Review scraper selectors and fallbacks
+          - [ ] Test the health check locally
+          - [ ] Update scraper code if needed
+          
+          **Related Links:**
+          - [Failed Workflow Run](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+          - [Health Check Script](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/src/health-check.ts)
+          `;
+          
+          // Check if there's already an open issue
+          const issues = await github.rest.issues.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'open',
+            labels: 'health-check-failure'
+          });
+          
+          if (issues.data.length === 0) {
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['health-check-failure', 'bug', 'urgent']
+            });
+          }
+          
+    - name: Close issue on success
+      if: success()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          // Find open health check failure issues
+          const issues = await github.rest.issues.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'open',
+            labels: 'health-check-failure'
+          });
+          
+          // Close any open health check failure issues
+          for (const issue of issues.data) {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: `✅ Health check is now passing. Closing this issue automatically.
+              
+              **Resolved at:** ${new Date().toISOString()}
+              **Workflow Run:** https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+            });
+            
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              state: 'closed'
+            });
+          }

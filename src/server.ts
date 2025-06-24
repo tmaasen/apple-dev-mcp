@@ -227,7 +227,7 @@ class AppleHIGMCPServer {
 
         switch (name) {
           case 'search_guidelines': {
-            const result = await this.toolProvider.searchGuidelines(args);
+            const result = await this.toolProvider.searchGuidelines(args as any);
             return {
               content: [{
                 type: 'text',
@@ -237,7 +237,7 @@ class AppleHIGMCPServer {
           }
 
           case 'get_component_spec': {
-            const result = await this.toolProvider.getComponentSpec(args);
+            const result = await this.toolProvider.getComponentSpec(args as any);
             return {
               content: [{
                 type: 'text',
@@ -247,7 +247,7 @@ class AppleHIGMCPServer {
           }
 
           case 'compare_platforms': {
-            const result = await this.toolProvider.comparePlatforms(args);
+            const result = await this.toolProvider.comparePlatforms(args as any);
             return {
               content: [{
                 type: 'text',
@@ -257,7 +257,7 @@ class AppleHIGMCPServer {
           }
 
           case 'get_latest_updates': {
-            const result = await this.toolProvider.getLatestUpdates(args);
+            const result = await this.toolProvider.getLatestUpdates(args as any);
             return {
               content: [{
                 type: 'text',

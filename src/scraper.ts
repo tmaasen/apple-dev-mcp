@@ -4,7 +4,7 @@
 
 import { load } from 'cheerio';
 import fetch from 'node-fetch';
-import { HIGSection, HIGComponent, ApplePlatform, HIGCategory, ScrapingConfig, SearchResult } from './types.js';
+import { HIGSection, ApplePlatform, HIGCategory, ScrapingConfig, SearchResult } from './types.js';
 import { HIGCache } from './cache.js';
 
 export class HIGScraper {
@@ -62,7 +62,7 @@ export class HIGScraper {
             'Cache-Control': 'no-cache',
             'Pragma': 'no-cache'
           },
-          timeout: this.config.timeout,
+          signal: AbortSignal.timeout(this.config.timeout),
         });
 
         if (!response.ok) {

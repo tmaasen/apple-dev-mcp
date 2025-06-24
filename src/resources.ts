@@ -4,7 +4,7 @@
 
 import { HIGScraper } from './scraper.js';
 import { HIGCache } from './cache.js';
-import { HIGResource, HIGSection, ApplePlatform, HIGCategory } from './types.js';
+import { HIGResource, ApplePlatform, HIGCategory } from './types.js';
 
 export class HIGResourceProvider {
   private scraper: HIGScraper;
@@ -175,7 +175,7 @@ export class HIGResourceProvider {
     category?: HIGCategory;
     updateType?: string;
   } | null {
-    const match = uri.match(/^hig:\/\/([^\/]+)(?:\/(.+))?$/);
+    const match = uri.match(/^hig:\/\/([^/]+)(?:\/(.+))?$/);
     if (!match) {
       return null;
     }

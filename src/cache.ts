@@ -28,7 +28,7 @@ export class HIGCache {
       ttl: ttl || this.defaultTTL
     };
     
-    return this.cache.set(key, entry, ttl);
+    return this.cache.set(key, entry, ttl || this.defaultTTL);
   }
 
   /**
@@ -111,7 +111,6 @@ export class HIGCache {
     }
 
     // If no fresh data, try to get from internal cache even if expired
-    const stats = this.cache.getStats();
     const allData = this.cache.keys().map(k => ({
       key: k,
       value: this.cache.get<CacheEntry<T>>(k)

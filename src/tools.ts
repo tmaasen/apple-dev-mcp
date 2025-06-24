@@ -12,8 +12,7 @@ import {
   GetLatestUpdatesArgs,
   SearchResult,
   HIGComponent,
-  ApplePlatform,
-  HIGSection
+  ApplePlatform
 } from './types.js';
 
 export class HIGToolProvider {
@@ -172,7 +171,12 @@ export class HIGToolProvider {
     console.log(`[HIGTools] Comparing ${componentName} across platforms:`, platforms);
     
     try {
-      const platformData = [];
+      const platformData: Array<{
+        platform: ApplePlatform;
+        guidelines: string[];
+        specifications: any;
+        differences: string[];
+      }> = [];
       
       for (const platform of platforms) {
         const componentSpec = await this.getComponentSpec({ componentName, platform });
@@ -188,7 +192,6 @@ export class HIGToolProvider {
       }
 
       // Find common guidelines
-      const allGuidelines = platformData.flatMap(p => p.guidelines);
       const commonGuidelines = this.findCommonElements(platformData.map(p => p.guidelines));
       
       // Identify key differences
@@ -196,7 +199,7 @@ export class HIGToolProvider {
       
       // Populate differences for each platform
       platformData.forEach(data => {
-        data.differences = data.guidelines.filter(g => !commonGuidelines.includes(g));
+        data.differences = data.guidelines.filter((g: string) => !commonGuidelines.includes(g));
       });
 
       return {
@@ -436,7 +439,7 @@ export class HIGToolProvider {
   /**
    * Extract Liquid Glass highlights
    */
-  private extractLiquidGlassHighlights(content: string): string[] {
+  private extractLiquidGlassHighlights(_content: string): string[] {
     const highlights = [
       'Translucent materials with real-time rendering',
       'Adaptive colors that respond to environment',
