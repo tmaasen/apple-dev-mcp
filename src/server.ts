@@ -58,7 +58,7 @@ class AppleHIGMCPServer {
     // Resource handlers
     this.server.setRequestHandler(ListResourcesRequestSchema, async () => {
       try {
-        console.log('[AppleHIGMCP] Listing resources...');
+        // console.log('[AppleHIGMCP] Listing resources...');
         const resources = await this.resourceProvider.listResources();
         
         return {
@@ -70,7 +70,7 @@ class AppleHIGMCPServer {
           }))
         };
       } catch (error) {
-        console.error('[AppleHIGMCP] Failed to list resources:', error);
+        // console.error('[AppleHIGMCP] Failed to list resources:', error);
         throw new McpError(
           ErrorCode.InternalError,
           `Failed to list resources: ${error instanceof Error ? error.message : 'Unknown error'}`
@@ -81,7 +81,7 @@ class AppleHIGMCPServer {
     this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
       try {
         const { uri } = request.params;
-        console.log(`[AppleHIGMCP] Reading resource: ${uri}`);
+        // console.log(`[AppleHIGMCP] Reading resource: ${uri}`);
         
         const resource = await this.resourceProvider.getResource(uri);
         
@@ -97,7 +97,7 @@ class AppleHIGMCPServer {
           }]
         };
       } catch (error) {
-        console.error(`[AppleHIGMCP] Failed to read resource ${request.params.uri}:`, error);
+        // console.error(`[AppleHIGMCP] Failed to read resource ${request.params.uri}:`, error);
         if (error instanceof McpError) {
           throw error;
         }
@@ -223,7 +223,8 @@ class AppleHIGMCPServer {
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       try {
         const { name, arguments: args } = request.params;
-        console.log(`[AppleHIGMCP] Calling tool: ${name}`);
+        // Disable console logging during tool calls to avoid JSON parsing issues
+        // console.log(`[AppleHIGMCP] Calling tool: ${name}`);
 
         switch (name) {
           case 'search_guidelines': {
@@ -270,7 +271,7 @@ class AppleHIGMCPServer {
             throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
         }
       } catch (error) {
-        console.error(`[AppleHIGMCP] Tool call failed for ${request.params.name}:`, error);
+        // console.error(`[AppleHIGMCP] Tool call failed for ${request.params.name}:`, error);
         if (error instanceof McpError) {
           throw error;
         }
@@ -283,29 +284,30 @@ class AppleHIGMCPServer {
   }
 
   async run(): Promise<void> {
-    console.log('🍎 Apple Human Interface Guidelines MCP Server starting...');
-    console.log('📖 Providing up-to-date access to Apple design guidelines');
-    console.log('✨ Including the latest Liquid Glass design system from WWDC 2025');
-    console.log('');
-    console.log('ℹ️  This server respects Apple\'s content and provides fair use access');
-    console.log('ℹ️  for educational and development purposes.');
-    console.log('');
+    // Disable startup logging to prevent JSON parsing issues in MCP Inspector
+    // console.log('🍎 Apple Human Interface Guidelines MCP Server starting...');
+    // console.log('📖 Providing up-to-date access to Apple design guidelines');
+    // console.log('✨ Including the latest Liquid Glass design system from WWDC 2025');
+    // console.log('');
+    // console.log('ℹ️  This server respects Apple\'s content and provides fair use access');
+    // console.log('ℹ️  for educational and development purposes.');
+    // console.log('');
 
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
     
-    console.log('🚀 Apple HIG MCP Server is ready!');
+    // console.log('🚀 Apple HIG MCP Server is ready!');
   }
 }
 
 // Handle graceful shutdown
 process.on('SIGINT', async () => {
-  console.log('\n🛑 Shutting down Apple HIG MCP Server...');
+  // console.log('\n🛑 Shutting down Apple HIG MCP Server...');
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-  console.log('\n🛑 Shutting down Apple HIG MCP Server...');
+  // console.log('\n🛑 Shutting down Apple HIG MCP Server...');
   process.exit(0);
 });
 
@@ -313,7 +315,7 @@ process.on('SIGTERM', async () => {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const server = new AppleHIGMCPServer();
   server.run().catch((error) => {
-    console.error('💥 Failed to start Apple HIG MCP Server:', error);
+    // console.error('💥 Failed to start Apple HIG MCP Server:', error);
     process.exit(1);
   });
 }

@@ -40,7 +40,7 @@ export class HIGToolProvider {
   }> {
     const { query, platform, category, limit = 10 } = args;
     
-    console.log(`[HIGTools] Searching for: "${query}" (platform: ${platform}, category: ${category})`);
+    // console.log(`[HIGTools] Searching for: "${query}" (platform: ${platform}, category: ${category})`);
     
     try {
       const results = await this.scraper.searchContent(query, platform, category, limit);
@@ -71,7 +71,7 @@ export class HIGToolProvider {
         }
       };
     } catch (error) {
-      console.error('[HIGTools] Search failed:', error);
+      // console.error('[HIGTools] Search failed:', error);
       throw new Error(`Search failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -88,7 +88,7 @@ export class HIGToolProvider {
   }> {
     const { componentName, platform } = args;
     
-    console.log(`[HIGTools] Getting component spec for: ${componentName} (platform: ${platform})`);
+    // console.log(`[HIGTools] Getting component spec for: ${componentName} (platform: ${platform})`);
     
     try {
       // Search for the component across guidelines
@@ -147,7 +147,7 @@ export class HIGToolProvider {
         liquidGlassUpdates
       };
     } catch (error) {
-      console.error('[HIGTools] Get component spec failed:', error);
+      // console.error('[HIGTools] Get component spec failed:', error);
       throw new Error(`Failed to get component specification: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -168,7 +168,7 @@ export class HIGToolProvider {
   }> {
     const { componentName, platforms } = args;
     
-    console.log(`[HIGTools] Comparing ${componentName} across platforms:`, platforms);
+    // console.log(`[HIGTools] Comparing ${componentName} across platforms:`, platforms);
     
     try {
       const platformData: Array<{
@@ -209,7 +209,7 @@ export class HIGToolProvider {
         keyDifferences
       };
     } catch (error) {
-      console.error('[HIGTools] Platform comparison failed:', error);
+      // console.error('[HIGTools] Platform comparison failed:', error);
       throw new Error(`Platform comparison failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -232,7 +232,7 @@ export class HIGToolProvider {
   }> {
     const { since, platform, limit = 20 } = args;
     
-    console.log(`[HIGTools] Getting latest updates (since: ${since}, platform: ${platform})`);
+    // console.log(`[HIGTools] Getting latest updates (since: ${since}, platform: ${platform})`);
     
     try {
       // Get Liquid Glass information
@@ -291,7 +291,7 @@ export class HIGToolProvider {
         wwdc2025Summary
       };
     } catch (error) {
-      console.error('[HIGTools] Get latest updates failed:', error);
+      // console.error('[HIGTools] Get latest updates failed:', error);
       throw new Error(`Failed to get latest updates: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
