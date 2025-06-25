@@ -73,14 +73,33 @@ npm run health-check
 
 ### Generation Script Options
 
-The content generator (`scripts/generate-hig-content.ts`) supports various configuration options:
+The content generator (`src/generators/enhanced-content-generator.ts`) supports various configuration options:
 
 ```typescript
-// Environment variables
-CONTENT_OUTPUT_DIR=./content     # Output directory
-HIG_BASE_URL=https://developer.apple.com/design/human-interface-guidelines/
-GENERATION_TIMEOUT=300000        # 5 minutes
-BATCH_SIZE=10                    # Concurrent requests
+// New configuration interface (ContentGenerationConfig)
+const config = {
+  outputDirectory: './content',   # Output directory
+  batchSize: 3,                  # Concurrent requests (rate limited)
+  rateLimitDelay: 2000,          # Delay between batches (ms)
+  forceUpdate: false,            # Force regeneration
+  maxRetries: 3                  # Max retry attempts
+};
+```
+
+### Refactored Architecture (2025)
+
+The content generation system now follows SOLID principles with clear separation of concerns:
+
+```typescript
+// Dependency injection pattern
+const generator = new EnhancedContentGenerator(
+  config,
+  new FileSystemService(),           // File I/O operations
+  new ContentProcessorService(),     // Content processing
+  new SearchIndexerService(),        # Search index generation
+  new CrossReferenceGeneratorService(), # Cross-reference generation
+  new ContentScraperService()        # Enhanced content extraction
+);
 ```
 
 ## Content Format

@@ -1,0 +1,2172 @@
+{
+  "ios-ios-overview": {
+    "relatedSections": [
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography",
+      "ios-ios-layout"
+    ],
+    "backlinks": [
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography",
+      "ios-ios-layout",
+      "ios-ios-buttons",
+      "ios-ios-controls",
+      "ios-ios-views",
+      "ios-ios-navigation",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers",
+      "ios-ios-sliders",
+      "ios-ios-steppers",
+      "ios-ios-lists-and-tables",
+      "ios-ios-switches",
+      "ios-ios-sheets",
+      "ios-ios-alerts",
+      "ios-ios-collection-views",
+      "ios-ios-action-sheets",
+      "ios-ios-popovers",
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts",
+      "ios-ios-sf-symbols",
+      "ios-ios-live-activities",
+      "ios-ios-images",
+      "ios-ios-animation",
+      "ios-ios-system-icons",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "macos-macos-overview",
+      "watchos-watchos-overview",
+      "tvos-tvos-overview",
+      "visionos-visionos-overview",
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-inclusion",
+      "universal-branding"
+    ],
+    "tags": [
+      "iOS",
+      "foundations"
+    ]
+  },
+  "ios-ios-app-icons": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography",
+      "ios-ios-layout"
+    ],
+    "backlinks": [
+      "ios-ios-overview",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography",
+      "ios-ios-layout",
+      "ios-ios-buttons",
+      "ios-ios-controls",
+      "ios-ios-views",
+      "ios-ios-navigation",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers",
+      "ios-ios-sliders",
+      "ios-ios-steppers",
+      "ios-ios-lists-and-tables",
+      "ios-ios-switches",
+      "ios-ios-sheets",
+      "ios-ios-alerts",
+      "ios-ios-collection-views",
+      "ios-ios-action-sheets",
+      "ios-ios-popovers",
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts",
+      "ios-ios-sf-symbols",
+      "ios-ios-live-activities",
+      "ios-ios-images",
+      "ios-ios-animation",
+      "ios-ios-system-icons",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics"
+    ],
+    "tags": [
+      "iOS",
+      "icons-and-images",
+      "visual-elements"
+    ]
+  },
+  "ios-ios-accessibility": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-color",
+      "ios-ios-typography",
+      "ios-ios-layout"
+    ],
+    "backlinks": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-color",
+      "ios-ios-typography",
+      "ios-ios-layout",
+      "ios-ios-buttons",
+      "ios-ios-controls",
+      "ios-ios-views",
+      "ios-ios-navigation",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers",
+      "ios-ios-sliders",
+      "ios-ios-steppers",
+      "ios-ios-lists-and-tables",
+      "ios-ios-switches",
+      "ios-ios-sheets",
+      "ios-ios-alerts",
+      "ios-ios-collection-views",
+      "ios-ios-action-sheets",
+      "ios-ios-popovers",
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts",
+      "ios-ios-sf-symbols",
+      "ios-ios-live-activities",
+      "ios-ios-images",
+      "ios-ios-animation",
+      "ios-ios-system-icons",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "macos-macos-overview",
+      "watchos-watchos-overview",
+      "tvos-tvos-overview",
+      "visionos-visionos-overview",
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-inclusion",
+      "universal-branding"
+    ],
+    "tags": [
+      "iOS",
+      "foundations",
+      "a11y"
+    ]
+  },
+  "ios-ios-color": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-typography",
+      "ios-ios-layout"
+    ],
+    "backlinks": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-controls",
+      "ios-ios-views",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers",
+      "ios-ios-sliders",
+      "ios-ios-steppers",
+      "ios-ios-lists-and-tables",
+      "ios-ios-switches",
+      "ios-ios-sheets",
+      "ios-ios-alerts",
+      "ios-ios-collection-views",
+      "ios-ios-action-sheets",
+      "ios-ios-popovers",
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts",
+      "ios-ios-sf-symbols",
+      "ios-ios-live-activities",
+      "ios-ios-images",
+      "ios-ios-animation",
+      "ios-ios-system-icons",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "macos-macos-windows",
+      "macos-macos-overview",
+      "macos-macos-menus",
+      "macos-macos-toolbars",
+      "macos-macos-dock",
+      "macos-macos-touch-bar",
+      "macos-macos-controls",
+      "watchos-watchos-overview",
+      "watchos-watchos-complications",
+      "watchos-watchos-digital-crown",
+      "watchos-watchos-notifications",
+      "watchos-watchos-gestures",
+      "tvos-tvos-overview",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control",
+      "visionos-visionos-overview",
+      "visionos-visionos-spatial-design",
+      "visionos-visionos-immersive-experiences",
+      "visionos-visionos-windows",
+      "visionos-visionos-eyes-and-hands",
+      "visionos-visionos-gestures",
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-privacy",
+      "universal-inclusion",
+      "universal-branding",
+      "universal-materials",
+      "universal-dark-mode",
+      "universal-visual-effects",
+      "universal-machine-learning",
+      "universal-augmented-reality",
+      "universal-audio",
+      "universal-game-center",
+      "universal-gestures",
+      "universal-motion",
+      "ios-ios-typography",
+      "ios-ios-layout",
+      "ios-ios-buttons",
+      "ios-ios-navigation"
+    ],
+    "tags": [
+      "iOS",
+      "color-and-materials",
+      "visual-design",
+      "theming"
+    ]
+  },
+  "ios-ios-typography": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-layout"
+    ],
+    "backlinks": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-controls",
+      "ios-ios-views",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers",
+      "ios-ios-sliders",
+      "ios-ios-steppers",
+      "ios-ios-lists-and-tables",
+      "ios-ios-switches",
+      "ios-ios-sheets",
+      "ios-ios-alerts",
+      "ios-ios-collection-views",
+      "ios-ios-action-sheets",
+      "ios-ios-popovers",
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts",
+      "ios-ios-sf-symbols",
+      "ios-ios-live-activities",
+      "ios-ios-images",
+      "ios-ios-animation",
+      "ios-ios-system-icons",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "macos-macos-windows",
+      "macos-macos-overview",
+      "macos-macos-menus",
+      "macos-macos-toolbars",
+      "macos-macos-dock",
+      "macos-macos-touch-bar",
+      "macos-macos-controls",
+      "watchos-watchos-overview",
+      "watchos-watchos-complications",
+      "watchos-watchos-digital-crown",
+      "watchos-watchos-notifications",
+      "watchos-watchos-gestures",
+      "tvos-tvos-overview",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control",
+      "visionos-visionos-overview",
+      "visionos-visionos-spatial-design",
+      "visionos-visionos-immersive-experiences",
+      "visionos-visionos-windows",
+      "visionos-visionos-eyes-and-hands",
+      "visionos-visionos-gestures",
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-privacy",
+      "universal-inclusion",
+      "universal-branding",
+      "universal-materials",
+      "universal-dark-mode",
+      "universal-visual-effects",
+      "universal-machine-learning",
+      "universal-augmented-reality",
+      "universal-audio",
+      "universal-game-center",
+      "universal-gestures",
+      "universal-motion",
+      "ios-ios-color",
+      "ios-ios-layout",
+      "ios-ios-buttons",
+      "ios-ios-navigation"
+    ],
+    "tags": [
+      "iOS",
+      "typography",
+      "text",
+      "fonts"
+    ]
+  },
+  "ios-ios-layout": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "tvos-tvos-layout",
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography",
+      "macos-macos-windows",
+      "visionos-visionos-spatial-design",
+      "visionos-visionos-windows"
+    ],
+    "tags": [
+      "iOS",
+      "layout"
+    ]
+  },
+  "ios-ios-buttons": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "macos-macos-buttons",
+      "watchos-watchos-complications",
+      "universal-visual-effects"
+    ],
+    "tags": [
+      "iOS",
+      "visual-design",
+      "controls",
+      "interaction"
+    ]
+  },
+  "ios-ios-controls": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "macos-macos-touch-bar",
+      "macos-macos-controls",
+      "watchos-watchos-digital-crown",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control",
+      "visionos-visionos-eyes-and-hands"
+    ],
+    "tags": [
+      "iOS",
+      "selection-and-input"
+    ]
+  },
+  "ios-ios-views": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "visionos-visionos-immersive-experiences"
+    ],
+    "tags": [
+      "iOS",
+      "presentation"
+    ]
+  },
+  "ios-ios-navigation": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "watchos-watchos-navigation",
+      "tvos-tvos-navigation",
+      "macos-macos-menus",
+      "macos-macos-toolbars"
+    ],
+    "tags": [
+      "iOS",
+      "navigation",
+      "navigation-ui",
+      "hierarchy"
+    ]
+  },
+  "ios-ios-tab-bars": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "macos-macos-menus",
+      "macos-macos-toolbars",
+      "watchos-watchos-navigation",
+      "tvos-tvos-navigation"
+    ],
+    "tags": [
+      "iOS",
+      "navigation"
+    ]
+  },
+  "ios-ios-sidebars": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "macos-macos-menus",
+      "macos-macos-toolbars",
+      "watchos-watchos-navigation",
+      "tvos-tvos-navigation"
+    ],
+    "tags": [
+      "iOS",
+      "navigation"
+    ]
+  },
+  "ios-ios-toolbars": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "macos-macos-menus",
+      "macos-macos-toolbars",
+      "watchos-watchos-navigation",
+      "tvos-tvos-navigation"
+    ],
+    "tags": [
+      "iOS",
+      "navigation"
+    ]
+  },
+  "ios-ios-text-fields": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "macos-macos-touch-bar",
+      "macos-macos-controls",
+      "watchos-watchos-digital-crown",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control",
+      "visionos-visionos-eyes-and-hands"
+    ],
+    "tags": [
+      "iOS",
+      "selection-and-input"
+    ]
+  },
+  "ios-ios-search": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "macos-macos-touch-bar",
+      "macos-macos-controls",
+      "watchos-watchos-digital-crown",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control",
+      "visionos-visionos-eyes-and-hands"
+    ],
+    "tags": [
+      "iOS",
+      "selection-and-input"
+    ]
+  },
+  "ios-ios-forms": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "macos-macos-touch-bar",
+      "macos-macos-controls",
+      "watchos-watchos-digital-crown",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control",
+      "visionos-visionos-eyes-and-hands"
+    ],
+    "tags": [
+      "iOS",
+      "selection-and-input"
+    ]
+  },
+  "ios-ios-pickers": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "macos-macos-touch-bar",
+      "macos-macos-controls",
+      "watchos-watchos-digital-crown",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control",
+      "visionos-visionos-eyes-and-hands"
+    ],
+    "tags": [
+      "iOS",
+      "selection-and-input"
+    ]
+  },
+  "ios-ios-sliders": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [],
+    "tags": [
+      "iOS",
+      "selection-and-input"
+    ]
+  },
+  "ios-ios-steppers": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [],
+    "tags": [
+      "iOS",
+      "selection-and-input"
+    ]
+  },
+  "ios-ios-lists-and-tables": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "visionos-visionos-immersive-experiences"
+    ],
+    "tags": [
+      "iOS",
+      "presentation"
+    ]
+  },
+  "ios-ios-switches": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [],
+    "tags": [
+      "iOS",
+      "selection-and-input"
+    ]
+  },
+  "ios-ios-sheets": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "visionos-visionos-immersive-experiences"
+    ],
+    "tags": [
+      "iOS",
+      "presentation"
+    ]
+  },
+  "ios-ios-alerts": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "visionos-visionos-immersive-experiences"
+    ],
+    "tags": [
+      "iOS",
+      "presentation"
+    ]
+  },
+  "ios-ios-collection-views": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "visionos-visionos-immersive-experiences"
+    ],
+    "tags": [
+      "iOS",
+      "presentation"
+    ]
+  },
+  "ios-ios-action-sheets": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [],
+    "tags": [
+      "iOS",
+      "presentation"
+    ]
+  },
+  "ios-ios-popovers": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [],
+    "tags": [
+      "iOS",
+      "presentation"
+    ]
+  },
+  "ios-ios-notifications": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "macos-macos-dock",
+      "watchos-watchos-notifications",
+      "universal-privacy"
+    ],
+    "tags": [
+      "iOS",
+      "system-capabilities"
+    ]
+  },
+  "ios-ios-widgets": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "macos-macos-dock",
+      "watchos-watchos-notifications",
+      "universal-privacy"
+    ],
+    "tags": [
+      "iOS",
+      "system-capabilities"
+    ]
+  },
+  "ios-ios-sharing": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "macos-macos-dock",
+      "watchos-watchos-notifications",
+      "universal-privacy"
+    ],
+    "tags": [
+      "iOS",
+      "system-capabilities"
+    ]
+  },
+  "ios-ios-app-extensions": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "macos-macos-dock",
+      "watchos-watchos-notifications",
+      "universal-privacy"
+    ],
+    "tags": [
+      "iOS",
+      "system-capabilities"
+    ]
+  },
+  "ios-ios-shortcuts": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "macos-macos-dock",
+      "watchos-watchos-notifications",
+      "universal-privacy"
+    ],
+    "tags": [
+      "iOS",
+      "system-capabilities"
+    ]
+  },
+  "ios-ios-sf-symbols": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [],
+    "tags": [
+      "iOS",
+      "icons-and-images"
+    ]
+  },
+  "ios-ios-live-activities": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [],
+    "tags": [
+      "iOS",
+      "system-capabilities"
+    ]
+  },
+  "ios-ios-images": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [],
+    "tags": [
+      "iOS",
+      "icons-and-images"
+    ]
+  },
+  "ios-ios-animation": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "watchos-watchos-gestures",
+      "visionos-visionos-gestures",
+      "universal-gestures",
+      "universal-motion"
+    ],
+    "tags": [
+      "iOS",
+      "motion"
+    ]
+  },
+  "ios-ios-system-icons": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [],
+    "tags": [
+      "iOS",
+      "icons-and-images",
+      "visual-elements"
+    ]
+  },
+  "ios-ios-gestures": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "watchos-watchos-gestures",
+      "visionos-visionos-gestures",
+      "universal-gestures",
+      "universal-motion"
+    ],
+    "tags": [
+      "iOS",
+      "motion"
+    ]
+  },
+  "ios-ios-feedback": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "watchos-watchos-gestures",
+      "visionos-visionos-gestures",
+      "universal-gestures",
+      "universal-motion"
+    ],
+    "tags": [
+      "iOS",
+      "motion"
+    ]
+  },
+  "ios-ios-haptics": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography"
+    ],
+    "backlinks": [
+      "watchos-watchos-gestures",
+      "visionos-visionos-gestures",
+      "universal-gestures",
+      "universal-motion"
+    ],
+    "tags": [
+      "iOS",
+      "motion"
+    ]
+  },
+  "macos-macos-windows": {
+    "relatedSections": [
+      "ios-ios-layout",
+      "macos-macos-overview",
+      "macos-macos-menus",
+      "macos-macos-toolbars",
+      "macos-macos-dock"
+    ],
+    "backlinks": [
+      "macos-macos-overview",
+      "macos-macos-menus",
+      "macos-macos-toolbars",
+      "macos-macos-buttons",
+      "tvos-tvos-layout",
+      "visionos-visionos-spatial-design",
+      "visionos-visionos-windows"
+    ],
+    "tags": [
+      "macOS",
+      "layout"
+    ]
+  },
+  "macos-macos-overview": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-accessibility",
+      "macos-macos-windows",
+      "macos-macos-menus",
+      "macos-macos-toolbars"
+    ],
+    "backlinks": [
+      "macos-macos-windows",
+      "macos-macos-buttons",
+      "watchos-watchos-overview",
+      "tvos-tvos-overview",
+      "visionos-visionos-overview",
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-inclusion",
+      "universal-branding"
+    ],
+    "tags": [
+      "macOS",
+      "foundations"
+    ]
+  },
+  "macos-macos-menus": {
+    "relatedSections": [
+      "ios-ios-navigation",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "macos-macos-windows"
+    ],
+    "backlinks": [
+      "macos-macos-windows",
+      "macos-macos-overview",
+      "macos-macos-buttons",
+      "watchos-watchos-navigation",
+      "tvos-tvos-navigation"
+    ],
+    "tags": [
+      "macOS",
+      "navigation"
+    ]
+  },
+  "macos-macos-toolbars": {
+    "relatedSections": [
+      "ios-ios-navigation",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "macos-macos-windows"
+    ],
+    "backlinks": [
+      "macos-macos-windows",
+      "macos-macos-overview",
+      "macos-macos-buttons"
+    ],
+    "tags": [
+      "macOS",
+      "navigation"
+    ]
+  },
+  "macos-macos-dock": {
+    "relatedSections": [
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts"
+    ],
+    "backlinks": [
+      "macos-macos-windows"
+    ],
+    "tags": [
+      "macOS",
+      "system-capabilities"
+    ]
+  },
+  "macos-macos-touch-bar": {
+    "relatedSections": [
+      "ios-ios-controls",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers"
+    ],
+    "backlinks": [],
+    "tags": [
+      "macOS",
+      "selection-and-input"
+    ]
+  },
+  "macos-macos-controls": {
+    "relatedSections": [
+      "ios-ios-controls",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers"
+    ],
+    "backlinks": [],
+    "tags": [
+      "macOS",
+      "selection-and-input"
+    ]
+  },
+  "macos-macos-buttons": {
+    "relatedSections": [
+      "ios-ios-buttons",
+      "macos-macos-windows",
+      "macos-macos-overview",
+      "macos-macos-menus",
+      "macos-macos-toolbars"
+    ],
+    "backlinks": [
+      "watchos-watchos-complications",
+      "universal-visual-effects"
+    ],
+    "tags": [
+      "macOS",
+      "visual-design",
+      "controls",
+      "interaction"
+    ]
+  },
+  "watchos-watchos-overview": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-accessibility",
+      "macos-macos-overview",
+      "watchos-watchos-complications",
+      "watchos-watchos-digital-crown"
+    ],
+    "backlinks": [
+      "watchos-watchos-complications",
+      "watchos-watchos-gestures",
+      "tvos-tvos-overview",
+      "visionos-visionos-overview",
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-inclusion",
+      "universal-branding"
+    ],
+    "tags": [
+      "watchOS",
+      "foundations"
+    ]
+  },
+  "watchos-watchos-complications": {
+    "relatedSections": [
+      "ios-ios-buttons",
+      "macos-macos-buttons",
+      "watchos-watchos-overview",
+      "watchos-watchos-digital-crown",
+      "watchos-watchos-notifications"
+    ],
+    "backlinks": [
+      "watchos-watchos-overview",
+      "universal-visual-effects"
+    ],
+    "tags": [
+      "watchOS",
+      "visual-design"
+    ]
+  },
+  "watchos-watchos-digital-crown": {
+    "relatedSections": [
+      "ios-ios-controls",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers"
+    ],
+    "backlinks": [
+      "watchos-watchos-overview",
+      "watchos-watchos-complications"
+    ],
+    "tags": [
+      "watchOS",
+      "selection-and-input"
+    ]
+  },
+  "watchos-watchos-notifications": {
+    "relatedSections": [
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts"
+    ],
+    "backlinks": [
+      "watchos-watchos-complications"
+    ],
+    "tags": [
+      "watchOS",
+      "system-capabilities"
+    ]
+  },
+  "watchos-watchos-navigation": {
+    "relatedSections": [
+      "ios-ios-navigation",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "macos-macos-menus"
+    ],
+    "backlinks": [],
+    "tags": [
+      "watchOS",
+      "navigation",
+      "navigation-ui",
+      "hierarchy"
+    ]
+  },
+  "watchos-watchos-gestures": {
+    "relatedSections": [
+      "ios-ios-animation",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "watchos-watchos-overview"
+    ],
+    "backlinks": [
+      "visionos-visionos-gestures",
+      "universal-gestures",
+      "universal-motion"
+    ],
+    "tags": [
+      "watchOS",
+      "motion"
+    ]
+  },
+  "tvos-tvos-overview": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-accessibility",
+      "macos-macos-overview",
+      "watchos-watchos-overview",
+      "tvos-tvos-focus-and-selection"
+    ],
+    "backlinks": [
+      "tvos-tvos-layout",
+      "visionos-visionos-overview",
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-inclusion",
+      "universal-branding"
+    ],
+    "tags": [
+      "tvOS",
+      "foundations"
+    ]
+  },
+  "tvos-tvos-focus-and-selection": {
+    "relatedSections": [
+      "ios-ios-controls",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers"
+    ],
+    "backlinks": [
+      "tvos-tvos-overview",
+      "tvos-tvos-layout"
+    ],
+    "tags": [
+      "tvOS",
+      "selection-and-input"
+    ]
+  },
+  "tvos-tvos-remote-control": {
+    "relatedSections": [
+      "ios-ios-controls",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers"
+    ],
+    "backlinks": [
+      "tvos-tvos-layout"
+    ],
+    "tags": [
+      "tvOS",
+      "selection-and-input"
+    ]
+  },
+  "tvos-tvos-navigation": {
+    "relatedSections": [
+      "ios-ios-navigation",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "macos-macos-menus"
+    ],
+    "backlinks": [],
+    "tags": [
+      "tvOS",
+      "navigation",
+      "navigation-ui",
+      "hierarchy"
+    ]
+  },
+  "tvos-tvos-layout": {
+    "relatedSections": [
+      "ios-ios-layout",
+      "macos-macos-windows",
+      "tvos-tvos-overview",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control"
+    ],
+    "backlinks": [
+      "visionos-visionos-spatial-design",
+      "visionos-visionos-windows"
+    ],
+    "tags": [
+      "tvOS",
+      "layout"
+    ]
+  },
+  "visionos-visionos-overview": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-accessibility",
+      "macos-macos-overview",
+      "watchos-watchos-overview",
+      "tvos-tvos-overview"
+    ],
+    "backlinks": [
+      "visionos-visionos-spatial-design",
+      "visionos-visionos-windows"
+    ],
+    "tags": [
+      "visionOS",
+      "foundations"
+    ]
+  },
+  "visionos-visionos-spatial-design": {
+    "relatedSections": [
+      "ios-ios-layout",
+      "macos-macos-windows",
+      "tvos-tvos-layout",
+      "visionos-visionos-overview",
+      "visionos-visionos-immersive-experiences"
+    ],
+    "backlinks": [
+      "visionos-visionos-windows"
+    ],
+    "tags": [
+      "visionOS",
+      "layout"
+    ]
+  },
+  "visionos-visionos-immersive-experiences": {
+    "relatedSections": [
+      "ios-ios-views",
+      "ios-ios-lists-and-tables",
+      "ios-ios-sheets",
+      "ios-ios-alerts",
+      "ios-ios-collection-views"
+    ],
+    "backlinks": [
+      "visionos-visionos-spatial-design"
+    ],
+    "tags": [
+      "visionOS",
+      "presentation"
+    ]
+  },
+  "visionos-visionos-windows": {
+    "relatedSections": [
+      "ios-ios-layout",
+      "macos-macos-windows",
+      "tvos-tvos-layout",
+      "visionos-visionos-overview",
+      "visionos-visionos-spatial-design"
+    ],
+    "backlinks": [],
+    "tags": [
+      "visionOS",
+      "layout"
+    ]
+  },
+  "visionos-visionos-eyes-and-hands": {
+    "relatedSections": [
+      "ios-ios-controls",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers"
+    ],
+    "backlinks": [],
+    "tags": [
+      "visionOS",
+      "selection-and-input"
+    ]
+  },
+  "visionos-visionos-gestures": {
+    "relatedSections": [
+      "ios-ios-animation",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "watchos-watchos-gestures"
+    ],
+    "backlinks": [],
+    "tags": [
+      "visionOS",
+      "motion"
+    ]
+  },
+  "universal-accessibility": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-accessibility",
+      "macos-macos-overview",
+      "watchos-watchos-overview",
+      "tvos-tvos-overview"
+    ],
+    "backlinks": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-typography",
+      "ios-ios-buttons",
+      "ios-ios-controls",
+      "ios-ios-views",
+      "ios-ios-navigation",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers",
+      "ios-ios-sliders",
+      "ios-ios-steppers",
+      "ios-ios-lists-and-tables",
+      "ios-ios-switches",
+      "ios-ios-sheets",
+      "ios-ios-alerts",
+      "ios-ios-collection-views",
+      "ios-ios-action-sheets",
+      "ios-ios-popovers",
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts",
+      "ios-ios-sf-symbols",
+      "ios-ios-live-activities",
+      "ios-ios-images",
+      "ios-ios-animation",
+      "ios-ios-system-icons",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "macos-macos-windows",
+      "macos-macos-overview",
+      "macos-macos-menus",
+      "macos-macos-toolbars",
+      "macos-macos-dock",
+      "macos-macos-touch-bar",
+      "macos-macos-controls",
+      "macos-macos-buttons",
+      "watchos-watchos-overview",
+      "watchos-watchos-complications",
+      "watchos-watchos-digital-crown",
+      "watchos-watchos-notifications",
+      "watchos-watchos-navigation",
+      "watchos-watchos-gestures",
+      "tvos-tvos-overview",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control",
+      "tvos-tvos-navigation",
+      "visionos-visionos-overview",
+      "visionos-visionos-spatial-design",
+      "visionos-visionos-immersive-experiences",
+      "visionos-visionos-windows",
+      "visionos-visionos-eyes-and-hands",
+      "visionos-visionos-gestures",
+      "universal-design-principles",
+      "universal-privacy",
+      "universal-inclusion",
+      "universal-branding",
+      "universal-materials",
+      "universal-dark-mode",
+      "universal-visual-effects",
+      "universal-machine-learning",
+      "universal-augmented-reality",
+      "universal-audio",
+      "universal-game-center",
+      "universal-gestures",
+      "universal-motion"
+    ],
+    "tags": [
+      "universal",
+      "foundations",
+      "a11y"
+    ]
+  },
+  "universal-design-principles": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-accessibility",
+      "macos-macos-overview",
+      "watchos-watchos-overview",
+      "tvos-tvos-overview"
+    ],
+    "backlinks": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-buttons",
+      "ios-ios-controls",
+      "ios-ios-views",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers",
+      "ios-ios-sliders",
+      "ios-ios-steppers",
+      "ios-ios-lists-and-tables",
+      "ios-ios-switches",
+      "ios-ios-sheets",
+      "ios-ios-alerts",
+      "ios-ios-collection-views",
+      "ios-ios-action-sheets",
+      "ios-ios-popovers",
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts",
+      "ios-ios-sf-symbols",
+      "ios-ios-live-activities",
+      "ios-ios-images",
+      "ios-ios-animation",
+      "ios-ios-system-icons",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "macos-macos-windows",
+      "macos-macos-overview",
+      "macos-macos-menus",
+      "macos-macos-toolbars",
+      "macos-macos-dock",
+      "macos-macos-touch-bar",
+      "macos-macos-controls",
+      "macos-macos-buttons",
+      "watchos-watchos-overview",
+      "watchos-watchos-complications",
+      "watchos-watchos-digital-crown",
+      "watchos-watchos-notifications",
+      "watchos-watchos-gestures",
+      "tvos-tvos-overview",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control",
+      "visionos-visionos-overview",
+      "visionos-visionos-spatial-design",
+      "visionos-visionos-immersive-experiences",
+      "visionos-visionos-windows",
+      "visionos-visionos-eyes-and-hands",
+      "visionos-visionos-gestures",
+      "universal-accessibility",
+      "universal-privacy",
+      "universal-inclusion",
+      "universal-branding",
+      "universal-materials",
+      "universal-dark-mode",
+      "universal-visual-effects",
+      "universal-machine-learning",
+      "universal-augmented-reality",
+      "universal-audio",
+      "universal-game-center",
+      "universal-gestures",
+      "universal-motion"
+    ],
+    "tags": [
+      "universal",
+      "foundations"
+    ]
+  },
+  "universal-privacy": {
+    "relatedSections": [
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts"
+    ],
+    "backlinks": [
+      "universal-materials",
+      "universal-dark-mode",
+      "universal-machine-learning",
+      "universal-augmented-reality",
+      "universal-audio",
+      "universal-game-center"
+    ],
+    "tags": [
+      "universal",
+      "system-capabilities"
+    ]
+  },
+  "universal-inclusion": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-accessibility",
+      "macos-macos-overview",
+      "watchos-watchos-overview",
+      "tvos-tvos-overview"
+    ],
+    "backlinks": [
+      "universal-materials",
+      "universal-dark-mode",
+      "universal-machine-learning",
+      "universal-augmented-reality",
+      "universal-audio",
+      "universal-game-center"
+    ],
+    "tags": [
+      "universal",
+      "foundations"
+    ]
+  },
+  "universal-branding": {
+    "relatedSections": [
+      "ios-ios-overview",
+      "ios-ios-accessibility",
+      "macos-macos-overview",
+      "watchos-watchos-overview",
+      "tvos-tvos-overview"
+    ],
+    "backlinks": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-controls",
+      "ios-ios-views",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers",
+      "ios-ios-sliders",
+      "ios-ios-steppers",
+      "ios-ios-lists-and-tables",
+      "ios-ios-switches",
+      "ios-ios-sheets",
+      "ios-ios-alerts",
+      "ios-ios-collection-views",
+      "ios-ios-action-sheets",
+      "ios-ios-popovers",
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts",
+      "ios-ios-sf-symbols",
+      "ios-ios-live-activities",
+      "ios-ios-images",
+      "ios-ios-animation",
+      "ios-ios-system-icons",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "macos-macos-windows",
+      "macos-macos-overview",
+      "macos-macos-menus",
+      "macos-macos-toolbars",
+      "macos-macos-dock",
+      "macos-macos-touch-bar",
+      "macos-macos-controls",
+      "watchos-watchos-overview",
+      "watchos-watchos-complications",
+      "watchos-watchos-digital-crown",
+      "watchos-watchos-notifications",
+      "watchos-watchos-gestures",
+      "tvos-tvos-overview",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control",
+      "visionos-visionos-overview",
+      "visionos-visionos-spatial-design",
+      "visionos-visionos-immersive-experiences",
+      "visionos-visionos-windows",
+      "visionos-visionos-eyes-and-hands",
+      "visionos-visionos-gestures",
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-privacy",
+      "universal-inclusion",
+      "universal-materials",
+      "universal-dark-mode",
+      "universal-visual-effects",
+      "universal-machine-learning",
+      "universal-augmented-reality",
+      "universal-audio",
+      "universal-game-center",
+      "universal-gestures",
+      "universal-motion"
+    ],
+    "tags": [
+      "universal",
+      "foundations"
+    ]
+  },
+  "universal-materials": {
+    "relatedSections": [
+      "ios-ios-color",
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-privacy",
+      "universal-inclusion"
+    ],
+    "backlinks": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-buttons",
+      "ios-ios-controls",
+      "ios-ios-views",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers",
+      "ios-ios-sliders",
+      "ios-ios-steppers",
+      "ios-ios-lists-and-tables",
+      "ios-ios-switches",
+      "ios-ios-sheets",
+      "ios-ios-alerts",
+      "ios-ios-collection-views",
+      "ios-ios-action-sheets",
+      "ios-ios-popovers",
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts",
+      "ios-ios-sf-symbols",
+      "ios-ios-live-activities",
+      "ios-ios-images",
+      "ios-ios-animation",
+      "ios-ios-system-icons",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "macos-macos-windows",
+      "macos-macos-overview",
+      "macos-macos-menus",
+      "macos-macos-toolbars",
+      "macos-macos-dock",
+      "macos-macos-touch-bar",
+      "macos-macos-controls",
+      "macos-macos-buttons",
+      "watchos-watchos-overview",
+      "watchos-watchos-complications",
+      "watchos-watchos-digital-crown",
+      "watchos-watchos-notifications",
+      "watchos-watchos-gestures",
+      "tvos-tvos-overview",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control",
+      "visionos-visionos-overview",
+      "visionos-visionos-spatial-design",
+      "visionos-visionos-immersive-experiences",
+      "visionos-visionos-windows",
+      "visionos-visionos-eyes-and-hands",
+      "visionos-visionos-gestures",
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-privacy",
+      "universal-inclusion",
+      "universal-branding",
+      "universal-dark-mode",
+      "universal-visual-effects",
+      "universal-machine-learning",
+      "universal-augmented-reality",
+      "universal-audio",
+      "universal-game-center",
+      "universal-gestures",
+      "universal-motion"
+    ],
+    "tags": [
+      "universal",
+      "color-and-materials"
+    ]
+  },
+  "universal-dark-mode": {
+    "relatedSections": [
+      "ios-ios-color",
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-privacy",
+      "universal-inclusion"
+    ],
+    "backlinks": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-buttons",
+      "ios-ios-controls",
+      "ios-ios-views",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers",
+      "ios-ios-sliders",
+      "ios-ios-steppers",
+      "ios-ios-lists-and-tables",
+      "ios-ios-switches",
+      "ios-ios-sheets",
+      "ios-ios-alerts",
+      "ios-ios-collection-views",
+      "ios-ios-action-sheets",
+      "ios-ios-popovers",
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts",
+      "ios-ios-sf-symbols",
+      "ios-ios-live-activities",
+      "ios-ios-images",
+      "ios-ios-animation",
+      "ios-ios-system-icons",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "macos-macos-windows",
+      "macos-macos-overview",
+      "macos-macos-menus",
+      "macos-macos-toolbars",
+      "macos-macos-dock",
+      "macos-macos-touch-bar",
+      "macos-macos-controls",
+      "macos-macos-buttons",
+      "watchos-watchos-overview",
+      "watchos-watchos-complications",
+      "watchos-watchos-digital-crown",
+      "watchos-watchos-notifications",
+      "watchos-watchos-gestures",
+      "tvos-tvos-overview",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control",
+      "visionos-visionos-overview",
+      "visionos-visionos-spatial-design",
+      "visionos-visionos-immersive-experiences",
+      "visionos-visionos-windows",
+      "visionos-visionos-eyes-and-hands",
+      "visionos-visionos-gestures",
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-privacy",
+      "universal-inclusion",
+      "universal-branding",
+      "universal-materials",
+      "universal-visual-effects",
+      "universal-machine-learning",
+      "universal-augmented-reality",
+      "universal-audio",
+      "universal-game-center",
+      "universal-gestures",
+      "universal-motion"
+    ],
+    "tags": [
+      "universal",
+      "color-and-materials"
+    ]
+  },
+  "universal-visual-effects": {
+    "relatedSections": [
+      "ios-ios-buttons",
+      "macos-macos-buttons",
+      "watchos-watchos-complications",
+      "universal-accessibility",
+      "universal-design-principles"
+    ],
+    "backlinks": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-buttons",
+      "ios-ios-controls",
+      "ios-ios-views",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers",
+      "ios-ios-sliders",
+      "ios-ios-steppers",
+      "ios-ios-lists-and-tables",
+      "ios-ios-switches",
+      "ios-ios-sheets",
+      "ios-ios-alerts",
+      "ios-ios-collection-views",
+      "ios-ios-action-sheets",
+      "ios-ios-popovers",
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts",
+      "ios-ios-sf-symbols",
+      "ios-ios-live-activities",
+      "ios-ios-images",
+      "ios-ios-animation",
+      "ios-ios-system-icons",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "macos-macos-windows",
+      "macos-macos-overview",
+      "macos-macos-menus",
+      "macos-macos-toolbars",
+      "macos-macos-dock",
+      "macos-macos-touch-bar",
+      "macos-macos-controls",
+      "macos-macos-buttons",
+      "watchos-watchos-overview",
+      "watchos-watchos-complications",
+      "watchos-watchos-digital-crown",
+      "watchos-watchos-notifications",
+      "watchos-watchos-gestures",
+      "tvos-tvos-overview",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control",
+      "visionos-visionos-overview",
+      "visionos-visionos-spatial-design",
+      "visionos-visionos-immersive-experiences",
+      "visionos-visionos-windows",
+      "visionos-visionos-eyes-and-hands",
+      "visionos-visionos-gestures",
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-privacy",
+      "universal-inclusion",
+      "universal-branding",
+      "universal-materials",
+      "universal-dark-mode",
+      "universal-machine-learning",
+      "universal-augmented-reality",
+      "universal-audio",
+      "universal-game-center",
+      "universal-gestures",
+      "universal-motion"
+    ],
+    "tags": [
+      "universal",
+      "visual-design"
+    ]
+  },
+  "universal-machine-learning": {
+    "relatedSections": [
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-privacy",
+      "universal-inclusion",
+      "universal-branding"
+    ],
+    "backlinks": [],
+    "tags": [
+      "universal",
+      "technologies"
+    ]
+  },
+  "universal-augmented-reality": {
+    "relatedSections": [
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-privacy",
+      "universal-inclusion",
+      "universal-branding"
+    ],
+    "backlinks": [],
+    "tags": [
+      "universal",
+      "technologies"
+    ]
+  },
+  "universal-audio": {
+    "relatedSections": [
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-privacy",
+      "universal-inclusion",
+      "universal-branding"
+    ],
+    "backlinks": [],
+    "tags": [
+      "universal",
+      "technologies"
+    ]
+  },
+  "universal-game-center": {
+    "relatedSections": [
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-privacy",
+      "universal-inclusion",
+      "universal-branding"
+    ],
+    "backlinks": [],
+    "tags": [
+      "universal",
+      "technologies"
+    ]
+  },
+  "universal-gestures": {
+    "relatedSections": [
+      "ios-ios-animation",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "watchos-watchos-gestures"
+    ],
+    "backlinks": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-controls",
+      "ios-ios-views",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers",
+      "ios-ios-sliders",
+      "ios-ios-steppers",
+      "ios-ios-lists-and-tables",
+      "ios-ios-switches",
+      "ios-ios-sheets",
+      "ios-ios-alerts",
+      "ios-ios-collection-views",
+      "ios-ios-action-sheets",
+      "ios-ios-popovers",
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts",
+      "ios-ios-sf-symbols",
+      "ios-ios-live-activities",
+      "ios-ios-images",
+      "ios-ios-animation",
+      "ios-ios-system-icons",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "macos-macos-windows",
+      "macos-macos-overview",
+      "macos-macos-menus",
+      "macos-macos-toolbars",
+      "macos-macos-dock",
+      "macos-macos-touch-bar",
+      "macos-macos-controls",
+      "watchos-watchos-overview",
+      "watchos-watchos-complications",
+      "watchos-watchos-digital-crown",
+      "watchos-watchos-notifications",
+      "watchos-watchos-gestures",
+      "tvos-tvos-overview",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control",
+      "visionos-visionos-overview",
+      "visionos-visionos-spatial-design",
+      "visionos-visionos-immersive-experiences",
+      "visionos-visionos-windows",
+      "visionos-visionos-eyes-and-hands",
+      "visionos-visionos-gestures",
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-privacy",
+      "universal-inclusion",
+      "universal-branding",
+      "universal-materials",
+      "universal-dark-mode",
+      "universal-visual-effects",
+      "universal-machine-learning",
+      "universal-augmented-reality",
+      "universal-audio",
+      "universal-game-center",
+      "universal-motion"
+    ],
+    "tags": [
+      "universal",
+      "motion"
+    ]
+  },
+  "universal-motion": {
+    "relatedSections": [
+      "ios-ios-animation",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "watchos-watchos-gestures"
+    ],
+    "backlinks": [
+      "ios-ios-overview",
+      "ios-ios-app-icons",
+      "ios-ios-accessibility",
+      "ios-ios-color",
+      "ios-ios-buttons",
+      "ios-ios-controls",
+      "ios-ios-views",
+      "ios-ios-tab-bars",
+      "ios-ios-sidebars",
+      "ios-ios-toolbars",
+      "ios-ios-text-fields",
+      "ios-ios-search",
+      "ios-ios-forms",
+      "ios-ios-pickers",
+      "ios-ios-sliders",
+      "ios-ios-steppers",
+      "ios-ios-lists-and-tables",
+      "ios-ios-switches",
+      "ios-ios-sheets",
+      "ios-ios-alerts",
+      "ios-ios-collection-views",
+      "ios-ios-action-sheets",
+      "ios-ios-popovers",
+      "ios-ios-notifications",
+      "ios-ios-widgets",
+      "ios-ios-sharing",
+      "ios-ios-app-extensions",
+      "ios-ios-shortcuts",
+      "ios-ios-sf-symbols",
+      "ios-ios-live-activities",
+      "ios-ios-images",
+      "ios-ios-animation",
+      "ios-ios-system-icons",
+      "ios-ios-gestures",
+      "ios-ios-feedback",
+      "ios-ios-haptics",
+      "macos-macos-windows",
+      "macos-macos-overview",
+      "macos-macos-menus",
+      "macos-macos-toolbars",
+      "macos-macos-dock",
+      "macos-macos-touch-bar",
+      "macos-macos-controls",
+      "macos-macos-buttons",
+      "watchos-watchos-overview",
+      "watchos-watchos-complications",
+      "watchos-watchos-digital-crown",
+      "watchos-watchos-notifications",
+      "watchos-watchos-gestures",
+      "tvos-tvos-overview",
+      "tvos-tvos-focus-and-selection",
+      "tvos-tvos-remote-control",
+      "visionos-visionos-overview",
+      "visionos-visionos-spatial-design",
+      "visionos-visionos-immersive-experiences",
+      "visionos-visionos-windows",
+      "visionos-visionos-eyes-and-hands",
+      "visionos-visionos-gestures",
+      "universal-accessibility",
+      "universal-design-principles",
+      "universal-privacy",
+      "universal-inclusion",
+      "universal-branding",
+      "universal-materials",
+      "universal-dark-mode",
+      "universal-visual-effects",
+      "universal-machine-learning",
+      "universal-augmented-reality",
+      "universal-audio",
+      "universal-game-center",
+      "universal-gestures"
+    ],
+    "tags": [
+      "universal",
+      "motion"
+    ]
+  }
+}

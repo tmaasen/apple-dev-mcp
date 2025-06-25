@@ -1,0 +1,28 @@
+{
+  "lastUpdated": "2025-06-25T02:54:29.455Z",
+  "totalSections": 78,
+  "sectionsByPlatform": {
+    "iOS": 39,
+    "macOS": 8,
+    "watchOS": 6,
+    "tvOS": 5,
+    "visionOS": 6,
+    "universal": 14
+  },
+  "sectionsByCategory": {
+    "foundations": 10,
+    "icons-and-images": 4,
+    "color-and-materials": 3,
+    "typography": 1,
+    "layout": 5,
+    "visual-design": 4,
+    "selection-and-input": 14,
+    "presentation": 8,
+    "navigation": 8,
+    "system-capabilities": 9,
+    "motion": 8,
+    "technologies": 4
+  },
+  "totalSize": 854839,
+  "generationDuration": 99843
+}

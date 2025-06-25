@@ -214,12 +214,21 @@ GitHub Action (Every 4 Months)
 
 ### Key Components
 
+#### Core MCP Server
 - **HIGStaticContentProvider**: Primary content source loading pre-generated markdown files
 - **HIGScraper**: Fallback content extraction with intelligent selectors and rate limiting
 - **HIGCache**: Smart caching layer with TTL and graceful degradation (for scraping)
 - **HIGResourceProvider**: MCP resources with static-first, scraping-fallback architecture
 - **HIGToolProvider**: Interactive tools using pre-built search indices for fast results
-- **Content Generator**: Automated script that creates optimized static content every 4 months
+
+#### Content Generation Architecture (SOLID Principles)
+- **EnhancedContentGenerator**: Main orchestrator following dependency injection
+- **FileSystemService**: Single responsibility for file operations
+- **ContentProcessorService**: Processes and cleans content
+- **SearchIndexerService**: Generates search indices
+- **CrossReferenceGeneratorService**: Creates cross-references between sections
+- **ContentScraperService**: Enhanced extraction from Apple's SPA website
+- **ContentEnhancementStrategies**: Strategy pattern for platform-specific enhancements
 
 ## ⚡ Performance & Reliability
 
@@ -261,8 +270,36 @@ content/
 Each markdown file includes:
 - **Front matter**: Structured metadata (platform, category, URL, etc.)
 - **AI-optimized content**: Clean formatting, proper headers, cross-references
+- **Code examples**: SwiftUI/UIKit snippets with proper accessibility
+- **Design specifications**: Colors, spacing, typography, sizing guidelines
 - **Attribution**: Proper Apple attribution and fair use notices
 - **Table of contents**: For longer sections
+
+### Refactored Architecture (2025)
+
+The content generation system has been completely refactored to follow SOLID principles:
+
+```
+src/
+├── generators/
+│   └── enhanced-content-generator.ts    # Main orchestrator
+├── services/                            # Single responsibility services
+│   ├── file-system.service.ts
+│   ├── content-processor.service.ts
+│   ├── search-indexer.service.ts
+│   ├── content-scraper.service.ts
+│   └── cross-reference-generator.service.ts
+├── strategies/                          # Strategy pattern
+│   └── content-enhancement-strategies.ts
+└── interfaces/                          # Dependency injection
+    └── content-interfaces.ts
+```
+
+**Benefits of the new architecture:**
+- ✅ **Modular**: Each service has a single, clear responsibility
+- ✅ **Testable**: Dependency injection enables isolated unit testing
+- ✅ **Extensible**: Strategy pattern allows easy addition of new content types
+- ✅ **Maintainable**: Clear separation of concerns and DRY principles
 
 ## 🤝 Contributing
 
