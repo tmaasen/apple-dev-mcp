@@ -3,7 +3,7 @@
  * Following SOLID principles with clear separation of concerns
  */
 
-import { 
+import type { 
   HIGSection, 
   HIGCategory, 
   ApplePlatform, 
@@ -52,30 +52,6 @@ export interface ICrossReferenceGenerator {
   clear(): void;
 }
 
-// Single Responsibility: Network operations only
-export interface INetworkClient {
-  fetch(url: string): Promise<string>;
-  isRateLimited(): boolean;
-  waitForRateLimit(): Promise<void>;
-}
-
-// Single Responsibility: Content scraping only
-export interface IContentScraper {
-  scrapeContent(url: string): Promise<string>;
-  isValidUrl(url: string): boolean;
-}
-
-// Single Responsibility: Fallback content generation
-export interface IFallbackContentStrategy {
-  canHandle(section: HIGSection): boolean;
-  generateContent(section: HIGSection): string;
-}
-
-// Single Responsibility: Page discovery for dynamic section detection
-export interface IPageDiscovery {
-  discoverSections(): Promise<HIGSection[]>;
-  isValidHIGUrl(url: string): boolean;
-}
 
 // Single Responsibility: Content quality assessment
 export interface IContentQualityValidator {

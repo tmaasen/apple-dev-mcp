@@ -3,8 +3,8 @@
  * Single Responsibility: Generate cross-references between sections
  */
 
-import { ICrossReferenceGenerator } from '../interfaces/content-interfaces.js';
-import { HIGSection } from '../types.js';
+import type { ICrossReferenceGenerator } from '../interfaces/content-interfaces.js';
+import type { HIGSection } from '../types.js';
 
 export class CrossReferenceGeneratorService implements ICrossReferenceGenerator {
   private sections: HIGSection[] = [];

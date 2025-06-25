@@ -1,19 +1,20 @@
 import { HIGResourceProvider } from '../resources.js';
-import { HIGScraper } from '../scraper.js';
+import { CrawleeHIGService } from '../services/crawlee-hig.service.js';
 import { HIGCache } from '../cache.js';
 
 describe('HIGResourceProvider', () => {
   let cache: HIGCache;
-  let scraper: HIGScraper;
+  let crawleeService: CrawleeHIGService;
   let resourceProvider: HIGResourceProvider;
 
   beforeEach(() => {
     cache = new HIGCache(60);
-    scraper = new HIGScraper(cache);
-    resourceProvider = new HIGResourceProvider(scraper, cache);
+    crawleeService = new CrawleeHIGService(cache);
+    resourceProvider = new HIGResourceProvider(crawleeService, cache);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    await crawleeService.teardown();
     cache.clear();
   });
 
@@ -37,7 +38,7 @@ describe('HIGResourceProvider', () => {
         }
       ];
 
-      jest.spyOn(scraper, 'discoverSections').mockResolvedValue(mockSections);
+      jest.spyOn(crawleeService, 'discoverSections').mockResolvedValue(mockSections);
 
       const resources = await resourceProvider.listResources();
       
@@ -48,7 +49,7 @@ describe('HIGResourceProvider', () => {
     });
 
     test('should include special update resources', async () => {
-      jest.spyOn(scraper, 'discoverSections').mockResolvedValue([]);
+      jest.spyOn(crawleeService, 'discoverSections').mockResolvedValue([]);
 
       const resources = await resourceProvider.listResources();
       
@@ -73,8 +74,8 @@ describe('HIGResourceProvider', () => {
         }
       ];
 
-      jest.spyOn(scraper, 'discoverSections').mockResolvedValue(mockSections);
-      jest.spyOn(scraper, 'fetchSectionContent').mockResolvedValue({
+      jest.spyOn(crawleeService, 'discoverSections').mockResolvedValue(mockSections);
+      jest.spyOn(crawleeService, 'fetchSectionContent').mockResolvedValue({
         ...mockSections[0],
         content: 'iOS button guidelines'
       });
@@ -98,8 +99,8 @@ describe('HIGResourceProvider', () => {
         }
       ];
 
-      jest.spyOn(scraper, 'discoverSections').mockResolvedValue(mockSections);
-      jest.spyOn(scraper, 'fetchSectionContent').mockResolvedValue({
+      jest.spyOn(crawleeService, 'discoverSections').mockResolvedValue(mockSections);
+      jest.spyOn(crawleeService, 'fetchSectionContent').mockResolvedValue({
         ...mockSections[0],
         content: 'Visual design principles'
       });

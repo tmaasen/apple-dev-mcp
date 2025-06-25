@@ -3,8 +3,8 @@
  * Single Responsibility: Generate and manage search indices
  */
 
-import { ISearchIndexer, IContentProcessor } from '../interfaces/content-interfaces.js';
-import { HIGSection } from '../types.js';
+import type { ISearchIndexer, IContentProcessor } from '../interfaces/content-interfaces.js';
+import type { HIGSection } from '../types.js';
 
 export class SearchIndexerService implements ISearchIndexer {
   private searchIndex: Record<string, any> = {};

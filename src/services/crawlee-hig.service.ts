@@ -8,9 +8,9 @@
  * Single Page Application architecture.
  */
 
-import { PlaywrightCrawler, Dataset } from '@crawlee/playwright';
-import { HIGSection, ApplePlatform, HIGCategory, SearchResult, ScrapingConfig } from '../types.js';
-import { HIGCache } from '../cache.js';
+import { PlaywrightCrawler } from '@crawlee/playwright';
+import type { HIGSection, ApplePlatform, HIGCategory, SearchResult, ScrapingConfig } from '../types.js';
+import type { HIGCache } from '../cache.js';
 import { HIGDiscoveryService } from './hig-discovery.service.js';
 
 export interface ContentExtractionResult {
@@ -128,74 +128,72 @@ export class CrawleeHIGService {
    * Extract content using Crawlee's PlaywrightCrawler
    */
   private async extractContentWithCrawlee(url: string): Promise<ContentExtractionResult> {
-    return new Promise(async (resolve, reject) => {
-      let extractedContent = '';
-      let extractionQuality = 0;
-      
-      // Respect rate limiting
-      await this.respectRateLimit();
+    let extractedContent = '';
+    let extractionQuality = 0;
+    
+    // Respect rate limiting
+    await this.respectRateLimit();
 
-      const crawler = new PlaywrightCrawler({
-        requestHandler: async ({ page, request }) => {
-          try {
-            console.log(`[CrawleeHIG] Processing: ${request.url}`);
-            
-            // Wait for SPA to load completely
-            await page.waitForLoadState('networkidle', { 
-              timeout: this.config.waitOptions.timeout 
-            });
-            
-            // Additional wait to ensure dynamic content is loaded
-            await page.waitForTimeout(this.config.waitOptions.networkIdle);
+    const crawler = new PlaywrightCrawler({
+      requestHandler: async ({ page, request }) => {
+        try {
+          console.log(`[CrawleeHIG] Processing: ${request.url}`);
+          
+          // Wait for SPA to load completely
+          await page.waitForLoadState('networkidle', { 
+            timeout: this.config.waitOptions.timeout 
+          });
+          
+          // Additional wait to ensure dynamic content is loaded
+          await page.waitForTimeout(this.config.waitOptions.networkIdle);
 
-            // Extract content from the page
-            const contentResult = await this.extractPageContent(page);
-            extractedContent = contentResult.content;
-            extractionQuality = contentResult.quality;
+          // Extract content from the page
+          const contentResult = await this.extractPageContent(page);
+          extractedContent = contentResult.content;
+          extractionQuality = contentResult.quality;
 
-            console.log(`[CrawleeHIG] Content extracted, length: ${extractedContent.length}, quality: ${extractionQuality}`);
+          console.log(`[CrawleeHIG] Content extracted, length: ${extractedContent.length}, quality: ${extractionQuality}`);
 
-          } catch (error) {
-            console.error(`[CrawleeHIG] Page processing error: ${error}`);
-            throw error;
-          }
-        },
-
-        // Crawler configuration
-        maxRequestsPerCrawl: 1, // Only process the target URL
-        maxConcurrency: 1, // One at a time for individual page extraction
-        
-        // Browser configuration
-        launchContext: {
-          launchOptions: {
-            headless: this.config.browserOptions.headless,
-            args: this.config.browserOptions.args
-          }
-        },
-
-        // Error handling
-        failedRequestHandler: async ({ request, error }) => {
-          const errorMessage = error instanceof Error ? error.message : String(error);
-          console.error(`[CrawleeHIG] Failed to process ${request.url}: ${errorMessage}`);
-          reject(new Error(`Failed to extract content from ${url}: ${errorMessage}`));
+        } catch (error) {
+          console.error(`[CrawleeHIG] Page processing error: ${error}`);
+          throw error;
         }
-      });
+      },
 
-      try {
-        // Run crawler on the specific URL
-        await crawler.run([{ url }]);
-        
-        resolve({
-          content: extractedContent,
-          quality: extractionQuality,
-          extractionMethod: 'crawlee',
-          timestamp: new Date()
-        });
+      // Crawler configuration
+      maxRequestsPerCrawl: 1, // Only process the target URL
+      maxConcurrency: 1, // One at a time for individual page extraction
+      
+      // Browser configuration
+      launchContext: {
+        launchOptions: {
+          headless: this.config.browserOptions.headless,
+          args: this.config.browserOptions.args
+        }
+      },
 
-      } catch (error) {
-        reject(error);
+      // Error handling
+      failedRequestHandler: async ({ request, error }) => {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error(`[CrawleeHIG] Failed to process ${request.url}: ${errorMessage}`);
+        throw new Error(`Failed to extract content from ${url}: ${errorMessage}`);
       }
     });
+
+    try {
+      // Run crawler on the specific URL
+      await crawler.run([{ url }]);
+      
+      return {
+        content: extractedContent,
+        quality: extractionQuality,
+        extractionMethod: 'crawlee',
+        timestamp: new Date()
+      };
+    } finally {
+      // Ensure crawler is properly torn down
+      await crawler.teardown();
+    }
   }
 
   /**
@@ -262,7 +260,7 @@ export class CrawleeHIGService {
             quality: this.calculateContentQuality(content)
           };
         }
-      } catch (error) {
+      } catch {
         // Try next selector
       }
     }
@@ -293,7 +291,7 @@ export class CrawleeHIGService {
             quality: this.calculateContentQuality(content)
           };
         }
-      } catch (error) {
+      } catch {
         // Try next selector
       }
     }
@@ -315,12 +313,15 @@ export class CrawleeHIGService {
         ];
 
         unwantedSelectors.forEach(selector => {
+          // eslint-disable-next-line no-undef
           const elements = document.querySelectorAll(selector);
-          elements.forEach(el => el.remove());
+           
+          elements.forEach((el: Element) => el.remove());
         });
 
-        // Convert body to markdown
-        return this.convertElementToMarkdown(document.body);
+        // Convert body to markdown (simple text extraction)
+        // eslint-disable-next-line no-undef
+        return document.body?.textContent || '';
       });
 
       if (content && content.length > 200) {
@@ -329,7 +330,7 @@ export class CrawleeHIGService {
           quality: this.calculateContentQuality(content) * 0.7 // Lower quality score for body strategy
         };
       }
-    } catch (error) {
+    } catch {
       // Continue to fallback
     }
 
@@ -342,7 +343,8 @@ export class CrawleeHIGService {
   private async extractWithFallbackStrategy(page: any): Promise<{ content: string; quality: number }> {
     try {
       const content = await page.evaluate(() => {
-        return document.body.innerText || '';
+        // eslint-disable-next-line no-undef
+        return document.body?.innerText || '';
       });
 
       if (content && content.length > 100) {
@@ -351,7 +353,7 @@ export class CrawleeHIGService {
           quality: 0.3 // Low quality for plain text
         };
       }
-    } catch (error) {
+    } catch {
       // Final fallback
     }
 
@@ -411,7 +413,7 @@ export class CrawleeHIGService {
             }
             markdown += '\n';
             break;
-          case 'ol':
+          case 'ol': {
             let index = 1;
             for (const li of child.children) {
               if (li.tagName?.toLowerCase() === 'li') {
@@ -421,6 +423,7 @@ export class CrawleeHIGService {
             }
             markdown += '\n';
             break;
+          }
           default:
             // Recursively process child elements
             markdown += convertElement(child);
@@ -587,5 +590,17 @@ This content is sourced from Apple's Human Interface Guidelines: ${section.url}
     return results
       .sort((a, b) => b.relevanceScore - a.relevanceScore)
       .slice(0, limit);
+  }
+
+  /**
+   * Clean up service resources
+   */
+  async teardown(): Promise<void> {
+    // Clear cache if needed
+    this.cache.clear();
+    
+    // Reset counters
+    this.requestCount = 0;
+    this.lastRequestTime = 0;
   }
 }

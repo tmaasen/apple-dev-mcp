@@ -5,7 +5,7 @@
 
 import { promises as fs } from 'fs';
 import path from 'path';
-import { IFileSystemService } from '../interfaces/content-interfaces.js';
+import type { IFileSystemService } from '../interfaces/content-interfaces.js';
 
 export class FileSystemService implements IFileSystemService {
   async writeFile(filePath: string, content: string): Promise<void> {

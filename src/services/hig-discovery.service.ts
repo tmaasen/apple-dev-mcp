@@ -8,8 +8,8 @@
  */
 
 import { PlaywrightCrawler, Dataset } from '@crawlee/playwright';
-import { HIGSection, ApplePlatform, HIGCategory } from '../types.js';
-import { HIGCache } from '../cache.js';
+import type { HIGSection, ApplePlatform, HIGCategory } from '../types.js';
+import type { HIGCache } from '../cache.js';
 
 export interface DiscoveredLink {
   url: string;
@@ -179,7 +179,7 @@ export class HIGDiscoveryService {
         if (links.length > 0) {
           console.log(`[HIGDiscovery] Found ${links.length} links with selector: ${selector}`);
         }
-      } catch (error) {
+      } catch {
         // Selector not found, continue with next one
       }
     }
@@ -221,7 +221,7 @@ export class HIGDiscoveryService {
         for (const link of links) {
           await this.processDiscoveredLink(link, request, dataset);
         }
-      } catch (error) {
+      } catch {
         // Selector not found, continue
       }
     }
@@ -230,7 +230,7 @@ export class HIGDiscoveryService {
   /**
    * Process a discovered link and add it to our dataset
    */
-  private async processDiscoveredLink(link: any, request: any, dataset: any): Promise<void> {
+  private async processDiscoveredLink(link: any, _request: any, dataset: any): Promise<void> {
     if (!link.href || this.processedUrls.has(link.href)) {
       return;
     }
@@ -312,7 +312,7 @@ export class HIGDiscoveryService {
         if (title && title.length > 0 && title !== 'Human Interface Guidelines') {
           return this.cleanTitle(title);
         }
-      } catch (error) {
+      } catch {
         // Selector not found, try next
       }
     }
@@ -351,7 +351,7 @@ export class HIGDiscoveryService {
 
       return !excludePatterns.some(pattern => url.includes(pattern));
 
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -413,7 +413,7 @@ export class HIGDiscoveryService {
       const urlObj = new URL(url);
       const pathSegments = urlObj.pathname.split('/').filter(segment => segment.length > 0);
       return pathSegments.length;
-    } catch (error) {
+    } catch {
       return 0;
     }
   }

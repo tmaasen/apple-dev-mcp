@@ -6,37 +6,38 @@
  */
 
 import { HIGCache } from '../cache.js';
-import { HIGScraper } from '../scraper.js';
+import { CrawleeHIGService } from '../services/crawlee-hig.service.js';
 import { HIGResourceProvider } from '../resources.js';
 import { HIGToolProvider } from '../tools.js';
 
 describe('Server Component Integration', () => {
   let cache: HIGCache;
-  let scraper: HIGScraper;
+  let crawleeService: CrawleeHIGService;
   let resourceProvider: HIGResourceProvider;
   let toolProvider: HIGToolProvider;
 
   beforeEach(() => {
     cache = new HIGCache(60);
-    scraper = new HIGScraper(cache);
-    resourceProvider = new HIGResourceProvider(scraper, cache);
-    toolProvider = new HIGToolProvider(scraper, cache, resourceProvider);
+    crawleeService = new CrawleeHIGService(cache);
+    resourceProvider = new HIGResourceProvider(crawleeService, cache);
+    toolProvider = new HIGToolProvider(crawleeService, cache, resourceProvider);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    await crawleeService.teardown();
     cache.clear();
   });
 
   test('should initialize all server components', () => {
     expect(cache).toBeInstanceOf(HIGCache);
-    expect(scraper).toBeInstanceOf(HIGScraper);
+    expect(crawleeService).toBeInstanceOf(CrawleeHIGService);
     expect(resourceProvider).toBeInstanceOf(HIGResourceProvider);
     expect(toolProvider).toBeInstanceOf(HIGToolProvider);
   });
 
   test('should have proper component dependencies', () => {
     // Test that components are properly connected
-    expect(scraper).toBeDefined();
+    expect(crawleeService).toBeDefined();
     expect(resourceProvider).toBeDefined();
     expect(toolProvider).toBeDefined();
     

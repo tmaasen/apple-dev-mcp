@@ -23,7 +23,7 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 
 import { HIGCache } from './cache.js';
-import { HIGScraper } from './scraper.js';
+import { CrawleeHIGService } from './services/crawlee-hig.service.js';
 import { HIGResourceProvider } from './resources.js';
 import { HIGToolProvider } from './tools.js';
 import { HIGStaticContentProvider } from './static-content.js';
@@ -31,7 +31,7 @@ import { HIGStaticContentProvider } from './static-content.js';
 class AppleHIGMCPServer {
   private server: Server;
   private cache: HIGCache;
-  private scraper: HIGScraper;
+  private crawleeService: CrawleeHIGService;
   private staticContentProvider: HIGStaticContentProvider;
   private resourceProvider: HIGResourceProvider;
   private toolProvider: HIGToolProvider;
@@ -60,10 +60,10 @@ class AppleHIGMCPServer {
 
     // Initialize components
     this.cache = new HIGCache(3600); // 1 hour default TTL
-    this.scraper = new HIGScraper(this.cache);
+    this.crawleeService = new CrawleeHIGService(this.cache);
     this.staticContentProvider = new HIGStaticContentProvider();
-    this.resourceProvider = new HIGResourceProvider(this.scraper, this.cache, this.staticContentProvider);
-    this.toolProvider = new HIGToolProvider(this.scraper, this.cache, this.resourceProvider, this.staticContentProvider);
+    this.resourceProvider = new HIGResourceProvider(this.crawleeService, this.cache, this.staticContentProvider);
+    this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.resourceProvider, this.staticContentProvider);
 
     this.setupHandlers();
   }
@@ -81,10 +81,10 @@ class AppleHIGMCPServer {
 
     // Validate dependencies are available
     try {
-      require('cheerio');
-      require('node-fetch');
+      require('@crawlee/playwright');
+      require('playwright');
       require('node-cache');
-    } catch (error) {
+    } catch {
       throw new Error(`Missing required dependencies. Run 'npm install' to install dependencies.`);
     }
   }

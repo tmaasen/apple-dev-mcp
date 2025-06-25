@@ -6,21 +6,21 @@
  */
 
 import { HIGCache } from './cache.js';
-import { HIGScraper } from './scraper.js';
+import { CrawleeHIGService } from './services/crawlee-hig.service.js';
 import { HIGResourceProvider } from './resources.js';
 import { HIGToolProvider } from './tools.js';
 
 class HealthChecker {
   private cache: HIGCache;
-  private scraper: HIGScraper;
+  private crawleeService: CrawleeHIGService;
   private resourceProvider: HIGResourceProvider;
   private toolProvider: HIGToolProvider;
 
   constructor() {
     this.cache = new HIGCache(3600);
-    this.scraper = new HIGScraper(this.cache);
-    this.resourceProvider = new HIGResourceProvider(this.scraper, this.cache);
-    this.toolProvider = new HIGToolProvider(this.scraper, this.cache, this.resourceProvider);
+    this.crawleeService = new CrawleeHIGService(this.cache);
+    this.resourceProvider = new HIGResourceProvider(this.crawleeService, this.cache);
+    this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.resourceProvider);
   }
 
   async runHealthCheck(): Promise<void> {
@@ -64,7 +64,7 @@ class HealthChecker {
     // Test 2: Section Discovery
     console.log('\n2️⃣  Testing section discovery...');
     try {
-      const sections = await this.scraper.discoverSections();
+      const sections = await this.crawleeService.discoverSections();
       
       if (sections.length > 0) {
         results.push({ test: 'Section Discovery', status: 'PASS', details: `Found ${sections.length} sections` });

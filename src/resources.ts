@@ -2,18 +2,18 @@
  * MCP Resources implementation for Apple HIG content
  */
 
-import { HIGScraper } from './scraper.js';
-import { HIGCache } from './cache.js';
-import { HIGStaticContentProvider } from './static-content.js';
-import { HIGResource, ApplePlatform, HIGCategory } from './types.js';
+import type { CrawleeHIGService } from './services/crawlee-hig.service.js';
+import type { HIGCache } from './cache.js';
+import type { HIGStaticContentProvider } from './static-content.js';
+import type { HIGResource, ApplePlatform, HIGCategory } from './types.js';
 
 export class HIGResourceProvider {
-  private scraper: HIGScraper;
+  private crawleeService: CrawleeHIGService;
   private cache: HIGCache;
   private staticContentProvider?: HIGStaticContentProvider;
 
-  constructor(scraper: HIGScraper, cache: HIGCache, staticContentProvider?: HIGStaticContentProvider) {
-    this.scraper = scraper;
+  constructor(crawleeService: CrawleeHIGService, cache: HIGCache, staticContentProvider?: HIGStaticContentProvider) {
+    this.crawleeService = crawleeService;
     this.cache = cache;
     this.staticContentProvider = staticContentProvider;
   }
@@ -44,7 +44,7 @@ export class HIGResourceProvider {
     }
 
     try {
-      const sections = await this.scraper.discoverSections();
+      const sections = await this.crawleeService.discoverSections();
       const resources: HIGResource[] = [];
 
       // Platform-specific resource collections
@@ -253,7 +253,7 @@ export class HIGResourceProvider {
     name: string;
     description: string;
   }> {
-    const sections = await this.scraper.discoverSections();
+    const sections = await this.crawleeService.discoverSections();
     const platformSections = sections.filter(s => s.platform === platform);
 
     let content = `# ${platform} Human Interface Guidelines\n\n`;
@@ -263,7 +263,7 @@ export class HIGResourceProvider {
     content += this.getAttributionText();
 
     for (const section of platformSections) {
-      const sectionWithContent = await this.scraper.fetchSectionContent(section);
+      const sectionWithContent = await this.crawleeService.fetchSectionContent(section);
       if (sectionWithContent.content) {
         content += `## ${section.title}\n\n`;
         content += `**URL:** ${section.url}\n\n`;
@@ -287,7 +287,7 @@ export class HIGResourceProvider {
     name: string;
     description: string;
   }> {
-    const sections = await this.scraper.discoverSections();
+    const sections = await this.crawleeService.discoverSections();
     const categorySections = sections.filter(s => 
       s.platform === platform && s.category === category
     );
@@ -300,7 +300,7 @@ export class HIGResourceProvider {
     content += this.getAttributionText();
 
     for (const section of categorySections) {
-      const sectionWithContent = await this.scraper.fetchSectionContent(section);
+      const sectionWithContent = await this.crawleeService.fetchSectionContent(section);
       if (sectionWithContent.content) {
         content += `## ${section.title}\n\n`;
         content += `**URL:** ${section.url}\n\n`;

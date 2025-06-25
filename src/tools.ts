@@ -2,11 +2,11 @@
  * MCP Tools implementation for Apple HIG interactive functionality
  */
 
-import { HIGScraper } from './scraper.js';
-import { HIGCache } from './cache.js';
-import { HIGResourceProvider } from './resources.js';
-import { HIGStaticContentProvider } from './static-content.js';
-import { 
+import type { CrawleeHIGService } from './services/crawlee-hig.service.js';
+import type { HIGCache } from './cache.js';
+import type { HIGResourceProvider } from './resources.js';
+import type { HIGStaticContentProvider } from './static-content.js';
+import type { 
   SearchGuidelinesArgs, 
   GetComponentSpecArgs, 
   ComparePlatformsArgs, 
@@ -17,14 +17,14 @@ import {
 } from './types.js';
 
 export class HIGToolProvider {
-  private scraper: HIGScraper;
-  private cache: HIGCache;
+  private crawleeService: CrawleeHIGService;
+  private _cache: HIGCache;
   private resourceProvider: HIGResourceProvider;
   private staticContentProvider?: HIGStaticContentProvider;
 
-  constructor(scraper: HIGScraper, cache: HIGCache, resourceProvider: HIGResourceProvider, staticContentProvider?: HIGStaticContentProvider) {
-    this.scraper = scraper;
-    this.cache = cache;
+  constructor(crawleeService: CrawleeHIGService, cache: HIGCache, resourceProvider: HIGResourceProvider, staticContentProvider?: HIGStaticContentProvider) {
+    this.crawleeService = crawleeService;
+    this._cache = cache;
     this.resourceProvider = resourceProvider;
     this.staticContentProvider = staticContentProvider;
   }
@@ -97,7 +97,7 @@ export class HIGToolProvider {
       
       // Fallback to scraper search
       if (!results) {
-        results = await this.scraper.searchContent(query.trim(), platform, category, limit);
+        results = await this.crawleeService.searchContent(query.trim(), platform, category, limit);
         
         if (process.env.NODE_ENV === 'development') {
           console.log(`[HIGTools] Using scraper search for: "${query}"`);
@@ -208,7 +208,7 @@ export class HIGToolProvider {
       
       // Fallback to scraper search
       if (!searchResults) {
-        searchResults = await this.scraper.searchContent(trimmedComponentName, platform);
+        searchResults = await this.crawleeService.searchContent(trimmedComponentName, platform);
       }
       
       if (searchResults.length === 0) {
@@ -223,7 +223,7 @@ export class HIGToolProvider {
       const bestMatch = searchResults[0];
       
       // Get detailed content for the component
-      const sections = await this.scraper.discoverSections();
+      const sections = await this.crawleeService.discoverSections();
       const componentSection = sections.find(s => s.id === bestMatch.id);
       
       if (!componentSection) {
@@ -235,7 +235,7 @@ export class HIGToolProvider {
         };
       }
 
-      const sectionWithContent = await this.scraper.fetchSectionContent(componentSection);
+      const sectionWithContent = await this.crawleeService.fetchSectionContent(componentSection);
       
       // Extract component specifications from content
       const component: HIGComponent = {
@@ -374,7 +374,7 @@ export class HIGToolProvider {
       const currentDesignSummary = `Apple's current design system represents the latest evolution in interface design, featuring advanced materials, adaptive elements, and seamless integration across all Apple platforms with enhanced visual hierarchy and user experience improvements.`;
       
       // Generate mock updates based on current sections (in a real implementation, this would track actual changes)
-      const sections = await this.scraper.discoverSections();
+      const sections = await this.crawleeService.discoverSections();
       let filteredSections = sections;
       
       if (platform && platform !== 'universal') {
@@ -507,7 +507,7 @@ export class HIGToolProvider {
    * Find related components
    */
   private async findRelatedComponents(componentName: string, platform: ApplePlatform): Promise<string[]> {
-    const sections = await this.scraper.discoverSections();
+    const sections = await this.crawleeService.discoverSections();
     const platformSections = sections.filter(s => s.platform === platform);
     
     // Simple related component finding based on similar titles

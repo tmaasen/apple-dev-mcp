@@ -7,7 +7,7 @@ import { HIGDiscoveryService } from '../services/hig-discovery.service.js';
 import { CrawleeHIGService } from '../services/crawlee-hig.service.js';
 import { HIGContentExtractor } from '../services/hig-content-extractor.service.js';
 import { ContentQualityValidatorService } from '../services/content-quality-validator.service.js';
-import { HIGSection } from '../types.js';
+import type { HIGSection } from '../types.js';
 
 // Mock node-fetch to avoid actual network requests during tests
 jest.mock('node-fetch');
@@ -27,8 +27,10 @@ describe('Crawlee-based HIG Architecture', () => {
     qualityValidator = new ContentQualityValidatorService();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     // Clean up any resources
+    await crawleeService.teardown();
+    cache.clear();
   });
 
   describe('HIGDiscoveryService', () => {
@@ -240,7 +242,7 @@ Apple's Human Interface Guidelines provide the foundation for great iOS app desi
           expect(stats.totalSections).toBeGreaterThan(0);
         }
         
-      } catch (error) {
+      } catch {
         // Expected in test environment due to mocking
         console.log('Integration test completed with expected mocking limitations');
       }
@@ -271,44 +273,4 @@ Apple's Human Interface Guidelines provide the foundation for great iOS app desi
   });
 });
 
-// Helper functions for testing
-function createMockSection(overrides: Partial<HIGSection> = {}): HIGSection {
-  return {
-    id: 'mock-section',
-    title: 'Mock Section',
-    url: 'https://developer.apple.com/design/human-interface-guidelines/mock',
-    platform: 'iOS',
-    category: 'foundations',
-    ...overrides
-  };
-}
-
-function createSampleContent(type: 'good' | 'poor' | 'fallback' = 'good'): string {
-  switch (type) {
-    case 'good':
-      return `
-# iOS Design Guidelines
-
-Apple's Human Interface Guidelines provide comprehensive design guidance.
-
-## Key Principles
-- Clarity
-- Deference  
-- Depth
-
-## Implementation
-Use these guidelines to create intuitive user interfaces.
-
-\`\`\`swift
-// Example code
-Button("Action") { }
-\`\`\`
-`;
-    case 'poor':
-      return 'Short content without structure.';
-    case 'fallback':
-      return 'This page requires JavaScript. Please turn on JavaScript in your browser.';
-    default:
-      return '';
-  }
-}
+// Helper functions for testing (may be used in future test expansions)

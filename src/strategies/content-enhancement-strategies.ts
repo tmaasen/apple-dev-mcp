@@ -3,8 +3,8 @@
  * Following Strategy Pattern for different content enhancement types
  */
 
-import { IContentEnhancer } from '../interfaces/content-interfaces.js';
-import { HIGSection } from '../types.js';
+import type { IContentEnhancer } from '../interfaces/content-interfaces.js';
+import type { HIGSection } from '../types.js';
 
 // Base abstract class for common functionality
 abstract class BaseContentEnhancer implements IContentEnhancer {

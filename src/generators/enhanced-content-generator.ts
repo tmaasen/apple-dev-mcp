@@ -9,7 +9,7 @@ import path from 'path';
 import { HIGCache } from '../cache.js';
 import { CrawleeHIGService } from '../services/crawlee-hig.service.js';
 import { HIGContentExtractor } from '../services/hig-content-extractor.service.js';
-import { HIGSection, ContentQualityMetrics, ExtractionStatistics } from '../types.js';
+import type { HIGSection, ContentQualityMetrics, ExtractionStatistics } from '../types.js';
 
 // Services (Dependency Injection)
 import { FileSystemService } from '../services/file-system.service.js';
@@ -19,13 +19,12 @@ import { CrossReferenceGeneratorService } from '../services/cross-reference-gene
 import { ContentEnhancerFactory } from '../strategies/content-enhancement-strategies.js';
 
 // Interfaces
-import { 
+import type { 
   IFileSystemService, 
   IContentProcessor, 
   ISearchIndexer, 
   ICrossReferenceGenerator,
-  ContentGenerationConfig,
-  GenerationMetadata
+  ContentGenerationConfig
 } from '../interfaces/content-interfaces.js';
 
 /**

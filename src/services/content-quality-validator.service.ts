@@ -5,14 +5,13 @@
  * to ensure compliance with the 95%+ real content SLA.
  */
 
-import { 
+import type { 
   HIGSection, 
   ContentQualityMetrics, 
   QualityValidationResult, 
-  ExtractionStatistics,
-  ProcessedContent 
+  ExtractionStatistics
 } from '../types.js';
-import { IContentQualityValidator, IExtractionMonitor } from '../interfaces/content-interfaces.js';
+import type { IContentQualityValidator, IExtractionMonitor } from '../interfaces/content-interfaces.js';
 
 export interface ValidationThresholds {
   minQualityScore: number;
@@ -234,7 +233,7 @@ export class ContentQualityValidatorService implements IContentQualityValidator,
 
   // Private helper methods
 
-  private calculateBasicQuality(content: string, section: HIGSection): ContentQualityMetrics {
+  private calculateBasicQuality(content: string, _section: HIGSection): ContentQualityMetrics {
     const score = this.calculateQualityScore(content);
     const isFallbackContent = this.detectFallbackContent(content);
     
@@ -325,7 +324,7 @@ export class ContentQualityValidatorService implements IContentQualityValidator,
     confidence: number,
     issues: string[],
     recommendations: string[],
-    sectionId: string
+    _sectionId: string
   ): QualityValidationResult {
     return {
       isValid,

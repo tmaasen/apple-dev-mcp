@@ -3,7 +3,7 @@
  */
 
 import NodeCache from 'node-cache';
-import { CacheEntry } from './types.js';
+import type { CacheEntry } from './types.js';
 
 export class HIGCache {
   private cache: NodeCache;
@@ -164,5 +164,12 @@ export class HIGCache {
     entries.forEach(entry => {
       this.set(entry.key, entry.data, entry.ttl);
     });
+  }
+
+  /**
+   * Clean up cache resources
+   */
+  destroy(): void {
+    this.cache.close();
   }
 }

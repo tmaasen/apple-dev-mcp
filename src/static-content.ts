@@ -6,7 +6,7 @@
 
 import { promises as fs } from 'fs';
 import path from 'path';
-import { HIGResource, ApplePlatform, HIGCategory, SearchResult } from './types.js';
+import type { HIGResource, ApplePlatform, HIGCategory, SearchResult } from './types.js';
 
 interface StaticContentMetadata {
   lastUpdated: string;

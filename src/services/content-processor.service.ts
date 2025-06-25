@@ -3,8 +3,8 @@
  * Single Responsibility: Process and clean content
  */
 
-import { IContentProcessor } from '../interfaces/content-interfaces.js';
-import { HIGSection } from '../types.js';
+import type { IContentProcessor } from '../interfaces/content-interfaces.js';
+import type { HIGSection } from '../types.js';
 
 export class ContentProcessorService implements IContentProcessor {
   private readonly commonWords = new Set([

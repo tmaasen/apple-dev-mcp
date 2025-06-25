@@ -5,7 +5,7 @@
  * with advanced quality scoring and validation to achieve 95%+ real content SLA.
  */
 
-import { HIGSection } from '../types.js';
+import type { HIGSection } from '../types.js';
 
 export interface ContentQualityMetrics {
   score: number; // 0-1, where 1 is highest quality
@@ -267,7 +267,7 @@ export class HIGContentExtractor {
     
     // Add frequently mentioned words
     Array.from(wordCount.entries())
-      .filter(([word, count]) => count >= 3)
+      .filter(([, count]) => count >= 3)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 20)
       .forEach(([word]) => keywords.add(word));

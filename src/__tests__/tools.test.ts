@@ -1,22 +1,23 @@
 import { HIGToolProvider } from '../tools.js';
-import { HIGScraper } from '../scraper.js';
+import { CrawleeHIGService } from '../services/crawlee-hig.service.js';
 import { HIGCache } from '../cache.js';
 import { HIGResourceProvider } from '../resources.js';
 
 describe('HIGToolProvider', () => {
   let cache: HIGCache;
-  let scraper: HIGScraper;
+  let crawleeService: CrawleeHIGService;
   let resourceProvider: HIGResourceProvider;
   let toolProvider: HIGToolProvider;
 
   beforeEach(() => {
     cache = new HIGCache(60);
-    scraper = new HIGScraper(cache);
-    resourceProvider = new HIGResourceProvider(scraper, cache);
-    toolProvider = new HIGToolProvider(scraper, cache, resourceProvider);
+    crawleeService = new CrawleeHIGService(cache);
+    resourceProvider = new HIGResourceProvider(crawleeService, cache);
+    toolProvider = new HIGToolProvider(crawleeService, cache, resourceProvider);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    await crawleeService.teardown();
     cache.clear();
   });
 
@@ -34,7 +35,7 @@ describe('HIGToolProvider', () => {
         }
       ];
 
-      jest.spyOn(scraper, 'searchContent').mockResolvedValue(mockSearchResults);
+      jest.spyOn(crawleeService, 'searchContent').mockResolvedValue(mockSearchResults);
       jest.spyOn(resourceProvider, 'getResource').mockResolvedValue({
         uri: 'hig://ios',
         name: 'iOS Guidelines',
@@ -56,7 +57,7 @@ describe('HIGToolProvider', () => {
     });
 
     test('should handle search errors gracefully', async () => {
-      jest.spyOn(scraper, 'searchContent').mockRejectedValue(new Error('Search failed'));
+      jest.spyOn(crawleeService, 'searchContent').mockRejectedValue(new Error('Search failed'));
 
       await expect(toolProvider.searchGuidelines({
         query: 'button'
@@ -94,9 +95,9 @@ describe('HIGToolProvider', () => {
         lastUpdated: new Date()
       };
 
-      jest.spyOn(scraper, 'searchContent').mockResolvedValue(mockSearchResults);
-      jest.spyOn(scraper, 'discoverSections').mockResolvedValue(mockSections);
-      jest.spyOn(scraper, 'fetchSectionContent').mockResolvedValue(mockSectionWithContent);
+      jest.spyOn(crawleeService, 'searchContent').mockResolvedValue(mockSearchResults);
+      jest.spyOn(crawleeService, 'discoverSections').mockResolvedValue(mockSections);
+      jest.spyOn(crawleeService, 'fetchSectionContent').mockResolvedValue(mockSectionWithContent);
 
       const result = await toolProvider.getComponentSpec({
         componentName: 'Button',
@@ -111,7 +112,7 @@ describe('HIGToolProvider', () => {
     });
 
     test('should return null for non-existent component', async () => {
-      jest.spyOn(scraper, 'searchContent').mockResolvedValue([]);
+      jest.spyOn(crawleeService, 'searchContent').mockResolvedValue([]);
 
       const result = await toolProvider.getComponentSpec({
         componentName: 'NonExistentComponent'
@@ -201,7 +202,7 @@ describe('HIGToolProvider', () => {
         content: 'Translucent materials with real-time rendering'
       };
 
-      jest.spyOn(scraper, 'discoverSections').mockResolvedValue(mockSections);
+      jest.spyOn(crawleeService, 'discoverSections').mockResolvedValue(mockSections);
       jest.spyOn(resourceProvider, 'getResource').mockResolvedValue(mockLiquidGlassResource);
 
       const result = await toolProvider.getLatestUpdates({
@@ -232,7 +233,7 @@ describe('HIGToolProvider', () => {
         }
       ];
 
-      jest.spyOn(scraper, 'discoverSections').mockResolvedValue(mockSections);
+      jest.spyOn(crawleeService, 'discoverSections').mockResolvedValue(mockSections);
       jest.spyOn(resourceProvider, 'getResource').mockResolvedValue({
         uri: 'hig://updates/latest-design-system',
         name: 'Liquid Glass',
