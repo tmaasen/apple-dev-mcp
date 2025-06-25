@@ -47,10 +47,13 @@
   },
   "homepage": "https://github.com/tannermaasen/apple-hig-mcp#readme",
   "dependencies": {
+    "@crawlee/playwright": "^3.13.8",
+    "@crawlee/utils": "^3.13.8",
     "@modelcontextprotocol/sdk": "^1.0.0",
     "cheerio": "^1.0.0-rc.12",
     "node-cache": "^5.1.2",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "playwright": "^1.53.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

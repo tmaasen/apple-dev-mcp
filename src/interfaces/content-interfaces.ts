@@ -3,7 +3,16 @@
  * Following SOLID principles with clear separation of concerns
  */
 
-import { HIGSection, HIGCategory, ApplePlatform } from '../types.js';
+import { 
+  HIGSection, 
+  HIGCategory, 
+  ApplePlatform, 
+  SearchResult,
+  ContentQualityMetrics,
+  ProcessedContent,
+  QualityValidationResult,
+  ExtractionStatistics
+} from '../types.js';
 
 // Single Responsibility: File system operations only
 export interface IFileSystemService {
@@ -60,6 +69,41 @@ export interface IContentScraper {
 export interface IFallbackContentStrategy {
   canHandle(section: HIGSection): boolean;
   generateContent(section: HIGSection): string;
+}
+
+// Single Responsibility: Page discovery for dynamic section detection
+export interface IPageDiscovery {
+  discoverSections(): Promise<HIGSection[]>;
+  isValidHIGUrl(url: string): boolean;
+}
+
+// Single Responsibility: Content quality assessment
+export interface IContentQualityValidator {
+  validateContent(content: string, section: HIGSection): Promise<QualityValidationResult>;
+  calculateQualityScore(content: string): number;
+  isHighQualityContent(metrics: ContentQualityMetrics): boolean;
+}
+
+// Single Responsibility: Advanced content extraction
+export interface IAdvancedContentExtractor {
+  extractContent(rawContent: string, section: HIGSection): Promise<ProcessedContent>;
+  extractCodeExamples(content: string): string[];
+  extractImageReferences(content: string): string[];
+  generateSummary(content: string, section: HIGSection): string;
+}
+
+// Single Responsibility: Crawlee-based scraping
+export interface ICrawleeHIGService {
+  discoverSections(): Promise<HIGSection[]>;
+  fetchSectionContent(section: HIGSection): Promise<HIGSection>;
+  searchContent(query: string, platform?: ApplePlatform, category?: HIGCategory, limit?: number): Promise<SearchResult[]>;
+}
+
+// Single Responsibility: Extraction statistics and monitoring
+export interface IExtractionMonitor {
+  recordExtraction(section: HIGSection, quality: ContentQualityMetrics): void;
+  getStatistics(): ExtractionStatistics;
+  generateReport(): string;
 }
 
 // Configuration value object
