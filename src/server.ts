@@ -26,13 +26,16 @@ import { HIGCache } from './cache.js';
 import { HIGScraper } from './scraper.js';
 import { HIGResourceProvider } from './resources.js';
 import { HIGToolProvider } from './tools.js';
+import { HIGStaticContentProvider } from './static-content.js';
 
 class AppleHIGMCPServer {
   private server: Server;
   private cache: HIGCache;
   private scraper: HIGScraper;
+  private staticContentProvider: HIGStaticContentProvider;
   private resourceProvider: HIGResourceProvider;
   private toolProvider: HIGToolProvider;
+  private useStaticContent: boolean = false;
 
   constructor() {
     this.server = new Server(
@@ -51,12 +54,16 @@ class AppleHIGMCPServer {
 
     // Validate environment
     this.validateEnvironment();
+    
+    // Initialize static content if available
+    this.initializeStaticContent();
 
     // Initialize components
     this.cache = new HIGCache(3600); // 1 hour default TTL
     this.scraper = new HIGScraper(this.cache);
-    this.resourceProvider = new HIGResourceProvider(this.scraper, this.cache);
-    this.toolProvider = new HIGToolProvider(this.scraper, this.cache, this.resourceProvider);
+    this.staticContentProvider = new HIGStaticContentProvider();
+    this.resourceProvider = new HIGResourceProvider(this.scraper, this.cache, this.staticContentProvider);
+    this.toolProvider = new HIGToolProvider(this.scraper, this.cache, this.resourceProvider, this.staticContentProvider);
 
     this.setupHandlers();
   }
@@ -98,6 +105,43 @@ class AppleHIGMCPServer {
     }
     
     return 0;
+  }
+  
+  /**
+   * Initialize static content provider if available
+   */
+  private async initializeStaticContent(): Promise<void> {
+    try {
+      const isAvailable = await this.staticContentProvider.isAvailable();
+      
+      if (isAvailable) {
+        await this.staticContentProvider.initialize();
+        this.useStaticContent = true;
+        
+        // Check if content is stale
+        const isStale = this.staticContentProvider.isContentStale();
+        const metadata = this.staticContentProvider.getMetadata();
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.log('✅ Static HIG content initialized');
+          console.log(`📊 Content: ${metadata?.totalSections || 0} sections`);
+          console.log(`📅 Last updated: ${metadata?.lastUpdated ? new Date(metadata.lastUpdated).toLocaleDateString() : 'unknown'}`);
+          
+          if (isStale) {
+            console.log('⚠️  Content is stale (>6 months old). Consider running content generation.');
+          }
+        }
+      } else {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('ℹ️  Static content not available. Using live scraping fallback.');
+        }
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('⚠️  Failed to initialize static content:', error);
+        console.log('ℹ️  Falling back to live scraping.');
+      }
+    }
   }
 
   /**
@@ -386,12 +430,15 @@ class AppleHIGMCPServer {
         console.log('ℹ️  for educational and development purposes.');
         console.log('');
       }
+      
+      // Initialize static content before starting the server
+      await this.initializeStaticContent();
 
       const transport = new StdioServerTransport();
       await this.server.connect(transport);
       
       if (process.env.NODE_ENV === 'development') {
-        console.log('🚀 Apple HIG MCP Server is ready!');
+        console.log(`🚀 Apple HIG MCP Server is ready! (Mode: ${this.useStaticContent ? 'Static Content' : 'Live Scraping'})`);
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';

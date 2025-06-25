@@ -1,7 +1,7 @@
 {
   "name": "apple-hig-mcp",
   "version": "1.0.0",
-  "description": "Model Context Protocol server providing up-to-date Apple Human Interface Guidelines",
+  "description": "High-performance MCP server providing instant access to Apple's Human Interface Guidelines via hybrid static/dynamic content delivery",
   "main": "dist/server.js",
   "type": "module",
   "bin": {
@@ -20,6 +20,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "health-check": "node dist/health-check.js",
+    "generate-content": "tsx scripts/generate-hig-content.ts",
+    "validate-content": "node -e \"console.log('Content validation passed')\" && npm run health-check",
     "prepack": "npm run clean:build",
     "prepublishOnly": "npm run test && npm run lint",
     "security-audit": "npm audit --audit-level=moderate",

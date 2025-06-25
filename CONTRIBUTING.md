@@ -1,6 +1,6 @@
 # Contributing to Apple HIG MCP Server
 
-Thank you for your interest in contributing to the Apple Human Interface Guidelines MCP Server! This project helps developers access Apple's latest design guidelines, including the Liquid Glass design system, directly within their AI-assisted development workflow.
+Thank you for your interest in contributing to the Apple Human Interface Guidelines MCP Server! This project helps developers access Apple's latest design guidelines directly within their AI-assisted development workflow using a hybrid static/dynamic content system.
 
 ## Table of Contents
 
@@ -9,6 +9,7 @@ Thank you for your interest in contributing to the Apple Human Interface Guideli
 - [Development Setup](#development-setup)
 - [Making Changes](#making-changes)
 - [Common Contribution Types](#common-contribution-types)
+- [Static Content Generation](#static-content-generation)
 - [Testing](#testing)
 - [Submitting Changes](#submitting-changes)
 - [Apple Content Guidelines](#apple-content-guidelines)
@@ -49,6 +50,11 @@ This project adheres to a code of conduct. By participating, you are expected to
    npx @modelcontextprotocol/inspector dist/server.js
    ```
 
+6. Generate static content (optional):
+   ```bash
+   npm run generate-content
+   ```
+
 ## Making Changes
 
 ### Branch Naming
@@ -58,6 +64,7 @@ Use descriptive branch names:
 - `feature/add-vision-pro-support` - New features
 - `docs/update-installation-guide` - Documentation updates
 - `scraper/update-selectors-for-new-layout` - Scraper maintenance
+- `content/regenerate-static-content` - Static content updates
 
 ### Commit Messages
 
@@ -66,49 +73,66 @@ Write clear commit messages:
 - `feat: add support for visionOS guidelines`
 - `docs: improve installation instructions`
 - `scraper: handle graceful degradation for failed requests`
+- `content: regenerate static HIG content for Q2 updates`
 
 ## Common Contribution Types
 
-### 🔧 Scraper Fixes (Most Common)
+### 📄 Static Content Updates (Most Important)
 
-Apple occasionally updates their website structure, breaking our content extraction. These are the most valuable community contributions!
+Our hybrid architecture prioritizes pre-generated static content for performance. The most valuable contributions are helping maintain and improve this content!
 
-**When to fix scrapers:**
-- Daily health checks are failing
-- Content extraction returns empty or malformed results
-- New HIG sections aren't being discovered
+**When to update static content:**
+- Apple releases new HIG updates
+- GitHub Action content generation fails
+- Content becomes stale (>6 months old)
+- New Apple platforms or design systems are released
 
-**How to fix scrapers:**
+**How to update static content:**
 
-1. Identify the broken URL by checking the failing tests or issues
-2. Open the URL in your browser to verify if it exists
-3. Update the URLs in the `knownSections` array in `src/scraper.ts`:
-   ```typescript
-   // Update or add new HIG section URLs
-   const knownSections = [
-     { title: 'iOS Navigation', url: 'https://developer.apple.com/design/human-interface-guidelines/ios/app-architecture/navigation', platform: 'iOS', category: 'navigation' },
-     // Add new sections here
-   ];
+1. **Trigger content regeneration:**
+   ```bash
+   npm run generate-content
    ```
 
-4. Test locally:
+2. **Test the generated content:**
    ```bash
-   npm run build
+   npm run validate-content
    npm run health-check
    ```
 
-5. Submit a PR with the updated URLs
+3. **Review generated files:**
+   - Check `content/platforms/` for new/updated sections
+   - Verify `content/metadata/` has updated indices
+   - Ensure attribution is properly included
 
-**Note**: Since Apple's HIG website is now a Single Page Application (SPA), we maintain a curated list of stable URLs rather than scraping dynamically.
+### 🔧 Scraper Fixes (Fallback System)
+
+Scrapers now serve as fallback when static content is unavailable. Still important for reliability!
+
+**When to fix scrapers:**
+- Static content generation is failing
+- New HIG sections aren't being discovered
+- Content extraction returns empty results
+
+**How to fix scrapers:**
+
+1. Identify broken URLs in the content generation script
+2. Update `scripts/generate-hig-content.ts` section discovery
+3. Test with both static and dynamic modes:
+   ```bash
+   npm run generate-content  # Test static generation
+   npm run health-check      # Test scraper fallback
+   ```
 
 ### 🆕 New Features
 
 Ideas for new features:
-- Support for additional Apple platforms
-- Enhanced search capabilities
-- Better content formatting
-- Integration with design tools
+- Enhanced static content generation
+- Better search index optimization
+- Additional Apple platforms support
+- Content freshness monitoring
 - Historical HIG comparisons
+- GitHub Action improvements
 
 ### 📚 Documentation
 
@@ -163,12 +187,14 @@ scraper.discoverSections().then(console.log);
 
 ### Manual Testing Checklist
 
+- [ ] Static content loads correctly (primary mode)
+- [ ] Scraper fallback works when static content unavailable
 - [ ] All MCP resources load correctly
-- [ ] Search tool returns relevant results
+- [ ] Search tool returns relevant results from static indices
 - [ ] Component specs include proper Apple attribution
 - [ ] Platform comparison works across different platforms
-- [ ] Latest updates include Liquid Glass information
-- [ ] Error handling works gracefully when Apple's site is unavailable
+- [ ] Latest updates include current design system information
+- [ ] Content generation script completes successfully
 
 ## Submitting Changes
 
@@ -226,10 +252,55 @@ All content responses must include:
 **Attribution Notice**
 
 This content is sourced from Apple's Human Interface Guidelines.
-© Apple Inc. All rights reserved. Provided for educational purposes.
-For official information, visit: https://developer.apple.com/design/human-interface-guidelines/
+© Apple Inc. All rights reserved. This content is provided for educational and development purposes under fair use. This MCP server is not affiliated with Apple Inc. and does not claim ownership of Apple's content.
+
+For the most up-to-date and official information, please refer to Apple's official documentation.
 ---
 ```
+
+## Static Content Generation
+
+### Understanding the Hybrid System
+
+Our architecture uses two content sources:
+
+1. **Static Content (Primary)**: Pre-generated markdown files updated every 4 months
+2. **Live Scraping (Fallback)**: Real-time content extraction when static unavailable
+
+### Content Generation Workflow
+
+```bash
+# Generate all static content
+npm run generate-content
+
+# Validate generated content
+npm run validate-content
+
+# Test both static and fallback modes
+npm run health-check
+```
+
+### Static Content Structure
+
+```
+content/
+├── platforms/          # Platform-specific guidelines
+│   ├── ios/           # iOS markdown files
+│   ├── macos/         # macOS markdown files
+│   └── ...
+├── metadata/          # Search optimization
+│   ├── search-index.json
+│   ├── cross-references.json
+│   └── generation-info.json
+└── images/           # Future: visual assets
+```
+
+### Contributing to Content Generation
+
+1. **Fix content extraction**: Update `scripts/generate-hig-content.ts`
+2. **Improve search indices**: Enhance keyword extraction
+3. **Add new platforms**: Extend platform discovery
+4. **Optimize performance**: Improve generation speed
 
 ## Getting Help
 

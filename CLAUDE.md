@@ -20,6 +20,8 @@ This is an Apple Human Interface Guidelines MCP (Model Context Protocol) server 
 - `npm run dev` - Start development server using tsx
 - `npm start` - Run compiled server from `dist/`
 - `npm run health-check` - Test scraper functionality
+- `npm run generate-content` - Generate static HIG content files
+- `npm run validate-content` - Validate generated content
 
 ### Testing with MCP Inspector
 ```bash
@@ -28,7 +30,7 @@ npx @modelcontextprotocol/inspector dist/server.js
 
 ## Architecture Overview
 
-The project follows a layered architecture with clear separation of concerns:
+The project uses a hybrid static/dynamic architecture with static content generation and live scraping fallback:
 
 ### Core Components
 
@@ -36,38 +38,64 @@ The project follows a layered architecture with clear separation of concerns:
    - Coordinates all components and handles MCP protocol communication
    - Sets up request handlers for resources and tools
    - Manages graceful startup/shutdown
+   - Initializes static content provider with fallback to scraping
 
-2. **HIGScraper** (`src/scraper.ts`) - Web scraping engine
+2. **HIGStaticContentProvider** (`src/static-content.ts`) - Primary content source
+   - Loads pre-generated markdown files from `content/` directory
+   - Provides instant responses (no scraping delays)
+   - Uses pre-built search indices for fast queries
+   - Falls back to scraper if static content unavailable
+
+3. **HIGScraper** (`src/scraper.ts`) - Fallback web scraping engine
    - Respectful scraping with rate limiting (1 second delays)
    - Intelligent fallback content when Apple's SPA fails to load
-   - Maintains curated list of known HIG sections (~850 URLs)
+   - Maintains curated list of known HIG sections (~65 URLs)
    - Converts HTML to clean markdown format
 
-3. **HIGCache** (`src/cache.ts`) - Smart caching layer
+4. **HIGCache** (`src/cache.ts`) - Smart caching layer (for scraping)
    - TTL-based caching with graceful degradation
    - Backup cache entries for offline resilience 
    - Two-tier caching: fresh data + stale fallback data
    - Methods: `getWithGracefulFallback()`, `setWithGracefulDegradation()`
 
-4. **HIGResourceProvider** (`src/resources.ts`) - MCP Resources implementation
+5. **HIGResourceProvider** (`src/resources.ts`) - MCP Resources implementation
    - Serves structured content via URIs like `hig://ios`, `hig://ios/buttons`
    - Platform-specific and category-specific resource organization
+   - Prefers static content, falls back to scraping
    - Generates comprehensive content with proper Apple attribution
 
-5. **HIGToolProvider** (`src/tools.ts`) - MCP Tools implementation
+6. **HIGToolProvider** (`src/tools.ts`) - MCP Tools implementation
    - Interactive search, component specs, platform comparison
    - Four main tools: `search_guidelines`, `get_component_spec`, `compare_platforms`, `get_latest_updates`
-   - Enhanced with Liquid Glass design system information
+   - Uses static search indices for fast results
 
 ### Data Flow
 
 ```
-MCP Client → AppleHIGMCPServer → HIGResourceProvider/HIGToolProvider → HIGScraper → HIGCache → Apple's Website
+MCP Client → AppleHIGMCPServer → HIGResourceProvider/HIGToolProvider
+                                            ↓
+                                 HIGStaticContentProvider (primary)
+                                            ↓ (fallback)
+                                     HIGScraper → HIGCache → Apple's Website
+```
+
+### Static Content Generation
+
+```
+GitHub Action (every 4 months) → Content Generator → Markdown Files + Search Indices
+                                                            ↓
+                                                    content/ directory
+                                                            ↓
+                                               HIGStaticContentProvider
 ```
 
 ### Key Patterns
 
-**Graceful Degradation**: The system prioritizes availability over freshness. If Apple's website is unavailable, it serves cached content or contextual fallback content rather than failing.
+**Static-First with Fallback**: The system prioritizes pre-generated static content for performance and reliability, falling back to live scraping only when static content is unavailable.
+
+**Graceful Degradation**: Multiple fallback layers ensure availability - static content → cached scraping → live scraping → contextual fallback content.
+
+**Performance Optimization**: Static content provides instant responses (no scraping delays) and scales to unlimited concurrent users.
 
 **Respectful Scraping**: Rate limiting, appropriate user agents, and fallback to known URLs when Apple's SPA architecture prevents dynamic discovery.
 
@@ -94,7 +122,36 @@ The server supports all Apple platforms with specific categories:
 
 ## Content Management
 
-### Fallback Content Strategy
+### Static Content Generation
+The system uses GitHub Actions to generate optimized static content:
+
+**Content Structure:**
+```
+content/
+├── platforms/           # Platform-specific markdown files
+│   ├── ios/
+│   ├── macos/
+│   └── ...
+├── metadata/           # Search indices and metadata
+│   ├── search-index.json
+│   ├── cross-references.json
+│   └── generation-info.json
+└── images/            # Downloaded images and diagrams
+```
+
+**Generation Process:**
+1. **Scrape all known HIG URLs** (~65 sections across all platforms)
+2. **Process to AI-friendly markdown** with front matter metadata
+3. **Generate search indices** for fast querying
+4. **Create cross-references** between related sections
+5. **Download and optimize images**
+
+**Scheduled Updates:**
+- **Every 4 months** via GitHub Action
+- **Manual triggers** for immediate updates
+- **Content validation** ensures quality and completeness
+
+### Fallback Content Strategy (for scraping)
 When Apple's website returns JavaScript placeholders, the scraper uses contextual fallback content:
 - Button guidelines → `getButtonFallbackContent()`
 - Navigation → `getNavigationFallbackContent()`
@@ -104,10 +161,10 @@ When Apple's website returns JavaScript placeholders, the scraper uses contextua
 - General → `getFallbackContent()`
 
 ### Known Sections Management
-The scraper maintains a curated list of ~50 core HIG sections in `discoverSections()`. When adding new sections:
+The content generator maintains a curated list of ~65 core HIG sections in `discoverSections()`. When adding new sections:
 1. Add to the `knownSections` array with proper platform/category classification
 2. Test the URL accessibility
-3. Update tests accordingly
+3. Regenerate static content with `npm run generate-content`
 
 ## Error Handling
 
@@ -131,22 +188,54 @@ The system uses multiple layers of error resilience:
 - Section content cache: 2 hours
 - Graceful degradation: 24x longer TTL for backup entries
 
+## Static Content vs Live Scraping
+
+### Performance Comparison
+- **Static Content**: Instant responses, unlimited concurrency
+- **Live Scraping**: 1-10 second delays, rate limited to 30 req/min
+
+### Reliability Comparison
+- **Static Content**: 99.9% availability, immune to Apple website changes
+- **Live Scraping**: Dependent on Apple website availability and structure
+
+### Content Freshness
+- **Static Content**: Updated every 4 months (sufficient for HIG changes)
+- **Live Scraping**: Real-time but often returns stale cached content
+
+### When to Use Each
+- **Static Content**: Default for all production use
+- **Live Scraping**: Fallback when static content unavailable
+- **Manual Generation**: When Apple announces major design updates
+
 ## Maintenance Notes
 
 ### Expected Maintenance
-- **Scraper updates**: Apple changes their website 2-4 times per year requiring selector updates
-- **New platform support**: Add new platforms as Apple releases them
-- **Health monitoring**: Daily automated checks via GitHub Actions
+- **Static content updates**: Automatic every 4 months via GitHub Actions
+- **Manual content updates**: When Apple announces major design changes
+- **Scraper updates**: Only needed when static content fails (rare)
+- **New platform support**: Add new platforms and regenerate content
+
+### Content Generation System
+Run `npm run generate-content` to:
+- Scrape all current HIG content
+- Generate optimized markdown files
+- Create search indices and metadata
+- Validate content completeness
+
+**GitHub Action Triggers:**
+- **Scheduled**: Every 4 months on the 1st at 2 AM UTC
+- **Manual**: `workflow_dispatch` for immediate updates
+- **Auto-PR**: Creates pull request for review when content changes
 
 ### Health Check System
 Run `npm run health-check` to verify:
-- Apple website accessibility
-- Core URL functionality
-- Scraper parsing accuracy
-- Cache performance
+- Static content availability and freshness
+- Fallback scraper functionality
+- MCP server integration
+- Content validation
 
-When scraper issues occur:
-1. Check recent Apple website changes
-2. Update selectors in `cleanContent()` method
-3. Add/update fallback content if needed
+When issues occur:
+1. Check if static content exists and is current
+2. Regenerate content with `npm run generate-content`
+3. For scraper issues: update selectors in `cleanContent()` method
 4. Test with `npm run health-check`

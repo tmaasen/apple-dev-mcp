@@ -5,6 +5,7 @@
 import { HIGScraper } from './scraper.js';
 import { HIGCache } from './cache.js';
 import { HIGResourceProvider } from './resources.js';
+import { HIGStaticContentProvider } from './static-content.js';
 import { 
   SearchGuidelinesArgs, 
   GetComponentSpecArgs, 
@@ -19,11 +20,13 @@ export class HIGToolProvider {
   private scraper: HIGScraper;
   private cache: HIGCache;
   private resourceProvider: HIGResourceProvider;
+  private staticContentProvider?: HIGStaticContentProvider;
 
-  constructor(scraper: HIGScraper, cache: HIGCache, resourceProvider: HIGResourceProvider) {
+  constructor(scraper: HIGScraper, cache: HIGCache, resourceProvider: HIGResourceProvider, staticContentProvider?: HIGStaticContentProvider) {
     this.scraper = scraper;
     this.cache = cache;
     this.resourceProvider = resourceProvider;
+    this.staticContentProvider = staticContentProvider;
   }
 
   /**
@@ -74,7 +77,32 @@ export class HIGToolProvider {
     
     try {
       const startTime = Date.now();
-      const results = await this.scraper.searchContent(query.trim(), platform, category, limit);
+      let results;
+      
+      // Try static content search first
+      if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
+        try {
+          results = await this.staticContentProvider.searchContent(query.trim(), platform, category, limit);
+          
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`[HIGTools] Using static content search for: "${query}"`);
+          }
+        } catch (error) {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('[HIGTools] Static search failed, falling back to scraper:', error);
+          }
+          // Fall through to scraper fallback
+        }
+      }
+      
+      // Fallback to scraper search
+      if (!results) {
+        results = await this.scraper.searchContent(query.trim(), platform, category, limit);
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[HIGTools] Using scraper search for: "${query}"`);
+        }
+      }
       
       // Enhance results with additional context
       const enhancedResults = await Promise.all(
@@ -163,8 +191,25 @@ export class HIGToolProvider {
       if (process.env.NODE_ENV === 'development') {
         console.log(`[HIGTools] Getting component spec for: ${trimmedComponentName} (platform: ${platform || 'any'})`);
       }
-      // Search for the component across guidelines
-      const searchResults = await this.scraper.searchContent(componentName, platform);
+      // Search for the component
+      let searchResults;
+      
+      // Try static content search first
+      if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
+        try {
+          searchResults = await this.staticContentProvider.searchContent(trimmedComponentName, platform);
+        } catch (error) {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('[HIGTools] Static component search failed, falling back to scraper:', error);
+          }
+          // Fall through to scraper fallback
+        }
+      }
+      
+      // Fallback to scraper search
+      if (!searchResults) {
+        searchResults = await this.scraper.searchContent(trimmedComponentName, platform);
+      }
       
       if (searchResults.length === 0) {
         return {

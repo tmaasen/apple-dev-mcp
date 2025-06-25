@@ -4,21 +4,37 @@
 
 import { HIGScraper } from './scraper.js';
 import { HIGCache } from './cache.js';
+import { HIGStaticContentProvider } from './static-content.js';
 import { HIGResource, ApplePlatform, HIGCategory } from './types.js';
 
 export class HIGResourceProvider {
   private scraper: HIGScraper;
   private cache: HIGCache;
+  private staticContentProvider?: HIGStaticContentProvider;
 
-  constructor(scraper: HIGScraper, cache: HIGCache) {
+  constructor(scraper: HIGScraper, cache: HIGCache, staticContentProvider?: HIGStaticContentProvider) {
     this.scraper = scraper;
     this.cache = cache;
+    this.staticContentProvider = staticContentProvider;
   }
 
   /**
    * List all available HIG resources
    */
   async listResources(): Promise<HIGResource[]> {
+    // Try static content first
+    if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
+      try {
+        return await this.staticContentProvider.listResources();
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[HIGResourceProvider] Static content failed, falling back to scraping:', error);
+        }
+        // Fall through to scraper fallback
+      }
+    }
+    
+    // Fallback to scraper
     const cacheKey = 'resources:list';
     
     // Check cache first
@@ -111,6 +127,22 @@ export class HIGResourceProvider {
    * Get content for a specific resource URI
    */
   async getResource(uri: string): Promise<HIGResource | null> {
+    // Try static content first
+    if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
+      try {
+        const resource = await this.staticContentProvider.getResource(uri);
+        if (resource) {
+          return resource;
+        }
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn(`[HIGResourceProvider] Static content failed for ${uri}, falling back to scraping:`, error);
+        }
+        // Fall through to scraper fallback
+      }
+    }
+    
+    // Fallback to scraper
     const cacheKey = `resource:${uri}`;
     
     // Check cache first
