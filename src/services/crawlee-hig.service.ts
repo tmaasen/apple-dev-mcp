@@ -8,7 +8,6 @@
  * Single Page Application architecture.
  */
 
-import { PlaywrightCrawler } from '@crawlee/playwright';
 import type { HIGSection, ApplePlatform, HIGCategory, SearchResult, ScrapingConfig } from '../types.js';
 import type { HIGCache } from '../cache.js';
 import { HIGDiscoveryService } from './hig-discovery.service.js';
