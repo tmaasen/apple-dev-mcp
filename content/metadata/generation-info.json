@@ -1,28 +1,39 @@
 {
-  "lastUpdated": "2025-06-25T02:54:29.455Z",
-  "totalSections": 78,
+  "lastUpdated": "2025-06-25T18:36:03.009Z",
+  "totalSections": 172,
   "sectionsByPlatform": {
-    "iOS": 39,
-    "macOS": 8,
-    "watchOS": 6,
-    "tvOS": 5,
-    "visionOS": 6,
-    "universal": 14
+    "universal": 166,
+    "macOS": 1,
+    "tvOS": 1,
+    "visionOS": 2,
+    "watchOS": 1,
+    "iOS": 1
   },
   "sectionsByCategory": {
-    "foundations": 10,
-    "icons-and-images": 4,
-    "color-and-materials": 3,
-    "typography": 1,
-    "layout": 5,
-    "visual-design": 4,
-    "selection-and-input": 14,
-    "presentation": 8,
-    "navigation": 8,
-    "system-capabilities": 9,
-    "motion": 8,
-    "technologies": 4
+    "visual-design": 160,
+    "foundations": 1,
+    "selection-and-input": 3,
+    "layout": 3,
+    "navigation": 1,
+    "presentation": 1,
+    "status": 2,
+    "system-capabilities": 1
   },
-  "totalSize": 854839,
-  "generationDuration": 99843
+  "totalSize": 1984042,
+  "generationDuration": 828604,
+  "extractionStatistics": {
+    "totalSections": 172,
+    "successfulExtractions": 172,
+    "fallbackUsage": 1,
+    "averageQuality": 0.49471773255813967,
+    "averageConfidence": 0.6415723837209307,
+    "extractionSuccessRate": 99.4186046511628
+  },
+  "qualityMetrics": {
+    "fallbackUsageRate": 0.5813953488372093,
+    "slaCompliance": true,
+    "averageQuality": 0.49471773255813967,
+    "averageConfidence": 0.6415723837209307
+  },
+  "generatedWith": "Crawlee-Enhanced-Content-Generator-v2.0"
 }

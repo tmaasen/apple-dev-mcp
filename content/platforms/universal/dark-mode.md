@@ -1,263 +1,147 @@
 ---
 title: "Dark Mode"
 platform: universal
-category: color-and-materials
+category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/dark-mode
 id: universal-dark-mode
-lastUpdated: 2025-06-25T02:54:17.554Z
+lastUpdated: 2025-06-25T18:28:45.286Z
+extractionMethod: crawlee
+qualityScore: 0.600
+confidence: 0.700
+contentLength: 7915
+hasCodeExamples: false
+hasImages: false
+keywords: ["universal", "visual-design", "dark mode", "accessibility", "color", "controls", "design", "icons", "images", "interface"]
 ---
-## Table of Contents
+## Summary
 
-- [Apple Human Interface Guidelines](#apple-human-interface-guidelines)
-- [Note](#note)
-- [Key Design Principles](#key-design-principles)
-  - [Clarity](#clarity)
-  - [Deference](#deference)
-  - [Depth](#depth)
-- [Current Apple Design System](#current-apple-design-system)
-- [Essential UI Components Reference](#essential-ui-components-reference)
-  - [Navigation & Structure](#navigation-structure)
-  - [Buttons & Actions](#buttons-actions)
-  - [Forms & Input](#forms-input)
-  - [Lists & Collections](#lists-collections)
-  - [Modals & Overlays](#modals-overlays)
-  - [Media & Content](#media-content)
-  - [System Integration](#system-integration)
-  - [Icons & Visual Elements](#icons-visual-elements)
-  - [Accessibility Features](#accessibility-features)
-  - [Platform-Specific Features](#platformspecific-features)
-    - [iOS Specific](#ios-specific)
-    - [macOS Specific](#macos-specific)
-    - [watchOS Specific](#watchos-specific)
-    - [tvOS Specific](#tvos-specific)
-    - [visionOS Specific](#visionos-specific)
-- [Platform-Specific Guidelines](#platformspecific-guidelines)
-  - [iOS](#ios)
-  - [macOS](#macos)
-  - [watchOS](#watchos)
-  - [tvOS](#tvos)
-  - [visionOS](#visionos)
-- [Color and Materials](#color-and-materials)
-  - [iOS Color Guidelines](#ios-color-guidelines)
-  - [Material Design](#material-design)
-- [Typography](#typography)
-  - [iOS Typography Guidelines](#ios-typography-guidelines)
-  - [Text Styles:](#text-styles)
+Skip Navigation
+Dark Mode
+Dark Mode is a systemwide appearance setting that uses a dark color palette to provide a comfortable viewing experience tailored for low-light environments.
 
-# Apple Human Interface Guidelines
+Skip Navigation
+Dark Mode
+Dark Mode is a systemwide appearance setting that uses a dark color palette to provide a comfortable viewing experience tailored for low-light environments.
 
-## Note
-Apple's Human Interface Guidelines website is now a Single Page Application (SPA) that requires JavaScript to load content. This MCP server provides structured access to Apple's design guidelines.
+In iOS, iPadOS, macOS, and tvOS, people often choose Dark Mode as their default interface style, and they generally expect all apps and games to respect their preference. In Dark Mode, the system uses a dark color palette for all screens, views, menus, and controls, and may also use greater perceptual contrast to make foreground content stand out against the darker backgrounds.
 
-## Key Design Principles
+Best practices
 
-### Clarity
-Text is legible at every size, icons are precise and lucid, adornments are subtle and appropriate, and a sharpened focus on functionality motivates the design.
+Avoid offering an app-specific appearance setting. An app-specific appearance mode option creates more work for people because they have to adjust more than one setting to get the appearance they want. Worse, they may think your app is broken because it doesn't respond to their systemwide appearance choice.
 
-### Deference
-Fluid motion and a crisp, beautiful interface help people understand and interact with content while never competing with it.
+Ensure that your app looks good in both appearance modes. In addition to using one mode or the other, people can choose the Auto appearance setting, which switches between the light and dark appearances as conditions change throughout the day, potentially while your app is running.
 
-### Depth
-Distinct visual layers and realistic motion convey hierarchy, impart vitality, and facilitate understanding.
+Test your content to make sure that it remains comfortably legible in both appearance modes. For example, in Dark Mode with Increase Contrast and Reduce Transparency turned on (both separately and together), you may find places where dark text is less legible when it's on a dark background. You might also find that turning on Increase Contrast in Dark Mode can result in reduced visual contrast between dark text and a dark background. Although people with strong vision might still be able to read lower contrast text, such text could be illegible for many. For guidance, see Accessibility.
 
-## Current Apple Design System
+In rare cases, consider using only a dark appearance in the interface. For example, it can make sense for an app that supports immersive media viewing to use a permanently dark appearance that lets the UI recede and helps people focus on the media.
 
-Apple's modern design language features:
-- **Advanced Materials**: Sophisticated visual elements with depth and clarity
-- **Adaptive Interface**: Intelligent adaptation across different environments and contexts
-- **Cross-platform Consistency**: Unified design language across all Apple platforms
-- **Modern APIs**: Latest SwiftUI, UIKit, and AppKit capabilities
+The Stocks app uses a dark-only appearance
 
-## Essential UI Components Reference
+Dark Mode colors
 
-### Navigation & Structure
-- **Navigation Bars**: Primary navigation with titles, back buttons, and action items
-- **Tab Bars**: Bottom navigation for primary app sections (2-5 tabs recommended)
-- **Sidebars**: Multi-column navigation for iPad and larger screens
-- **Toolbars**: Context-specific actions and tools
-- **Search Bars**: Content discovery and filtering functionality
-- **Breadcrumbs**: Hierarchical navigation indicators
+The color palette in Dark Mode includes dimmer background colors and brighter foreground colors. It's important to realize that these colors aren't necessarily inversions of their light counterparts: while many colors are inverted, some are not. For more information, see Specifications.
 
-### Buttons & Actions
-- **Buttons**: Primary, secondary, and tertiary action triggers
-- **Link Buttons**: Text-based navigation and actions
-- **Toggle Buttons**: Binary state controls
-- **Action Sheets**: Modal selection from multiple options
-- **Context Menus**: Right-click or long-press actions
+Embrace colors that adapt to the current appearance. Semantic colors (like labelColor and controlColor in macOS or separator in iOS and iPadOS) automatically adapt to the current appearance. When you need a custom color, add a Color Set asset to your app's asset catalog in Xcode, and specify the bright and dim variants of the color. Avoid using hard-coded color values or colors that don't adapt.
 
-### Forms & Input
-- **Text Fields**: Single-line text input with validation
-- **Text Views**: Multi-line text editing areas
-- **Switches**: Binary on/off controls
-- **Sliders**: Continuous value selection
-- **Steppers**: Incremental numeric adjustment
-- **Pickers**: Selection from predefined lists
-- **Date Pickers**: Date and time selection controls
-- **Segmented Controls**: Mutually exclusive option selection
+System colors in the light appearance
 
-### Lists & Collections
-- **Lists and Tables**: Structured data presentation
-- **Collection Views**: Grid-based content layout
-- **Outline Views**: Hierarchical data structure (macOS)
-- **Source Lists**: Sidebar navigation lists (macOS)
+System colors in the dark appearance
 
-### Modals & Overlays
-- **Sheets**: Modal content presentation
-- **Alerts**: Critical information and confirmations
-- **Popovers**: Contextual information overlays
-- **Activity Views**: Progress and loading indicators
-- **Tooltips**: Helpful hints and explanations
+Aim for sufficient color contrast in all appearances. Using system-defined colors can help you achieve a good contrast ratio between your foreground and background content. At a minimum, make sure the contrast ratio between colors is no lower than 4.5:1. For custom foreground and background colors, strive for a contrast ratio of 7:1, especially in small text. This ratio ensures that your foreground content stands out from the background, and helps your content meet recommended accessibility guidelines.
 
-### Media & Content
-- **Images**: Static visual content with proper accessibility
-- **Video Players**: Media playback controls and interfaces
-- **Web Views**: Embedded web content
-- **Maps**: Location-based information and interaction
-- **Charts**: Data visualization components
+Soften the color of white backgrounds. If you display a content image that includes a white background, consider slightly darkening the image to prevent the background from glowing in the surrounding Dark Mode context.
 
-### System Integration
-- **Notifications**: Local and push notification design
-- **Widgets**: Home Screen and Today View extensions
-- **App Extensions**: Share, Action, and other system extensions
-- **Shortcuts**: Siri integration and automation
-- **Handoff**: Cross-device continuity features
+Icons and images
 
-### Icons & Visual Elements
-- **SF Symbols**: Apple's comprehensive icon library
-- **App Icons**: Application identifier and branding
-- **System Icons**: Interface and navigation symbols
-- **Custom Icons**: Brand-specific iconography guidelines
-- **Visual Effects**: Blur, vibrancy, and material effects
+The system uses SF Symbols (which automatically adapt to Dark Mode) and full-color images that are optimized for both the light and dark appearances.
 
-### Accessibility Features
-- **VoiceOver**: Screen reader support and optimization
-- **Voice Control**: Voice navigation and interaction
-- **Switch Control**: Alternative input methods
-- **Dynamic Type**: Text size scaling and adaptation
-- **Reduced Motion**: Animation and transition preferences
-- **High Contrast**: Visual accessibility enhancements
-- **Color Blind Support**: Color accessibility considerations
+Use SF Symbols wherever possible. Symbols work well in both appearance modes when you use dynamic colors to tint them or when you add vibrancy. For guidance, see Color.
 
-### Platform-Specific Features
+Design separate interface icons for the light and dark appearances if necessary. For example, an icon that depicts a full moon might need a subtle dark outline to contrast well with a light background, but need no outline when it displays on a dark background. Similarly, an icon that represents a drop of oil might need a slight border to make the edge visible against a dark background.
 
-#### iOS Specific
-- **Dynamic Island**: Interactive notification area (iPhone 14 Pro+)
-- **Control Center**: System controls and quick actions
-- **Spotlight Search**: System-wide search functionality
-- **Today View**: Widget dashboard
-- **App Library**: App organization and discovery
+Icon in the light appearance with no border
 
-#### macOS Specific
-- **Menu Bar**: Global application menus
-- **Dock**: Application launcher and switcher
-- **Mission Control**: Window and desktop management
-- **Launchpad**: Application grid launcher
-- **Touch Bar**: Context-sensitive control strip
+Icon in the dark appearance with border for better contrast
 
-#### watchOS Specific
-- **Digital Crown**: Rotary input mechanism
-- **Complications**: Watch face data displays
-- **Force Touch**: Pressure-sensitive interactions
-- **Haptic Feedback**: Tactile response patterns
+Make sure full-color images and icons look good in both appearances. Use the same asset if it looks good in both the light and dark appearances. If an asset looks good in only one mode, modify the asset or create separate light and dark assets. Use asset catalogs to combine your assets into a single named image.
 
-#### tvOS Specific
-- **Focus Engine**: Navigation and selection system
-- **Siri Remote**: Touch and motion controls
-- **Top Shelf**: Featured content display
+Illustration on a light background
 
-#### visionOS Specific
-- **Spatial Design**: 3D interface layout principles
-- **Eye Tracking**: Gaze-based selection
-- **Hand Gestures**: Natural interaction methods
-- **Immersive Spaces**: Full environment experiences
+On a dark background, the same illustration has poor contrast and many details are lost
 
-## Platform-Specific Guidelines
+Illustration adjusted for better contrast on a dark background
 
-### iOS
-- Focus on touch-first interactions
-- Leverage iOS-specific features like Dynamic Island
-- Implement proper gesture recognition
-- Support accessibility features
-- Use iOS design tokens and spacing
+Text
 
-### macOS
-- Utilize the full capabilities of the Mac
-- Support keyboard navigation
-- Implement proper window management
-- Leverage macOS-specific controls
-- Consider menu bar integration
+The system uses vibrancy and increased contrast to maintain the legibility of text on darker backgrounds.
 
-### watchOS
-- Design for quick, focused interactions
-- Optimize for the small screen
-- Implement complications effectively
-- Support Digital Crown interactions
-- Consider wrist gestures
+Use the system-provided label colors for labels. The primary, secondary, tertiary, and quaternary label colors adapt automatically to the light and dark appearances.
 
-### tvOS
-- Focus on the viewing experience
-- Support remote control navigation
-- Implement proper focus management
-- Design for the big screen
-- Consider viewing distance
+Primary label in the light appearance
 
-### visionOS
-- Design for spatial computing
-- Support natural gestures
-- Implement proper depth and layering
-- Consider user comfort and safety
-- Design for mixed reality contexts
+Secondary label in the dark appearance
 
-## Color and Materials
+Use system views to draw text fields and text views. System views and controls make your app's text look good on all backgrounds, adjusting automatically for the presence or absence of vibrancy. When possible, use a system-provided view to display text instead of drawing the text yourself.
 
-### iOS Color Guidelines
-- Use dynamic colors that adapt to light and dark modes
-- Ensure sufficient contrast for accessibility
-- Consider color blindness in your color choices
-- Use semantic colors for consistent meaning
-- Test colors across different devices and conditions
+Platform considerations
 
-### Material Design
-- Implement proper material hierarchy
-- Use appropriate opacity and blur effects
-- Consider the material's context and purpose
-- Test materials across different backgrounds
-- Ensure materials enhance rather than distract
+No additional considerations for tvOS. Dark Mode isn't supported in visionOS or watchOS.
 
-## Typography
+iOS, iPadOS
 
-### iOS Typography Guidelines
-- Use Dynamic Type to support user font size preferences
-- Choose appropriate font weights for hierarchy
-- Ensure sufficient line spacing and character spacing
-- Test typography with accessibility features
-- Consider localization impact on text layout
+In Dark Mode, the system uses two sets of background colors -- called base and elevated -- to enhance the perception of depth when one dark interface is layered above another. The base colors are dimmer, making background interfaces appear to recede, and the elevated colors are brighter, making foreground interfaces appear to advance.
 
-### Text Styles:
-- **Large Title**: 34pt, prominent page titles
-- **Title 1**: 28pt, section titles
-- **Title 2**: 22pt, subsection titles
-- **Title 3**: 20pt, group titles
-- **Headline**: 17pt, emphasized content
-- **Body**: 17pt, primary content
-- **Callout**: 16pt, secondary content
-- **Subhead**: 15pt, descriptive content
-- **Footnote**: 13pt, supplementary content
-- **Caption 1**: 12pt, image captions
-- **Caption 2**: 11pt, minimal text
+Base
 
-For the most up-to-date and detailed information, please visit Apple's official Human Interface Guidelines at:
-https://developer.apple.com/design/human-interface-guidelines/
+Elevated
 
----
+Light
 
-This content provides general guidance based on Apple's Human Interface Guidelines.
-© Apple Inc. All rights reserved. For official and detailed information, visit Apple's documentation.
+Prefer the system background colors. Dark Mode is dynamic, which means that the background color automatically changes from base to elevated when an interface is in the foreground, such as a popover or modal sheet. The system also uses the elevated background color to provide visual separation between apps in a multitasking environment and between windows in a multiple-window context. Using a custom background color can make it harder for people to perceive these system-provided visual distinctions.
+
+macOS
+
+When people choose the graphite accent color in General settings, macOS causes window backgrounds to pick up color from the current desktop picture. The result -- called desktop tinting -- is a subtle effect that helps windows blend more harmoniously with their surrounding content.
+
+Include some transparency in custom component backgrounds when appropriate. Transparency lets your components pick up color from the window background when desktop tinting is active, creating a visual harmony that can persist even when the desktop picture changes. To help achieve this harmony, add transparency only to a custom component that has a visible background or bezel, and only when the component is in a neutral state, such as state that doesn't use color. You don't want to add transparency when the component is in a state that uses color, because doing so can cause the component's color to fluctuate when the window background adjusts to a different location on the desktop or when the desktop picture changes.
+
+Resources
+Related
+
+Color
+
+Materials
+
+Typography
+
+Videos
+Meet Liquid Glass
+Implementing Dark Mode on iOS
+Change log
+
+Date
+
+Changes
+
+August 6, 2024
+
+Added art contrasting the light and dark appearances.
+
+Current page is Dark Mode
+Supported platforms
+Dark Mode
+Best practices
+Dark Mode colors
+Platform considerations
+Resources
+Change log
 ---
 
 **Attribution Notice**
 
 This content is sourced from Apple's Human Interface Guidelines: https://developer.apple.com/design/human-interface-guidelines/dark-mode
+
+This content was extracted with moderate confidence. Please verify important details with the official Apple documentation.
 
 © Apple Inc. All rights reserved. This content is provided for educational and development purposes under fair use. This MCP server is not affiliated with Apple Inc. and does not claim ownership of Apple's content.
 

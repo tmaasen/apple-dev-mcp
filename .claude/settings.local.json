@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(npm install)",
+      "Bash(npm test)",
+      "Bash(npm test:*)",
+      "Bash(mv:*)",
+      "Bash(npm run lint)",
+      "Bash(mkdir:*)",
+      "Bash(npm run:*)",
+      "Bash(node:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "WebFetch(domain:modelcontextprotocol.io)",
+      "Bash(find:*)",
+      "Bash(rm:*)",
+      "WebFetch(domain:developer.apple.com)",
+      "Bash(npm install:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npx eslint:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(npm outdated)",
+      "Bash(npx playwright install:*)",
+      "Bash(npx playwright:*)",
+      "Bash(timeout 10s npm run health-check)",
+      "Bash(true)",
+      "Bash(gtimeout:*)"
+    ],
+    "deny": []
+  }
+}

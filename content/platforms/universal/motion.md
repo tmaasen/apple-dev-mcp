@@ -1,263 +1,139 @@
 ---
 title: "Motion"
 platform: universal
-category: motion
+category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/motion
 id: universal-motion
-lastUpdated: 2025-06-25T02:54:29.406Z
+lastUpdated: 2025-06-25T18:29:00.683Z
+extractionMethod: crawlee
+qualityScore: 0.620
+confidence: 0.820
+contentLength: 7443
+hasCodeExamples: true
+hasImages: false
+keywords: ["universal", "visual-design", "motion", "accessibility", "animation", "design", "feedback", "gestures", "haptics", "interface"]
 ---
-## Table of Contents
+## Summary
 
-- [Apple Human Interface Guidelines](#apple-human-interface-guidelines)
-- [Note](#note)
-- [Key Design Principles](#key-design-principles)
-  - [Clarity](#clarity)
-  - [Deference](#deference)
-  - [Depth](#depth)
-- [Current Apple Design System](#current-apple-design-system)
-- [Essential UI Components Reference](#essential-ui-components-reference)
-  - [Navigation & Structure](#navigation-structure)
-  - [Buttons & Actions](#buttons-actions)
-  - [Forms & Input](#forms-input)
-  - [Lists & Collections](#lists-collections)
-  - [Modals & Overlays](#modals-overlays)
-  - [Media & Content](#media-content)
-  - [System Integration](#system-integration)
-  - [Icons & Visual Elements](#icons-visual-elements)
-  - [Accessibility Features](#accessibility-features)
-  - [Platform-Specific Features](#platformspecific-features)
-    - [iOS Specific](#ios-specific)
-    - [macOS Specific](#macos-specific)
-    - [watchOS Specific](#watchos-specific)
-    - [tvOS Specific](#tvos-specific)
-    - [visionOS Specific](#visionos-specific)
-- [Platform-Specific Guidelines](#platformspecific-guidelines)
-  - [iOS](#ios)
-  - [macOS](#macos)
-  - [watchOS](#watchos)
-  - [tvOS](#tvos)
-  - [visionOS](#visionos)
-- [Color and Materials](#color-and-materials)
-  - [iOS Color Guidelines](#ios-color-guidelines)
-  - [Material Design](#material-design)
-- [Typography](#typography)
-  - [iOS Typography Guidelines](#ios-typography-guidelines)
-  - [Text Styles:](#text-styles)
+Skip Navigation
+Motion
+Beautiful, fluid motions bring the interface to life, conveying status, providing feedback and instruction, and enriching the visual experience of your app or game.
 
-# Apple Human Interface Guidelines
+Skip Navigation
+Motion
+Beautiful, fluid motions bring the interface to life, conveying status, providing feedback and instruction, and enriching the visual experience of your app or game.
 
-## Note
-Apple's Human Interface Guidelines website is now a Single Page Application (SPA) that requires JavaScript to load content. This MCP server provides structured access to Apple's design guidelines.
+Many system components automatically include motion, letting you offer familiar and consistent experiences throughout your app or game. If you design custom motion, follow the guidelines below.
 
-## Key Design Principles
+Best practices
 
-### Clarity
-Text is legible at every size, icons are precise and lucid, adornments are subtle and appropriate, and a sharpened focus on functionality motivates the design.
+Add motion purposefully, supporting the experience without overshadowing it. Don't add motion for the sake of adding motion. Gratuitous or excessive animation can distract people and may make them feel disconnected or physically uncomfortable.
 
-### Deference
-Fluid motion and a crisp, beautiful interface help people understand and interact with content while never competing with it.
+Make motion optional. Not everyone can or wants to experience the motion in your app or game, so it's essential to avoid using it as the only way to communicate important information. To help everyone enjoy your app or game, supplement visual feedback by also using alternatives like haptics and audio to communicate.
 
-### Depth
-Distinct visual layers and realistic motion convey hierarchy, impart vitality, and facilitate understanding.
+Providing feedback
 
-## Current Apple Design System
+Strive for realistic feedback motion that follows people's gestures and expectations. In nongame apps, accurate, realistic motion can help people understand how something works, but feedback motion that doesn't make sense can make them feel disoriented. For example, if someone reveals a view by sliding it down from the top, they don't expect to dismiss the view by sliding it to the side.
 
-Apple's modern design language features:
-- **Advanced Materials**: Sophisticated visual elements with depth and clarity
-- **Adaptive Interface**: Intelligent adaptation across different environments and contexts
-- **Cross-platform Consistency**: Unified design language across all Apple platforms
-- **Modern APIs**: Latest SwiftUI, UIKit, and AppKit capabilities
+Aim for brevity and precision in feedback animations. When animated feedback is brief and precise, it tends to feel lightweight and unobtrusive, and it can often convey information more effectively than prominent animation. For example, when a game displays a succinct animation that's precisely tied to a successful action, players can instantly get the message without being distracted from their gameplay. Another example is in visionOS: When people tap a panorama in Photos, it quickly and smoothly expands to fill the space in front of them, helping them track the transition without making them wait to enjoy the content.
 
-## Essential UI Components Reference
+In apps, generally avoid adding motion to UI interactions that occur frequently. The system already provides subtle animations for interactions with standard interface elements. For a custom element, you generally want to avoid making people spend extra time paying attention to unnecessary motion every time they interact with it.
 
-### Navigation & Structure
-- **Navigation Bars**: Primary navigation with titles, back buttons, and action items
-- **Tab Bars**: Bottom navigation for primary app sections (2-5 tabs recommended)
-- **Sidebars**: Multi-column navigation for iPad and larger screens
-- **Toolbars**: Context-specific actions and tools
-- **Search Bars**: Content discovery and filtering functionality
-- **Breadcrumbs**: Hierarchical navigation indicators
+Let people cancel motion. As much as possible, don't make people wait for an animation to complete before they can do anything, especially if they have to experience the animation more than once.
 
-### Buttons & Actions
-- **Buttons**: Primary, secondary, and tertiary action triggers
-- **Link Buttons**: Text-based navigation and actions
-- **Toggle Buttons**: Binary state controls
-- **Action Sheets**: Modal selection from multiple options
-- **Context Menus**: Right-click or long-press actions
+Consider using animated symbols where it makes sense. When you use SF Symbols 5 or later, you can apply animations to SF Symbols or custom symbols. For guidance, see Animations.
 
-### Forms & Input
-- **Text Fields**: Single-line text input with validation
-- **Text Views**: Multi-line text editing areas
-- **Switches**: Binary on/off controls
-- **Sliders**: Continuous value selection
-- **Steppers**: Incremental numeric adjustment
-- **Pickers**: Selection from predefined lists
-- **Date Pickers**: Date and time selection controls
-- **Segmented Controls**: Mutually exclusive option selection
+Leveraging platform capabilities
 
-### Lists & Collections
-- **Lists and Tables**: Structured data presentation
-- **Collection Views**: Grid-based content layout
-- **Outline Views**: Hierarchical data structure (macOS)
-- **Source Lists**: Sidebar navigation lists (macOS)
+Make sure your game's motion looks great by default on each platform you support. In most games, maintaining a consistent frame rate of 30 to 60 fps typically results in a smooth, visually appealing experience. For each platform you support, use the device's graphics capabilities to enable default settings that let people enjoy your game without first having to change those settings.
 
-### Modals & Overlays
-- **Sheets**: Modal content presentation
-- **Alerts**: Critical information and confirmations
-- **Popovers**: Contextual information overlays
-- **Activity Views**: Progress and loading indicators
-- **Tooltips**: Helpful hints and explanations
+Let people customize the visual experience of your game to optimize performance or battery life. For example, consider letting people switch between power modes when the system detects the presence of an external power source.
 
-### Media & Content
-- **Images**: Static visual content with proper accessibility
-- **Video Players**: Media playback controls and interfaces
-- **Web Views**: Embedded web content
-- **Maps**: Location-based information and interaction
-- **Charts**: Data visualization components
+Platform considerations
 
-### System Integration
-- **Notifications**: Local and push notification design
-- **Widgets**: Home Screen and Today View extensions
-- **App Extensions**: Share, Action, and other system extensions
-- **Shortcuts**: Siri integration and automation
-- **Handoff**: Cross-device continuity features
+No additional considerations for iOS, iPadOS, macOS, or tvOS.
 
-### Icons & Visual Elements
-- **SF Symbols**: Apple's comprehensive icon library
-- **App Icons**: Application identifier and branding
-- **System Icons**: Interface and navigation symbols
-- **Custom Icons**: Brand-specific iconography guidelines
-- **Visual Effects**: Blur, vibrancy, and material effects
+visionOS
 
-### Accessibility Features
-- **VoiceOver**: Screen reader support and optimization
-- **Voice Control**: Voice navigation and interaction
-- **Switch Control**: Alternative input methods
-- **Dynamic Type**: Text size scaling and adaptation
-- **Reduced Motion**: Animation and transition preferences
-- **High Contrast**: Visual accessibility enhancements
-- **Color Blind Support**: Color accessibility considerations
+In addition to subtly communicating context, drawing attention to information, and enriching immersive experiences, motion in visionOS can combine with depth to provide essential feedback when people look at interactive elements. Because motion is likely to be a large part of your visionOS experience, it's crucial to avoid causing distraction, confusion, or discomfort.
 
-### Platform-Specific Features
+As much as possible, avoid displaying motion at the edges of a person's field of view. People can be particularly sensitive to motion that occurs in their peripheral vision: in addition to being distracting, such motion can even cause discomfort because it can make people feel like they or their surroundings are moving. If you need to show an object moving in the periphery during an immersive experience, make sure the object's brightness level is similar to the rest of the visible content.
 
-#### iOS Specific
-- **Dynamic Island**: Interactive notification area (iPhone 14 Pro+)
-- **Control Center**: System controls and quick actions
-- **Spotlight Search**: System-wide search functionality
-- **Today View**: Widget dashboard
-- **App Library**: App organization and discovery
+Help people remain comfortable when showing the movement of large virtual objects. If an object is large enough to fill a lot of the field of view, occluding most or all of passthrough, people can naturally perceive it as being part of their surroundings. To help people perceive the object's movement without making them think that they or their surroundings are moving, you can increase the object's translucency, helping people see through it, or lower its contrast to make its motion less noticeable.
 
-#### macOS Specific
-- **Menu Bar**: Global application menus
-- **Dock**: Application launcher and switcher
-- **Mission Control**: Window and desktop management
-- **Launchpad**: Application grid launcher
-- **Touch Bar**: Context-sensitive control strip
+Note
 
-#### watchOS Specific
-- **Digital Crown**: Rotary input mechanism
-- **Complications**: Watch face data displays
-- **Force Touch**: Pressure-sensitive interactions
-- **Haptic Feedback**: Tactile response patterns
+People can experience discomfort even when they're the ones moving a large virtual object, such as a window. Although adjusting translucency and contrast can help in this scenario, consider also keeping a window's size fairly small.
 
-#### tvOS Specific
-- **Focus Engine**: Navigation and selection system
-- **Siri Remote**: Touch and motion controls
-- **Top Shelf**: Featured content display
+Consider using fades when you need to relocate an object. When an object moves from one location to another, people naturally watch the movement. If such movement doesn't communicate anything useful to people, you can fade the object out before moving it and fade it back in after it's in the new location.
 
-#### visionOS Specific
-- **Spatial Design**: 3D interface layout principles
-- **Eye Tracking**: Gaze-based selection
-- **Hand Gestures**: Natural interaction methods
-- **Immersive Spaces**: Full environment experiences
+In general, avoid letting people rotate a virtual world. When a virtual world rotates, the experience typically upsets people's sense of stability, even when they control the rotation and the movement is subtle. Instead, consider using instantaneous directional changes during a quick fade-out.
 
-## Platform-Specific Guidelines
+Consider giving people a stationary frame of reference. It can be easier for people to handle visual movement when it's contained within an area that doesn't move. In contrast, if the entire surrounding area appears to move -- for example, in a game that automatically moves a player through space -- people can feel unwell.
 
-### iOS
-- Focus on touch-first interactions
-- Leverage iOS-specific features like Dynamic Island
-- Implement proper gesture recognition
-- Support accessibility features
-- Use iOS design tokens and spacing
+Avoid showing objects that oscillate in a sustained way. In particular, you want to avoid showing an oscillation that has a frequency of around 0.2 Hz because people can be very sensitive to this frequency. If you need to show objects oscillating, aim to keep the amplitude low and consider making the content translucent.
 
-### macOS
-- Utilize the full capabilities of the Mac
-- Support keyboard navigation
-- Implement proper window management
-- Leverage macOS-specific controls
-- Consider menu bar integration
+watchOS
 
-### watchOS
-- Design for quick, focused interactions
-- Optimize for the small screen
-- Implement complications effectively
-- Support Digital Crown interactions
-- Consider wrist gestures
+SwiftUI provides a powerful and streamlined way to add motion to your app. If you need to use WatchKit to animate layout and appearance changes -- or create animated image sequences -- see WKInterfaceImage.
 
-### tvOS
-- Focus on the viewing experience
-- Support remote control navigation
-- Implement proper focus management
-- Design for the big screen
-- Consider viewing distance
+Note
 
-### visionOS
-- Design for spatial computing
-- Support natural gestures
-- Implement proper depth and layering
-- Consider user comfort and safety
-- Design for mixed reality contexts
+All layout- and appearance-based animations automatically include built-in easing that plays at the start and end of the animation. You can't turn off or customize easing.
 
-## Color and Materials
+Resources
+Related
 
-### iOS Color Guidelines
-- Use dynamic colors that adapt to light and dark modes
-- Ensure sufficient contrast for accessibility
-- Consider color blindness in your color choices
-- Use semantic colors for consistent meaning
-- Test colors across different devices and conditions
+Feedback
 
-### Material Design
-- Implement proper material hierarchy
-- Use appropriate opacity and blur effects
-- Consider the material's context and purpose
-- Test materials across different backgrounds
-- Ensure materials enhance rather than distract
+Accessibility
 
-## Typography
+Spatial layout
 
-### iOS Typography Guidelines
-- Use Dynamic Type to support user font size preferences
-- Choose appropriate font weights for hierarchy
-- Ensure sufficient line spacing and character spacing
-- Test typography with accessibility features
-- Consider localization impact on text layout
+Immersive experiences
 
-### Text Styles:
-- **Large Title**: 34pt, prominent page titles
-- **Title 1**: 28pt, section titles
-- **Title 2**: 22pt, subsection titles
-- **Title 3**: 20pt, group titles
-- **Headline**: 17pt, emphasized content
-- **Body**: 17pt, primary content
-- **Callout**: 16pt, secondary content
-- **Subhead**: 15pt, descriptive content
-- **Footnote**: 13pt, supplementary content
-- **Caption 1**: 12pt, image captions
-- **Caption 2**: 11pt, minimal text
+Developer documentation
 
-For the most up-to-date and detailed information, please visit Apple's official Human Interface Guidelines at:
-https://developer.apple.com/design/human-interface-guidelines/
+Animating views and transitions -- SwiftUI
 
----
+Videos
+Enhance your UI animations and transitions
+Create custom visual effects with SwiftUI
+Design considerations for vision and motion
+Change log
 
-This content provides general guidance based on Apple's Human Interface Guidelines.
-© Apple Inc. All rights reserved. For official and detailed information, visit Apple's documentation.
+Date
+
+Changes
+
+June 10, 2024
+
+Added game-specific examples and enhanced guidance for using motion in games.
+
+February 2, 2024
+
+Enhanced guidance for minimizing peripheral motion in visionOS apps.
+
+June 21, 2023
+
+Updated to include guidance for visionOS.
+
+Current page is Motion
+Supported platforms
+Motion
+Best practices
+Providing feedback
+Leveraging platform capabilities
+Platform considerations
+Resources
+Change log
 ---
 
 **Attribution Notice**
 
 This content is sourced from Apple's Human Interface Guidelines: https://developer.apple.com/design/human-interface-guidelines/motion
+
+This content was extracted with moderate confidence. Please verify important details with the official Apple documentation.
 
 © Apple Inc. All rights reserved. This content is provided for educational and development purposes under fair use. This MCP server is not affiliated with Apple Inc. and does not claim ownership of Apple's content.
 

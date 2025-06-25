@@ -1,263 +1,234 @@
 ---
 title: "Materials"
 platform: universal
-category: color-and-materials
+category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/materials
 id: universal-materials
-lastUpdated: 2025-06-25T02:54:16.658Z
+lastUpdated: 2025-06-25T18:27:58.751Z
+extractionMethod: crawlee
+qualityScore: 0.600
+confidence: 0.800
+contentLength: 9762
+hasCodeExamples: false
+hasImages: false
+keywords: ["universal", "visual-design", "materials", "accessibility", "buttons", "color", "controls", "design", "interface", "navigation"]
 ---
-## Table of Contents
+## Summary
 
-- [Apple Human Interface Guidelines](#apple-human-interface-guidelines)
-- [Note](#note)
-- [Key Design Principles](#key-design-principles)
-  - [Clarity](#clarity)
-  - [Deference](#deference)
-  - [Depth](#depth)
-- [Current Apple Design System](#current-apple-design-system)
-- [Essential UI Components Reference](#essential-ui-components-reference)
-  - [Navigation & Structure](#navigation-structure)
-  - [Buttons & Actions](#buttons-actions)
-  - [Forms & Input](#forms-input)
-  - [Lists & Collections](#lists-collections)
-  - [Modals & Overlays](#modals-overlays)
-  - [Media & Content](#media-content)
-  - [System Integration](#system-integration)
-  - [Icons & Visual Elements](#icons-visual-elements)
-  - [Accessibility Features](#accessibility-features)
-  - [Platform-Specific Features](#platformspecific-features)
-    - [iOS Specific](#ios-specific)
-    - [macOS Specific](#macos-specific)
-    - [watchOS Specific](#watchos-specific)
-    - [tvOS Specific](#tvos-specific)
-    - [visionOS Specific](#visionos-specific)
-- [Platform-Specific Guidelines](#platformspecific-guidelines)
-  - [iOS](#ios)
-  - [macOS](#macos)
-  - [watchOS](#watchos)
-  - [tvOS](#tvos)
-  - [visionOS](#visionos)
-- [Color and Materials](#color-and-materials)
-  - [iOS Color Guidelines](#ios-color-guidelines)
-  - [Material Design](#material-design)
-- [Typography](#typography)
-  - [iOS Typography Guidelines](#ios-typography-guidelines)
-  - [Text Styles:](#text-styles)
+Added guidance for Liquid Glass.
+Materials
+A material is a visual effect that creates a sense of depth, layering, and hierarchy between foreground and background elements.
 
-# Apple Human Interface Guidelines
+Skip Navigation
 
-## Note
-Apple's Human Interface Guidelines website is now a Single Page Application (SPA) that requires JavaScript to load content. This MCP server provides structured access to Apple's design guidelines.
+June 9, 2025
 
-## Key Design Principles
+Added guidance for Liquid Glass.
+Materials
+A material is a visual effect that creates a sense of depth, layering, and hierarchy between foreground and background elements.
 
-### Clarity
-Text is legible at every size, icons are precise and lucid, adornments are subtle and appropriate, and a sharpened focus on functionality motivates the design.
+Materials help visually separate foreground elements, such as text and controls, from background elements, such as content and solid colors. By allowing color to pass through from background to foreground, a material establishes visual hierarchy to help people more easily retain a sense of place.
 
-### Deference
-Fluid motion and a crisp, beautiful interface help people understand and interact with content while never competing with it.
+Apple platforms feature two types of materials: Liquid Glass, and standard materials. Liquid Glass is a dynamic material that unifies the design language across Apple platforms, allowing you to present controls and navigation without obscuring underlying content. In contrast to Liquid Glass, the standard materials help with visual differentiation within the content layer.
 
-### Depth
-Distinct visual layers and realistic motion convey hierarchy, impart vitality, and facilitate understanding.
+Liquid Glass
 
-## Current Apple Design System
+Liquid Glass forms a distinct functional layer for controls and navigation elements -- like tab bars and sidebars -- that floats above the content layer, establishing a clear visual hierarchy between functional elements and content. Liquid Glass allows content to scroll and peek through from beneath these elements to give the interface a sense of dynamism and depth, all while maintaining legibility for controls and navigation.
 
-Apple's modern design language features:
-- **Advanced Materials**: Sophisticated visual elements with depth and clarity
-- **Adaptive Interface**: Intelligent adaptation across different environments and contexts
-- **Cross-platform Consistency**: Unified design language across all Apple platforms
-- **Modern APIs**: Latest SwiftUI, UIKit, and AppKit capabilities
+Don't use Liquid Glass in the content layer. Liquid Glass works best when it provides a clear distinction between interactive elements and content, and including it in the content layer can result in unnecessary complexity and a confusing visual hierarchy. Instead, use standard materials for elements in the content layer, such as app backgrounds. An exception to this is for controls in the content layer with a transient interactive element like sliders and toggles; in these cases, the element takes on a Liquid Glass appearance to emphasize its interactivity when a person activates it.
 
-## Essential UI Components Reference
+Use Liquid Glass effects sparingly. Standard components from system frameworks pick up the appearance and behavior of this material automatically. If you apply Liquid Glass effects to a custom control, do so sparingly. Liquid Glass seeks to bring attention to the underlying content, and overusing this material in multiple custom controls can provide a subpar user experience by distracting from that content. Limit these effects to the most important functional elements in your app. For developer guidance, see Applying Liquid Glass to custom views.
 
-### Navigation & Structure
-- **Navigation Bars**: Primary navigation with titles, back buttons, and action items
-- **Tab Bars**: Bottom navigation for primary app sections (2-5 tabs recommended)
-- **Sidebars**: Multi-column navigation for iPad and larger screens
-- **Toolbars**: Context-specific actions and tools
-- **Search Bars**: Content discovery and filtering functionality
-- **Breadcrumbs**: Hierarchical navigation indicators
+Standard materials
 
-### Buttons & Actions
-- **Buttons**: Primary, secondary, and tertiary action triggers
-- **Link Buttons**: Text-based navigation and actions
-- **Toggle Buttons**: Binary state controls
-- **Action Sheets**: Modal selection from multiple options
-- **Context Menus**: Right-click or long-press actions
+Use standard materials and effects -- such as blur, vibrancy, and blending modes -- to convey a sense of structure in the content beneath Liquid Glass.
 
-### Forms & Input
-- **Text Fields**: Single-line text input with validation
-- **Text Views**: Multi-line text editing areas
-- **Switches**: Binary on/off controls
-- **Sliders**: Continuous value selection
-- **Steppers**: Incremental numeric adjustment
-- **Pickers**: Selection from predefined lists
-- **Date Pickers**: Date and time selection controls
-- **Segmented Controls**: Mutually exclusive option selection
+Choose materials and effects based on semantic meaning and recommended usage. Avoid selecting a material or effect based on the apparent color it imparts to your interface, because system settings can change its appearance and behavior. Instead, match the material or vibrancy style to your specific use case.
 
-### Lists & Collections
-- **Lists and Tables**: Structured data presentation
-- **Collection Views**: Grid-based content layout
-- **Outline Views**: Hierarchical data structure (macOS)
-- **Source Lists**: Sidebar navigation lists (macOS)
+Help ensure legibility by using vibrant colors on top of materials. When you use system-defined vibrant colors, you don't need to worry about colors seeming too dark, bright, saturated, or low contrast in different contexts. Regardless of the material you choose, use vibrant colors on top of it. For guidance, see System colors.
 
-### Modals & Overlays
-- **Sheets**: Modal content presentation
-- **Alerts**: Critical information and confirmations
-- **Popovers**: Contextual information overlays
-- **Activity Views**: Progress and loading indicators
-- **Tooltips**: Helpful hints and explanations
+Consider contrast and visual separation when choosing a material to combine with blur and vibrancy effects. For example, consider that:
 
-### Media & Content
-- **Images**: Static visual content with proper accessibility
-- **Video Players**: Media playback controls and interfaces
-- **Web Views**: Embedded web content
-- **Maps**: Location-based information and interaction
-- **Charts**: Data visualization components
+Thicker materials, which are more opaque, can provide better contrast for text and other elements with fine features.
 
-### System Integration
-- **Notifications**: Local and push notification design
-- **Widgets**: Home Screen and Today View extensions
-- **App Extensions**: Share, Action, and other system extensions
-- **Shortcuts**: Siri integration and automation
-- **Handoff**: Cross-device continuity features
+Thinner materials, which are more translucent, can help people retain their context by providing a visible reminder of the content that's in the background.
 
-### Icons & Visual Elements
-- **SF Symbols**: Apple's comprehensive icon library
-- **App Icons**: Application identifier and branding
-- **System Icons**: Interface and navigation symbols
-- **Custom Icons**: Brand-specific iconography guidelines
-- **Visual Effects**: Blur, vibrancy, and material effects
+For developer guidance, see Material.
 
-### Accessibility Features
-- **VoiceOver**: Screen reader support and optimization
-- **Voice Control**: Voice navigation and interaction
-- **Switch Control**: Alternative input methods
-- **Dynamic Type**: Text size scaling and adaptation
-- **Reduced Motion**: Animation and transition preferences
-- **High Contrast**: Visual accessibility enhancements
-- **Color Blind Support**: Color accessibility considerations
+Platform considerations
+iOS, iPadOS
 
-### Platform-Specific Features
+iOS and iPadOS define vibrant colors for labels, fills, and separators that are specifically designed to work with each material.
 
-#### iOS Specific
-- **Dynamic Island**: Interactive notification area (iPhone 14 Pro+)
-- **Control Center**: System controls and quick actions
-- **Spotlight Search**: System-wide search functionality
-- **Today View**: Widget dashboard
-- **App Library**: App organization and discovery
+Labels and fills both have several levels of vibrancy; separators have one level. The name of a level indicates the relative amount of contrast between an element and the background: The default level has the highest contrast, whereas quaternary (when it exists) has the lowest contrast.
 
-#### macOS Specific
-- **Menu Bar**: Global application menus
-- **Dock**: Application launcher and switcher
-- **Mission Control**: Window and desktop management
-- **Launchpad**: Application grid launcher
-- **Touch Bar**: Context-sensitive control strip
+Separator vibrancy
 
-#### watchOS Specific
-- **Digital Crown**: Rotary input mechanism
-- **Complications**: Watch face data displays
-- **Force Touch**: Pressure-sensitive interactions
-- **Haptic Feedback**: Tactile response patterns
+Except for quaternary, you can use the following vibrancy values for labels on any material. In general, avoid using quaternary on top of the thin and ultraThin materials, because the contrast is too low.
 
-#### tvOS Specific
-- **Focus Engine**: Navigation and selection system
-- **Siri Remote**: Touch and motion controls
-- **Top Shelf**: Featured content display
+UIVibrancyEffectStyle.label (default)
 
-#### visionOS Specific
-- **Spatial Design**: 3D interface layout principles
-- **Eye Tracking**: Gaze-based selection
-- **Hand Gestures**: Natural interaction methods
-- **Immersive Spaces**: Full environment experiences
+UIVibrancyEffectStyle.secondaryLabel
 
-## Platform-Specific Guidelines
+UIVibrancyEffectStyle.tertiaryLabel
 
-### iOS
-- Focus on touch-first interactions
-- Leverage iOS-specific features like Dynamic Island
-- Implement proper gesture recognition
-- Support accessibility features
-- Use iOS design tokens and spacing
+UIVibrancyEffectStyle.quaternaryLabel
 
-### macOS
-- Utilize the full capabilities of the Mac
-- Support keyboard navigation
-- Implement proper window management
-- Leverage macOS-specific controls
-- Consider menu bar integration
+You can use the following vibrancy values for fills on all materials.
 
-### watchOS
-- Design for quick, focused interactions
-- Optimize for the small screen
-- Implement complications effectively
-- Support Digital Crown interactions
-- Consider wrist gestures
+UIVibrancyEffectStyle.fill (default)
 
-### tvOS
-- Focus on the viewing experience
-- Support remote control navigation
-- Implement proper focus management
-- Design for the big screen
-- Consider viewing distance
+UIVibrancyEffectStyle.secondaryFill
 
-### visionOS
-- Design for spatial computing
-- Support natural gestures
-- Implement proper depth and layering
-- Consider user comfort and safety
-- Design for mixed reality contexts
+UIVibrancyEffectStyle.tertiaryFill
 
-## Color and Materials
+The system provides a single, default vibrancy value for a separator, which works well on all materials.
 
-### iOS Color Guidelines
-- Use dynamic colors that adapt to light and dark modes
-- Ensure sufficient contrast for accessibility
-- Consider color blindness in your color choices
-- Use semantic colors for consistent meaning
-- Test colors across different devices and conditions
+macOS
 
-### Material Design
-- Implement proper material hierarchy
-- Use appropriate opacity and blur effects
-- Consider the material's context and purpose
-- Test materials across different backgrounds
-- Ensure materials enhance rather than distract
+macOS provides several standard materials with designated purposes, and vibrant versions of all system colors. For developer guidance, see NSVisualEffectView.Material.
 
-## Typography
+Choose when to allow vibrancy in custom views and controls. Depending on configuration and system settings, system views and controls use vibrancy to make foreground content stand out against any background. Test your interface in a variety of contexts to discover when vibrancy enhances the appearance and improves communication.
 
-### iOS Typography Guidelines
-- Use Dynamic Type to support user font size preferences
-- Choose appropriate font weights for hierarchy
-- Ensure sufficient line spacing and character spacing
-- Test typography with accessibility features
-- Consider localization impact on text layout
+Choose a background blending mode that complements your interface design. macOS defines two modes that blend background content: behind window and within window. For developer guidance, see NSVisualEffectView.BlendingMode.
 
-### Text Styles:
-- **Large Title**: 34pt, prominent page titles
-- **Title 1**: 28pt, section titles
-- **Title 2**: 22pt, subsection titles
-- **Title 3**: 20pt, group titles
-- **Headline**: 17pt, emphasized content
-- **Body**: 17pt, primary content
-- **Callout**: 16pt, secondary content
-- **Subhead**: 15pt, descriptive content
-- **Footnote**: 13pt, supplementary content
-- **Caption 1**: 12pt, image captions
-- **Caption 2**: 11pt, minimal text
+tvOS
 
-For the most up-to-date and detailed information, please visit Apple's official Human Interface Guidelines at:
-https://developer.apple.com/design/human-interface-guidelines/
+Use thinner, translucent materials to elevate content and make it feel fresh. Thicker materials tend to hide shadows, reducing depth and making it harder to distinguish content clearly. You might consider using thicker materials if you want to evoke a heavier feeling or suggest that the content is older.
 
----
+For example, consider using standard materials in the following ways:
 
-This content provides general guidance based on Apple's Human Interface Guidelines.
-© Apple Inc. All rights reserved. For official and detailed information, visit Apple's documentation.
+Material
+
+Recommended for
+
+ultraThin
+
+Full-screen views that require a light color scheme
+
+thin
+
+Overlay views that partially obscure onscreen content and require a light color scheme
+
+regular
+
+Overlay views that partially obscure onscreen content
+
+thick
+
+Overlay views that partially obscure onscreen content and require a dark color scheme
+
+ultraThick
+
+Full-screen views that require a dark color scheme
+
+You can also use the prominent blur effect for adaptable, full-screen backgrounds in your tvOS app.
+
+visionOS
+
+In visionOS, windows generally use an unmodifiable system-defined material called glass that helps people stay grounded by letting light, the current Environment, virtual content, and objects in people's surroundings show through. Glass is an adaptive material that limits the range of background color information so a window can continue to provide contrast for app content while becoming brighter or darker depending on people's physical surroundings and other virtual content.
+
+Play
+
+Note
+
+visionOS doesn't have a distinct Dark Mode setting. Instead, glass automatically adapts to the luminance of the objects and colors behind it.
+
+Avoid using opaque colors in a window. Areas of opacity can block people's view, making them feel constricted and reducing their awareness of the virtual and physical objects around them.
+
+If necessary, choose materials that help you create visual separations or indicate interactivity in your app. If you need to create a custom component, you may need to specify a system material for it. Use the following examples for guidance.
+
+The thin material brings attention to interactive elements like buttons and selected items.
+
+The regular material can help you visually separate sections of your app, like a sidebar or a grouped table view.
+
+The thick material lets you create a dark element that remains visually distinct when it's on top of an area that uses a regular background.
+
+To ensure foreground content remains legible when it displays on top of a material, visionOS applies vibrancy to text, symbols, and fills. Vibrancy enhances the sense of depth by pulling light and color forward from both virtual and physical surroundings.
+
+visionOS defines three vibrancy values that help you communicate a hierarchy of text, symbols, and fills.
+
+Use UIVibrancyEffectStyle.label for standard text.
+
+Use UIVibrancyEffectStyle.secondaryLabel for descriptive text like footnotes and subtitles.
+
+Use UIVibrancyEffectStyle.tertiaryLabel for inactive elements, and only when text doesn't need high legibility.
+
+label
+
+secondaryLabel
+
+tertiaryLabel
+
+watchOS
+
+Use materials to provide context in a full-screen modal view. Because full-screen modal views are common in watchOS, the contrast provided by material layers can help orient people in your app and distinguish controls and system elements from other content. Avoid removing or replacing material backgrounds for modal sheets when they're provided by default.
+
+Resources
+Related
+
+Color
+
+Accessibility
+
+Dark Mode
+
+Developer documentation
+
+Adopting Liquid Glass
+
+glassEffect(_:in:isEnabled:)
+
+Material -- SwiftUI
+
+UIVisualEffectView -- UIKit
+
+NSVisualEffectView -- AppKit
+
+Videos
+Meet Liquid Glass
+Get to know the new design system
+Change log
+
+Date
+
+Changes
+
+June 9, 2025
+
+Added guidance for Liquid Glass.
+
+August 6, 2024
+
+Added platform-specific art.
+
+December 5, 2023
+
+Updated descriptions of the various material types, and clarified terms related to vibrancy and material thickness.
+
+June 21, 2023
+
+Updated to include guidance for visionOS.
+
+June 5, 2023
+
+Added guidance on using materials to provide context and orientation in watchOS apps.
+
+Current page is Materials
+Supported platforms
+Materials
+Liquid Glass
+Standard materials
+Platform considerations
+Resources
+Change log
 ---
 
 **Attribution Notice**
 
 This content is sourced from Apple's Human Interface Guidelines: https://developer.apple.com/design/human-interface-guidelines/materials
+
+This content was extracted with moderate confidence. Please verify important details with the official Apple documentation.
 
 © Apple Inc. All rights reserved. This content is provided for educational and development purposes under fair use. This MCP server is not affiliated with Apple Inc. and does not claim ownership of Apple's content.
 
