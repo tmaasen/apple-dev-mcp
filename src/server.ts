@@ -51,12 +51,17 @@ class AppleHIGMCPServer {
         },
       }
     );
+  }
 
+  /**
+   * Initialize the server asynchronously
+   */
+  async initialize(): Promise<void> {
     // Validate environment
-    this.validateEnvironment();
+    await this.validateEnvironment();
     
     // Initialize static content if available
-    this.initializeStaticContent();
+    await this.initializeStaticContent();
 
     // Initialize components
     this.cache = new HIGCache(3600); // 1 hour default TTL
@@ -71,7 +76,7 @@ class AppleHIGMCPServer {
   /**
    * Validate runtime environment and configuration
    */
-  private validateEnvironment(): void {
+  private async validateEnvironment(): Promise<void> {
     const requiredNodeVersion = '18.0.0';
     const currentVersion = process.version.slice(1); // Remove 'v' prefix
     
@@ -81,9 +86,9 @@ class AppleHIGMCPServer {
 
     // Validate dependencies are available
     try {
-      require('@crawlee/playwright');
-      require('playwright');
-      require('node-cache');
+      await import('@crawlee/playwright');
+      await import('playwright');
+      await import('node-cache');
     } catch {
       throw new Error(`Missing required dependencies. Run 'npm install' to install dependencies.`);
     }
@@ -431,8 +436,8 @@ class AppleHIGMCPServer {
         console.log('');
       }
       
-      // Initialize static content before starting the server
-      await this.initializeStaticContent();
+      // Initialize the server components
+      await this.initialize();
 
       const transport = new StdioServerTransport();
       await this.server.connect(transport);
@@ -468,6 +473,10 @@ process.on('SIGTERM', async () => {
 
 // Start the server
 if (import.meta.url === `file://${process.argv[1]}`) {
+  // Handle command line arguments - ignore any extra args like 'run start'
+  const args = process.argv.slice(2);
+  
+  // Always start the server regardless of arguments
   const server = new AppleHIGMCPServer();
   server.run().catch((_error) => {
     // console.error('💥 Failed to start Apple HIG MCP Server:', error);

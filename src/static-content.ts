@@ -68,14 +68,18 @@ export class HIGStaticContentProvider {
       await this.loadCrossReferences();
       
       if (process.env.NODE_ENV === 'development') {
-        console.log(`[StaticContent] Initialized with ${this.metadata?.totalSections || 0} sections`);
-        console.log(`[StaticContent] Content last updated: ${this.metadata?.lastUpdated || 'unknown'}`);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[StaticContent] Initialized with ${this.metadata?.totalSections || 0} sections`);
+          console.log(`[StaticContent] Content last updated: ${this.metadata?.lastUpdated || 'unknown'}`);
+        }
       }
       
       return true;
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
-        console.warn('[StaticContent] Failed to initialize:', error);
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[StaticContent] Failed to initialize:', error);
+        }
       }
       return false;
     }
@@ -333,7 +337,9 @@ export class HIGStaticContentProvider {
       return section;
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
-        console.warn(`[StaticContent] Failed to load section ${sectionId}:`, error);
+        if (process.env.NODE_ENV === 'development') {
+          console.warn(`[StaticContent] Failed to load section ${sectionId}:`, error);
+        }
       }
       return null;
     }

@@ -36,6 +36,14 @@ export class HIGDiscoveryService {
 
   constructor(cache: HIGCache) {
     this.cache = cache;
+    
+    // Suppress Crawlee logging when not in development
+    if (process.env.NODE_ENV !== 'development') {
+      process.env.CRAWLEE_LOG_LEVEL = 'OFF';
+      process.env.CRAWLEE_VERBOSE_LOG = 'false';
+      process.env.APIFY_LOG_LEVEL = 'OFF';
+    }
+    
     this.config = {
       baseUrl: 'https://developer.apple.com/design/human-interface-guidelines',
       maxDepth: 3,
@@ -53,11 +61,15 @@ export class HIGDiscoveryService {
     // Check cache first
     const cached = this.cache.get<HIGSection[]>(this.config.cacheKey);
     if (cached && cached.length > 0) {
-      console.log(`[HIGDiscovery] Using cached sections: ${cached.length} sections`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[HIGDiscovery] Using cached sections: ${cached.length} sections`);
+      }
       return cached;
     }
 
-    console.log('[HIGDiscovery] Starting dynamic section discovery...');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[HIGDiscovery] Starting dynamic section discovery...');
+    }
     
     try {
       // Reset state
@@ -87,7 +99,12 @@ export class HIGDiscoveryService {
               '--disable-setuid-sandbox',
               '--disable-dev-shm-usage',
               '--disable-accelerated-2d-canvas',
-              '--disable-gpu'
+              '--disable-gpu',
+              '--log-level=3',
+              '--silent',
+              '--disable-logging',
+              '--disable-dev-tools',
+              '--disable-extensions-http-throttling'
             ]
           }
         },
@@ -95,7 +112,9 @@ export class HIGDiscoveryService {
         // Error handling
         failedRequestHandler: async ({ request, error }) => {
           const errorMessage = error instanceof Error ? error.message : String(error);
-          console.warn(`[HIGDiscovery] Failed to process ${request.url}: ${errorMessage}`);
+          if (process.env.NODE_ENV === 'development') {
+            console.warn(`[HIGDiscovery] Failed to process ${request.url}: ${errorMessage}`);
+          }
         }
       });
 
@@ -108,13 +127,17 @@ export class HIGDiscoveryService {
       // Cache the results
       this.cache.set(this.config.cacheKey, sections, this.config.cacheTTL);
       
-      console.log(`[HIGDiscovery] Discovery completed: ${sections.length} sections found`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[HIGDiscovery] Discovery completed: ${sections.length} sections found`);
+      }
       this.logDiscoveryStats(sections);
       
       return sections;
 
     } catch (error) {
-      console.error('[HIGDiscovery] Discovery failed:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[HIGDiscovery] Discovery failed:', error);
+      }
       
       // Return fallback known sections if discovery fails
       return this.getFallbackSections();
@@ -125,14 +148,18 @@ export class HIGDiscoveryService {
    * Handle each page during crawling
    */
   private async handlePageRequest(page: any, request: any, enqueueLinks: any, dataset: any): Promise<void> {
-    console.log(`[HIGDiscovery] Processing: ${request.url}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[HIGDiscovery] Processing: ${request.url}`);
+    }
     
     // Wait for the SPA to load
     await page.waitForLoadState('networkidle', { timeout: 15000 });
     
     // Extract the page title
     const pageTitle = await page.title();
-    console.log(`[HIGDiscovery] Page title: ${pageTitle}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[HIGDiscovery] Page title: ${pageTitle}`);
+    }
 
     // Look for navigation elements and content links
     await this.extractNavigationLinks(page, request, enqueueLinks, dataset);
@@ -177,7 +204,9 @@ export class HIGDiscoveryService {
         }
 
         if (links.length > 0) {
-          console.log(`[HIGDiscovery] Found ${links.length} links with selector: ${selector}`);
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`[HIGDiscovery] Found ${links.length} links with selector: ${selector}`);
+          }
         }
       } catch {
         // Selector not found, continue with next one
@@ -257,7 +286,9 @@ export class HIGDiscoveryService {
       };
 
       await dataset.pushData(discoveredLink);
-      console.log(`[HIGDiscovery] Discovered: ${title} (${platform}/${category})`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[HIGDiscovery] Discovered: ${title} (${platform}/${category})`);
+      }
     }
   }
 
@@ -287,10 +318,14 @@ export class HIGDiscoveryService {
       };
 
       this.discoveredSections.set(url, section);
-      console.log(`[HIGDiscovery] Created section: ${title}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[HIGDiscovery] Created section: ${title}`);
+      }
 
     } catch (error) {
-      console.warn(`[HIGDiscovery] Failed to create section from ${request.url}:`, error);
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`[HIGDiscovery] Failed to create section from ${request.url}:`, error);
+      }
     }
   }
 
@@ -443,16 +478,20 @@ export class HIGDiscoveryService {
       return acc;
     }, {} as Record<string, number>);
 
-    console.log('[HIGDiscovery] Discovery Statistics:');
-    console.log('  Platforms:', platformCounts);
-    console.log('  Categories:', categoryCounts);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[HIGDiscovery] Discovery Statistics:');
+      console.log('  Platforms:', platformCounts);
+      console.log('  Categories:', categoryCounts);
+    }
   }
 
   /**
    * Fallback to known sections if discovery fails
    */
   private getFallbackSections(): HIGSection[] {
-    console.warn('[HIGDiscovery] Using fallback known sections');
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[HIGDiscovery] Using fallback known sections');
+    }
     
     // Return a minimal set of core sections as fallback
     const fallbackSections = [

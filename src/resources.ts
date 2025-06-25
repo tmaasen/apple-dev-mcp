@@ -118,7 +118,9 @@ export class HIGResourceProvider {
       
       return resources;
     } catch (error) {
-      console.error('[HIGResourceProvider] Failed to list resources:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[HIGResourceProvider] Failed to list resources:', error);
+      }
       return [];
     }
   }
@@ -193,7 +195,9 @@ export class HIGResourceProvider {
       
       return resource;
     } catch (error) {
-      console.error(`[HIGResourceProvider] Failed to get resource ${uri}:`, error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`[HIGResourceProvider] Failed to get resource ${uri}:`, error);
+      }
       return null;
     }
   }

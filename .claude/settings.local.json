@@ -26,7 +26,10 @@
       "Bash(npx playwright:*)",
       "Bash(timeout 10s npm run health-check)",
       "Bash(true)",
-      "Bash(gtimeout:*)"
+      "Bash(gtimeout:*)",
+      "Bash(ls:*)",
+      "Bash(npx @modelcontextprotocol/inspector:*)",
+      "Bash(pkill:*)"
     ],
     "deny": []
   }

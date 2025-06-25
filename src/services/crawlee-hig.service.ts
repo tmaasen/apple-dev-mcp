@@ -43,6 +43,14 @@ export class CrawleeHIGService {
     this.cache = cache;
     this.discoveryService = new HIGDiscoveryService(cache);
     
+    // Suppress Crawlee/Playwright logging when not in development
+    if (process.env.NODE_ENV !== 'development') {
+      process.env.CRAWLEE_LOG_LEVEL = 'OFF';
+      process.env.CRAWLEE_VERBOSE_LOG = 'false';
+      process.env.APIFY_LOG_LEVEL = 'OFF';
+      process.env.PLAYWRIGHT_LOG_LEVEL = 'OFF';
+    }
+    
     this.config = {
       // Base scraping config
       baseUrl: 'https://developer.apple.com/design/human-interface-guidelines',
@@ -63,7 +71,12 @@ export class CrawleeHIGService {
           '--disable-accelerated-2d-canvas',
           '--disable-gpu',
           '--disable-web-security',
-          '--disable-features=VizDisplayCompositor'
+          '--disable-features=VizDisplayCompositor',
+          '--log-level=3',
+          '--silent',
+          '--disable-logging',
+          '--disable-dev-tools',
+          '--disable-extensions-http-throttling'
         ]
       },
       waitOptions: {
@@ -90,11 +103,15 @@ export class CrawleeHIGService {
     // Check cache first
     const cached = this.cache.get<HIGSection>(cacheKey);
     if (cached) {
-      console.log(`[CrawleeHIG] Using cached content for: ${section.title}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[CrawleeHIG] Using cached content for: ${section.title}`);
+      }
       return cached;
     }
 
-    console.log(`[CrawleeHIG] Extracting content for: ${section.title}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[CrawleeHIG] Extracting content for: ${section.title}`);
+    }
 
     try {
       const extractionResult = await this.extractContentWithCrawlee(section.url);
@@ -108,12 +125,16 @@ export class CrawleeHIGService {
       // Cache successful extractions for 2 hours
       this.cache.set(cacheKey, updatedSection, 7200);
       
-      console.log(`[CrawleeHIG] Successfully extracted content for: ${section.title} (quality: ${extractionResult.quality}, method: ${extractionResult.extractionMethod})`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[CrawleeHIG] Successfully extracted content for: ${section.title} (quality: ${extractionResult.quality}, method: ${extractionResult.extractionMethod})`);
+      }
       
       return updatedSection;
 
     } catch (error) {
-      console.error(`[CrawleeHIG] Failed to extract content for ${section.title}:`, error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`[CrawleeHIG] Failed to extract content for ${section.title}:`, error);
+      }
       
       // Return section with minimal fallback content
       return {
@@ -138,7 +159,9 @@ export class CrawleeHIGService {
     let page;
     
     try {
-      console.log(`[CrawleeHIG] Processing: ${url}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[CrawleeHIG] Processing: ${url}`);
+      }
       
       // Launch browser with our configuration
       browser = await chromium.launch({
@@ -168,7 +191,9 @@ export class CrawleeHIGService {
       // Extract content from the page
       const contentResult = await this.extractPageContent(page);
 
-      console.log(`[CrawleeHIG] Content extracted, length: ${contentResult.content.length}, quality: ${contentResult.quality}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[CrawleeHIG] Content extracted, length: ${contentResult.content.length}, quality: ${contentResult.quality}`);
+      }
 
       return {
         content: contentResult.content,
@@ -178,7 +203,9 @@ export class CrawleeHIGService {
       };
 
     } catch (error) {
-      console.error(`[CrawleeHIG] Page processing error: ${error}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`[CrawleeHIG] Page processing error: ${error}`);
+      }
       throw error;
     } finally {
       // Clean up resources
@@ -215,7 +242,9 @@ export class CrawleeHIGService {
             bestQuality = result.quality;
           }
         } catch (error) {
-          console.warn(`[CrawleeHIG] Content extraction strategy failed: ${error}`);
+          if (process.env.NODE_ENV === 'development') {
+            console.warn(`[CrawleeHIG] Content extraction strategy failed: ${error}`);
+          }
         }
       }
 
@@ -225,7 +254,9 @@ export class CrawleeHIGService {
       };
 
     } catch (error) {
-      console.error(`[CrawleeHIG] Content extraction failed: ${error}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`[CrawleeHIG] Content extraction failed: ${error}`);
+      }
       throw error;
     }
   }
@@ -489,7 +520,9 @@ export class CrawleeHIGService {
     
     if (timeSinceLastRequest < this.config.requestDelay) {
       const waitTime = this.config.requestDelay - timeSinceLastRequest;
-      console.log(`[CrawleeHIG] Rate limiting: waiting ${waitTime}ms`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[CrawleeHIG] Rate limiting: waiting ${waitTime}ms`);
+      }
       await new Promise(resolve => setTimeout(resolve, waitTime));
     }
     

@@ -61,7 +61,9 @@ export class HIGContentExtractor {
    * Extract and process content from raw HTML or text
    */
   async extractContent(rawContent: string, section: HIGSection): Promise<ProcessedContent> {
-    console.log(`[HIGContentExtractor] Processing content for: ${section.title}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[HIGContentExtractor] Processing content for: ${section.title}`);
+    }
 
     // Clean and normalize the content
     const cleanedContent = this.cleanRawContent(rawContent);
@@ -86,7 +88,9 @@ export class HIGContentExtractor {
       headingCount: headings.length
     });
 
-    console.log(`[HIGContentExtractor] Content quality score: ${quality.score.toFixed(2)} for ${section.title}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[HIGContentExtractor] Content quality score: ${quality.score.toFixed(2)} for ${section.title}`);
+    }
 
     return {
       content: cleanedContent,
