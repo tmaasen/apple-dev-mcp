@@ -74,6 +74,7 @@ export class CrawleeHIGService {
     };
   }
 
+
   /**
    * Discover all HIG sections using dynamic discovery
    */
@@ -125,74 +126,69 @@ export class CrawleeHIGService {
   }
 
   /**
-   * Extract content using Crawlee's PlaywrightCrawler
+   * Extract content using direct Playwright browser instead of Crawlee
    */
   private async extractContentWithCrawlee(url: string): Promise<ContentExtractionResult> {
-    let extractedContent = '';
-    let extractionQuality = 0;
-    
     // Respect rate limiting
     await this.respectRateLimit();
 
-    const crawler = new PlaywrightCrawler({
-      requestHandler: async ({ page, request }) => {
-        try {
-          console.log(`[CrawleeHIG] Processing: ${request.url}`);
-          
-          // Wait for SPA to load completely
-          await page.waitForLoadState('networkidle', { 
-            timeout: this.config.waitOptions.timeout 
-          });
-          
-          // Additional wait to ensure dynamic content is loaded
-          await page.waitForTimeout(this.config.waitOptions.networkIdle);
-
-          // Extract content from the page
-          const contentResult = await this.extractPageContent(page);
-          extractedContent = contentResult.content;
-          extractionQuality = contentResult.quality;
-
-          console.log(`[CrawleeHIG] Content extracted, length: ${extractedContent.length}, quality: ${extractionQuality}`);
-
-        } catch (error) {
-          console.error(`[CrawleeHIG] Page processing error: ${error}`);
-          throw error;
-        }
-      },
-
-      // Crawler configuration
-      maxRequestsPerCrawl: 1, // Only process the target URL
-      maxConcurrency: 1, // One at a time for individual page extraction
-      
-      // Browser configuration
-      launchContext: {
-        launchOptions: {
-          headless: this.config.browserOptions.headless,
-          args: this.config.browserOptions.args
-        }
-      },
-
-      // Error handling
-      failedRequestHandler: async ({ request, error }) => {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        console.error(`[CrawleeHIG] Failed to process ${request.url}: ${errorMessage}`);
-        throw new Error(`Failed to extract content from ${url}: ${errorMessage}`);
-      }
-    });
-
+    // Use Playwright directly for more reliable single-page extraction
+    const { chromium } = await import('playwright');
+    
+    let browser;
+    let page;
+    
     try {
-      // Run crawler on the specific URL
-      await crawler.run([{ url }]);
+      console.log(`[CrawleeHIG] Processing: ${url}`);
       
+      // Launch browser with our configuration
+      browser = await chromium.launch({
+        headless: this.config.browserOptions.headless,
+        args: this.config.browserOptions.args
+      });
+      
+      // Create a new page
+      page = await browser.newPage({
+        viewport: this.config.browserOptions.viewport
+      });
+      
+      // Set user agent
+      await page.setExtraHTTPHeaders({
+        'User-Agent': this.config.userAgent
+      });
+      
+      // Navigate to the URL
+      await page.goto(url, { 
+        waitUntil: 'networkidle', 
+        timeout: this.config.waitOptions.timeout 
+      });
+      
+      // Additional wait to ensure dynamic content is loaded
+      await page.waitForTimeout(this.config.waitOptions.networkIdle);
+
+      // Extract content from the page
+      const contentResult = await this.extractPageContent(page);
+
+      console.log(`[CrawleeHIG] Content extracted, length: ${contentResult.content.length}, quality: ${contentResult.quality}`);
+
       return {
-        content: extractedContent,
-        quality: extractionQuality,
+        content: contentResult.content,
+        quality: contentResult.quality,
         extractionMethod: 'crawlee',
         timestamp: new Date()
       };
+
+    } catch (error) {
+      console.error(`[CrawleeHIG] Page processing error: ${error}`);
+      throw error;
     } finally {
-      // Ensure crawler is properly torn down
-      await crawler.teardown();
+      // Clean up resources
+      if (page) {
+        await page.close().catch(() => {});
+      }
+      if (browser) {
+        await browser.close().catch(() => {});
+      }
     }
   }
 
