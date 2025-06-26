@@ -12,6 +12,7 @@ export interface HIGSection {
   lastUpdated?: Date;
   quality?: ContentQualityMetrics;
   extractionMethod?: 'crawlee' | 'fallback' | 'static';
+  structuredContent?: StructuredHIGContent;
 }
 
 export interface HIGComponent {

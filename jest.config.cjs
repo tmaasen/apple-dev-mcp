@@ -36,7 +36,9 @@ module.exports = {
   extensionsToTreatAsEsm: ['.ts'],
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
-    '^node-fetch$': '<rootDir>/src/__mocks__/node-fetch.ts'
+    '^node-fetch$': '<rootDir>/src/__mocks__/node-fetch.ts',
+    '^@tensorflow-models/universal-sentence-encoder$': '<rootDir>/src/__mocks__/@tensorflow-models/universal-sentence-encoder.ts',
+    '^compromise$': '<rootDir>/src/__mocks__/compromise.ts'
   },
   testPathIgnorePatterns: [
     '/node_modules/',
