@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
 /**
- * Phase 2 Semantic Search Enhancement Validation Test
+ * Semantic Search Validation Test
  * 
- * Tests the enhanced semantic search functionality to validate Phase 2 improvements
+ * Tests the semantic search functionality and content processing capabilities
  */
 
 import { SemanticSearchService } from './dist/services/semantic-search.service.js';
 import { SearchIndexerService } from './dist/services/search-indexer.service.js';
 import { ContentProcessorService } from './dist/services/content-processor.service.js';
-import { EnhancedHIGToolsService } from './dist/services/enhanced-tools.service.js';
+import { HIGToolsService } from './dist/services/tools.service.js';
 
 // Test data that mimics HIG sections
 const testSections = [
@@ -147,8 +147,8 @@ Ensure sufficient contrast ratios. Insufficient contrast in your app makes conte
   }
 ];
 
-async function runPhase2ValidationTests() {
-  console.log('🚀 Starting Phase 2 Semantic Search Enhancement Validation...\n');
+async function runSemanticSearchValidation() {
+  console.log('🚀 Starting Semantic Search Validation...\n');
   
   const results = {
     semanticSearchTests: [],
@@ -193,13 +193,13 @@ async function runPhase2ValidationTests() {
       message: `Indexed ${indexStats.keywordIndex.totalEntries} sections` 
     });
 
-    // Test 3: Enhanced Tools Service
-    console.log('\n📝 Test 3: Enhanced Tools Service');
-    const enhancedTools = new EnhancedHIGToolsService();
+    // Test 3: Tools Service
+    console.log('\n📝 Test 3: Tools Service');
+    const enhancedTools = new HIGToolsService();
     
     const toolsStats = enhancedTools.getStatistics();
-    console.log('✅ Enhanced tools service created');
-    console.log(`   Enhanced features available: ${Object.keys(toolsStats.enhancedFeatures).length}`);
+    console.log('✅ Tools service created');
+    console.log(`   Features available: ${Object.keys(toolsStats.enhancedFeatures).length}`);
     console.log(`   Version: ${toolsStats.version}`);
     
     results.enhancedToolsTests.push({ 
@@ -356,9 +356,9 @@ async function runPhase2ValidationTests() {
       message: `Average search time: ${averageSearchTime.toFixed(1)}ms`
     });
 
-    // Generate Phase 2 Success Report
+    // Generate Success Report
     console.log('\n' + '='.repeat(70));
-    console.log('📊 PHASE 2 VALIDATION SUMMARY');
+    console.log('📊 SEMANTIC SEARCH VALIDATION SUMMARY');
     console.log('='.repeat(70));
     
     const allTests = [
@@ -376,32 +376,32 @@ async function runPhase2ValidationTests() {
     console.log(`📈 Test Results: ${passedTests}/${totalTests} passed, ${failedTests} failed, ${skippedTests} skipped`);
     console.log(`✅ Success Rate: ${((passedTests / totalTests) * 100).toFixed(1)}%`);
     
-    console.log('\n🎯 PHASE 2 SUCCESS CRITERIA:');
+    console.log('\n🎯 SUCCESS CRITERIA:');
     
-    const phase2Criteria = {
+    const criteria = {
       semanticSearchImplemented: results.semanticSearchTests.some(t => t.status === 'pass' || t.status === 'skip'),
       enhancedToolsWorking: results.enhancedToolsTests.filter(t => t.status === 'pass').length >= 3,
       searchFunctional: results.qualityTests.filter(t => t.status === 'pass').length >= 2,
       performanceAcceptable: averageSearchTime < 1000 // Under 1 second average
     };
     
-    console.log(`   ${phase2Criteria.semanticSearchImplemented ? '✅' : '❌'} Semantic Search Implemented: TensorFlow Universal Sentence Encoder integration`);
-    console.log(`   ${phase2Criteria.enhancedToolsWorking ? '✅' : '❌'} Enhanced Tools Working: Multi-factor relevance scoring and intent recognition`);
-    console.log(`   ${phase2Criteria.searchFunctional ? '✅' : '❌'} Search Functional: Query understanding and contextual results`);
-    console.log(`   ${phase2Criteria.performanceAcceptable ? '✅' : '❌'} Performance Acceptable: <1s average search time (${averageSearchTime.toFixed(1)}ms)`);
+    console.log(`   ${criteria.semanticSearchImplemented ? '✅' : '❌'} Semantic Search Implemented: TensorFlow Universal Sentence Encoder integration`);
+    console.log(`   ${criteria.enhancedToolsWorking ? '✅' : '❌'} Tools Working: Multi-factor relevance scoring and intent recognition`);
+    console.log(`   ${criteria.searchFunctional ? '✅' : '❌'} Search Functional: Query understanding and contextual results`);
+    console.log(`   ${criteria.performanceAcceptable ? '✅' : '❌'} Performance Acceptable: <1s average search time (${averageSearchTime.toFixed(1)}ms)`);
     
-    const overallSuccess = Object.values(phase2Criteria).filter(Boolean).length >= 3;
+    const overallSuccess = Object.values(criteria).filter(Boolean).length >= 3;
     
-    console.log('\n🏁 PHASE 2 OVERALL RESULT:');
+    console.log('\n🏁 OVERALL RESULT:');
     if (overallSuccess) {
-      console.log('🎉 PHASE 2 COMPLETE - SEMANTIC SEARCH ENHANCEMENT SUCCESSFUL!');
-      console.log('   Ready for production deployment with enhanced search capabilities');
+      console.log('🎉 SEMANTIC SEARCH VALIDATION SUCCESSFUL!');
+      console.log('   Ready for production deployment with semantic search capabilities');
     } else {
-      console.log('⚠️  Phase 2 partially complete - some criteria need attention');
+      console.log('⚠️  Validation partially complete - some criteria need attention');
       console.log('   Review failed tests and consider additional optimization');
     }
     
-    console.log('\n📈 PHASE 2 ACHIEVEMENTS:');
+    console.log('\n📈 ACHIEVEMENTS:');
     console.log('   • Semantic search with TensorFlow Universal Sentence Encoder');
     console.log('   • Multi-factor relevance scoring (semantic + keyword + structure + context)');
     console.log('   • Intent recognition and entity extraction using compromise NLP');
@@ -421,7 +421,7 @@ async function runPhase2ValidationTests() {
 }
 
 // Run the validation
-runPhase2ValidationTests()
+runSemanticSearchValidation()
   .then(success => {
     process.exit(success ? 0 : 1);
   })

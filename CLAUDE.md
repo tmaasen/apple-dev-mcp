@@ -64,29 +64,56 @@ The project uses a hybrid static/dynamic architecture with static content genera
    - Prefers static content, falls back to scraping
    - Generates comprehensive content with proper Apple attribution
 
-6. **HIGToolProvider** (`src/tools.ts`) - MCP Tools implementation
-   - Interactive search, component specs, platform comparison
+6. **HIGToolsService** (`src/services/tools.service.ts`) - MCP Tools implementation with semantic search
+   - Interactive search with semantic understanding and intent recognition
    - Four main tools: `search_guidelines`, `get_component_spec`, `compare_platforms`, `get_latest_updates`
-   - Uses static search indices for fast results
+   - Multi-factor relevance scoring (semantic + keyword + structure + context)
+   - Uses semantic embeddings via TensorFlow Universal Sentence Encoder
+   - Graceful fallback to keyword search when semantic models unavailable
+
+7. **SemanticSearchService** (`src/services/semantic-search.service.ts`) - Advanced search capabilities
+   - TensorFlow Universal Sentence Encoder for vector similarity matching
+   - Query analysis with intent recognition and entity extraction (using compromise NLP)
+   - Multi-dimensional relevance scoring with configurable weights
+   - Support for contextual search across Apple platform design patterns
+
+8. **ContentProcessor** (`src/services/content-processor.service.ts`) - Content processing pipeline
+   - HTML to markdown conversion using Turndown.js (images removed for MCP efficiency)
+   - Structured content extraction (overview, guidelines, examples, specifications)
+   - Quality validation with comprehensive scoring and SLA monitoring
+   - Apple-specific content pattern recognition and enhancement
 
 ### Data Flow
 
 ```
-MCP Client → AppleHIGMCPServer → HIGResourceProvider/HIGToolProvider
+MCP Client → AppleHIGMCPServer → HIGResourceProvider/HIGToolsService
                                             ↓
                                  HIGStaticContentProvider (primary)
                                             ↓ (fallback)
                                      HIGScraper → HIGCache → Apple's Website
+
+Search Flow:
+Query → SemanticSearchService → TensorFlow USE Model (embeddings)
+                            ↓
+                    Multi-factor Scoring (semantic + keyword + structure + context)
+                            ↓
+                    Ranked Results (with intent recognition and boost factors)
 ```
 
-### Static Content Generation
+### Content Generation and Processing
 
 ```
-GitHub Action (every 4 months) → Content Generator → Markdown Files + Search Indices
-                                                            ↓
-                                                    content/ directory
-                                                            ↓
-                                               HIGStaticContentProvider
+GitHub Action (every 4 months) → ContentGenerator → Semantic Processing Pipeline
+                                        ↓
+                                ContentProcessor (Turndown.js + Structure Extraction)
+                                        ↓
+                                Quality Validation + SLA Monitoring
+                                        ↓
+                        Markdown Files + Search Indices + Semantic Embeddings
+                                        ↓
+                                content/ directory
+                                        ↓
+                        HIGStaticContentProvider + SemanticSearchService
 ```
 
 ### Key Patterns
@@ -96,6 +123,12 @@ GitHub Action (every 4 months) → Content Generator → Markdown Files + Search
 **Graceful Degradation**: Multiple fallback layers ensure availability - static content → cached scraping → live scraping → contextual fallback content.
 
 **Performance Optimization**: Static content provides instant responses (no scraping delays) and scales to unlimited concurrent users.
+
+**Semantic Search Enhancement**: Multi-factor relevance scoring combines semantic similarity (via TensorFlow Universal Sentence Encoder), keyword matching, content structure analysis, and contextual relevance for superior search results.
+
+**Intent Recognition**: Query analysis extracts user intent (find_component, find_guideline, compare_platforms, etc.) and entities (components, platforms, properties) for more accurate results.
+
+**Graceful AI Fallback**: When TensorFlow models are unavailable (network restrictions, etc.), the system seamlessly falls back to optimized keyword search with enhanced relevance scoring.
 
 **Respectful Scraping**: Rate limiting, appropriate user agents, and fallback to known URLs when Apple's SPA architecture prevents dynamic discovery.
 

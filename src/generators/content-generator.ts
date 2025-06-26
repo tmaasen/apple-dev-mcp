@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Enhanced Content Generator
- * Refactored to follow SOLID principles with proper separation of concerns
+ * Content Generator
+ * Follows SOLID principles with proper separation of concerns and semantic search capabilities
  */
 
 import path from 'path';
@@ -32,7 +32,7 @@ import type {
  * Main Content Generator Class
  * Single Responsibility: Orchestrate the content generation process
  */
-export class EnhancedContentGenerator {
+export class ContentGenerator {
   private sections: HIGSection[] = [];
   private readonly startTime: number = Date.now();
   private extractionStats: ExtractionStatistics = {
@@ -69,7 +69,7 @@ export class EnhancedContentGenerator {
    * Main generation process - orchestrates all steps
    */
   async generate(): Promise<void> {
-    console.log('🍎 Starting enhanced HIG content generation...');
+    console.log('🍎 Starting HIG content generation with semantic capabilities...');
     console.log(`📁 Output directory: ${this.config.outputDirectory}`);
     
     try {
@@ -569,7 +569,7 @@ export class EnhancedContentGenerator {
         averageQuality: this.extractionStats.averageQuality,
         averageConfidence: this.extractionStats.averageConfidence
       },
-      generatedWith: 'Crawlee-Enhanced-Content-Generator-v2.0'
+      generatedWith: 'Content-Generator-v2.0'
     };
 
     await this.fileSystem.writeFile(
@@ -710,7 +710,7 @@ export class EnhancedContentGenerator {
 }
 
 // Factory function for creating the generator with all dependencies
-export function createContentGenerator(config?: Partial<ContentGenerationConfig>): EnhancedContentGenerator {
+export function createContentGenerator(config?: Partial<ContentGenerationConfig>): ContentGenerator {
   const defaultConfig: ContentGenerationConfig = {
     outputDirectory: path.join(process.cwd(), 'content'),
     batchSize: 3,
@@ -732,13 +732,13 @@ export function createContentGenerator(config?: Partial<ContentGenerationConfig>
   const crawleeService = new CrawleeHIGService(cache);
   const contentExtractor = new HIGContentExtractor();
 
-  console.log('🔧 Initialized Crawlee-Enhanced Content Generator v2.0');
+  console.log('🔧 Initialized Content Generator v2.0 with semantic search capabilities');
   console.log('   • Dynamic section discovery enabled');
   console.log('   • JavaScript-capable content extraction');
   console.log('   • Quality monitoring and validation');
   console.log('   • 95%+ real content SLA target');
 
-  return new EnhancedContentGenerator(
+  return new ContentGenerator(
     finalConfig,
     fileSystem,
     contentProcessor,

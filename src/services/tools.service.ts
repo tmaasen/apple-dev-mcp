@@ -1,5 +1,5 @@
 /**
- * Enhanced HIG Tools with Semantic Search Integration
+ * HIG Tools with Semantic Search Integration
  * 
  * Provides MCP tools with semantic search capabilities, falling back to 
  * traditional keyword search when semantic search is unavailable.
@@ -22,7 +22,7 @@ import { SearchIndexerService } from './search-indexer.service.js';
 import { ContentProcessorService } from './content-processor.service.js';
 import type { HIGStaticContentProvider } from '../static-content.js';
 
-export class EnhancedHIGToolsService {
+export class HIGToolsService {
   private searchIndexer: SearchIndexerService;
   private contentProcessor: ContentProcessorService;
   private sections: HIGSection[] = [];
@@ -44,12 +44,12 @@ export class EnhancedHIGToolsService {
         const isAvailable = await this.staticContentProvider.isAvailable();
         if (isAvailable) {
           // Load all sections for semantic indexing
-          console.log('[EnhancedTools] Loading sections for semantic indexing...');
+          console.log('[HIGTools] Loading sections for semantic indexing...');
           // This would need to be implemented in the static content provider
           // For now, we'll work with empty sections and they'll be populated as needed
         }
       } catch (error) {
-        console.warn('[EnhancedTools] Failed to load initial sections:', error);
+        console.warn('[HIGTools] Failed to load initial sections:', error);
       }
     }
   }
@@ -87,7 +87,7 @@ export class EnhancedHIGToolsService {
       // Try semantic search first if available
       if (this.searchIndexer.isSemanticSearchEnabled() && this.sections.length > 0) {
         try {
-          console.log('[EnhancedTools] Using semantic search for:', trimmedQuery);
+          console.log('[HIGTools] Using semantic search for:', trimmedQuery);
           results = await this.searchIndexer.search(trimmedQuery, this.sections, {
             platform,
             category,
@@ -96,7 +96,7 @@ export class EnhancedHIGToolsService {
           }) as SemanticSearchResult[];
           searchMethod = 'semantic';
         } catch (semanticError) {
-          console.warn('[EnhancedTools] Semantic search failed, falling back:', semanticError);
+          console.warn('[HIGTools] Semantic search failed, falling back:', semanticError);
         }
       }
 
@@ -114,10 +114,10 @@ export class EnhancedHIGToolsService {
               new Promise<SearchResult[]>((_, reject) => setTimeout(() => reject(new Error('Search timeout')), 3000))
             ]);
             searchMethod = 'static';
-            console.log('[EnhancedTools] Using static content search');
+            console.log('[HIGTools] Using static content search');
           }
         } catch (staticError) {
-          console.warn('[EnhancedTools] Static search failed:', staticError);
+          console.warn('[HIGTools] Static search failed:', staticError);
         }
       }
 
@@ -131,9 +131,9 @@ export class EnhancedHIGToolsService {
             useSemanticSearch: false
           }) as SearchResult[];
           searchMethod = 'keyword';
-          console.log('[EnhancedTools] Using keyword search');
+          console.log('[HIGTools] Using keyword search');
         } catch (keywordError) {
-          console.warn('[EnhancedTools] Keyword search failed:', keywordError);
+          console.warn('[HIGTools] Keyword search failed:', keywordError);
         }
       }
 
@@ -141,7 +141,7 @@ export class EnhancedHIGToolsService {
       if (results.length === 0) {
         results = this.getFallbackSearchResults(trimmedQuery, platform, category, limit);
         searchMethod = 'fallback';
-        console.log('[EnhancedTools] Using fallback search');
+        console.log('[HIGTools] Using fallback search');
       }
 
       const processingTime = Date.now() - startTime;
@@ -166,7 +166,7 @@ export class EnhancedHIGToolsService {
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error('[EnhancedTools] Search failed:', error);
+      console.error('[HIGTools] Search failed:', error);
       throw new Error(`Enhanced search failed: ${errorMessage}`);
     }
   }
@@ -218,7 +218,7 @@ export class EnhancedHIGToolsService {
             }
           }
         } catch (semanticError) {
-          console.warn('[EnhancedTools] Semantic component search failed:', semanticError);
+          console.warn('[HIGTools] Semantic component search failed:', semanticError);
         }
       }
 
@@ -269,7 +269,7 @@ export class EnhancedHIGToolsService {
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error('[EnhancedTools] Component spec failed:', error);
+      console.error('[HIGTools] Component spec failed:', error);
       throw new Error(`Failed to get component specification: ${errorMessage}`);
     }
   }
@@ -326,7 +326,7 @@ export class EnhancedHIGToolsService {
           semanticInsights.platformSpecificFeatures = this.extractPlatformFeatures(comparison);
           semanticInsights.migrationConsiderations = this.generateMigrationTips(componentName, platforms);
         } catch (error) {
-          console.warn('[EnhancedTools] Failed to generate semantic insights:', error);
+          console.warn('[HIGTools] Failed to generate semantic insights:', error);
         }
       }
 
@@ -339,7 +339,7 @@ export class EnhancedHIGToolsService {
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error('[EnhancedTools] Platform comparison failed:', error);
+      console.error('[HIGTools] Platform comparison failed:', error);
       throw new Error(`Platform comparison failed: ${errorMessage}`);
     }
   }
@@ -387,7 +387,7 @@ export class EnhancedHIGToolsService {
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error('[EnhancedTools] Get updates failed:', error);
+      console.error('[HIGTools] Get updates failed:', error);
       throw new Error(`Failed to get latest updates: ${errorMessage}`);
     }
   }
@@ -645,7 +645,7 @@ export class EnhancedHIGToolsService {
         qualityMetrics: true,
         fallbackSearch: true
       },
-      version: '2.0-semantic-enhanced'
+      version: '2.0-semantic'
     };
   }
 }
