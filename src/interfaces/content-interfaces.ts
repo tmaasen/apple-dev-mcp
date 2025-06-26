@@ -28,6 +28,7 @@ export interface IFileSystemService {
 // Single Responsibility: Content processing only
 export interface IContentProcessor {
   process(section: HIGSection): Promise<string>;
+  processContent(html: string, url: string): Promise<any>; // Enhanced processing method
   extractSnippet(content: string, maxLength?: number): string;
   extractKeywords(content: string, section: HIGSection): string[];
 }

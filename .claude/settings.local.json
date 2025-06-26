@@ -29,7 +29,10 @@
       "Bash(gtimeout:*)",
       "Bash(ls:*)",
       "Bash(npx @modelcontextprotocol/inspector:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(tsx test-content-processor.ts:*)",
+      "Bash(npx tsx:*)",
+      "Bash(npm search \"nlp compromise\")"
     ],
     "deny": []
   }

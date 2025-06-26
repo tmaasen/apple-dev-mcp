@@ -49,6 +49,46 @@ export interface ComponentSpec {
   };
 }
 
+// Enhanced structured content interfaces for Phase 1
+export interface StructuredHIGContent {
+  overview: string;           // What this component/concept is
+  guidelines: string[];       // Best practices and rules  
+  examples: string[];         // Concrete usage examples
+  specifications?: ComponentSpec; // Technical details
+  relatedConcepts: string[];  // Cross-references to other HIG sections
+  platformSpecific?: {        // Platform-specific variations
+    [platform: string]: {
+      guidelines?: string[];
+      examples?: string[];
+      specifications?: ComponentSpec;
+    };
+  };
+}
+
+export interface EnhancedHIGSection extends HIGSection {
+  structuredContent?: StructuredHIGContent;
+  rawHtml?: string;           // Store original HTML for debugging
+  processingMetrics?: {
+    extractionTime: number;
+    contentLength: number;
+    structureScore: number;   // How well-structured the content is
+    cleaningScore: number;    // How much cleaning was needed
+  };
+}
+
+// Content processing result
+export interface ProcessedContentResult {
+  cleanedMarkdown: string;
+  structuredContent: StructuredHIGContent;
+  quality: ContentQualityMetrics;
+  processingMetrics: {
+    extractionTime: number;
+    contentLength: number;
+    structureScore: number;
+    cleaningScore: number;
+  };
+}
+
 export interface SearchResult {
   id: string;
   title: string;
@@ -217,4 +257,88 @@ export interface ExtractionStatistics {
   averageQuality: number;
   averageConfidence: number;
   extractionSuccessRate: number;
+}
+
+// Phase 2: Semantic Search Enhancement Types
+export interface SemanticSearchResult extends SearchResult {
+  semanticScore: number;      // Vector similarity score
+  keywordScore: number;       // Traditional keyword matching score
+  structureScore: number;     // Score based on content structure match
+  contextualScore: number;    // Score based on contextual understanding
+  combinedScore: number;      // Final weighted relevance score
+  searchTerms: string[];      // Extracted terms from query
+  matchedConcepts: string[];  // Semantic concepts that matched
+}
+
+export interface QueryAnalysis {
+  originalQuery: string;
+  processedQuery: string;     // Normalized/cleaned query
+  intent: SearchIntent;       // What the user is trying to find
+  entities: EntityMatch[];    // Named entities found in query
+  keywords: string[];         // Important keywords extracted
+  concepts: string[];         // Semantic concepts identified
+  platform?: ApplePlatform;  // Platform inferred from query
+  category?: HIGCategory;     // Category inferred from query
+}
+
+export interface EntityMatch {
+  text: string;              // Original text from query
+  type: EntityType;          // Type of entity
+  confidence: number;        // Confidence in the match
+  normalizedValue?: string;  // Standardized form
+}
+
+export type EntityType = 
+  | 'component'              // UI components (button, navigation, etc.)
+  | 'platform'              // Apple platforms
+  | 'property'               // Design properties (color, spacing, etc.)
+  | 'action'                 // User actions (tap, swipe, etc.)
+  | 'concept'                // Design concepts (accessibility, etc.)
+  | 'measurement'            // Dimensions, sizes, etc.
+
+export type SearchIntent = 
+  | 'find_component'         // Looking for specific UI component
+  | 'find_guideline'         // Looking for design guidelines
+  | 'compare_platforms'      // Comparing across platforms
+  | 'find_specification'     // Looking for technical specs
+  | 'find_example'           // Looking for examples/patterns
+  | 'troubleshoot'           // Solving a design problem
+  | 'general_search'         // Broad/unclear intent
+
+export interface EmbeddingVector {
+  values: number[];          // The actual embedding vector
+  dimension: number;         // Vector dimension
+  model: string;             // Model used to generate embedding
+}
+
+export interface SemanticIndex {
+  sectionId: string;
+  embeddings: {
+    title: EmbeddingVector;
+    overview: EmbeddingVector;
+    guidelines: EmbeddingVector;
+    fullContent: EmbeddingVector;
+  };
+  metadata: {
+    platform: ApplePlatform;
+    category: HIGCategory;
+    concepts: string[];       // Key concepts for this section
+    lastUpdated: Date;
+    qualityScore: number;
+  };
+}
+
+export interface SearchConfig {
+  semanticWeight: number;     // Weight for semantic similarity (0-1)
+  keywordWeight: number;      // Weight for keyword matching (0-1)
+  structureWeight: number;    // Weight for structure matching (0-1)
+  contextWeight: number;      // Weight for contextual relevance (0-1)
+  minSemanticThreshold: number; // Minimum semantic similarity to consider
+  maxResults: number;         // Maximum results to return
+  boostFactors: {            // Boost scores for certain matches
+    exactTitle: number;
+    platformMatch: number;
+    categoryMatch: number;
+    recentContent: number;
+  };
 }
