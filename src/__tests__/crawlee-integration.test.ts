@@ -9,10 +9,14 @@ import { HIGContentExtractor } from '../services/hig-content-extractor.service.j
 import { ContentQualityValidatorService } from '../services/content-quality-validator.service.js';
 import type { HIGSection } from '../types.js';
 
-// Mock node-fetch to avoid actual network requests during tests
+// Mock external dependencies to avoid actual network requests and browser launches
 jest.mock('node-fetch');
+jest.mock('@crawlee/playwright');
+jest.mock('playwright');
 
 describe('Crawlee-based HIG Architecture', () => {
+  // Set overall timeout for the test suite to prevent hanging
+  jest.setTimeout(10000); // 10 seconds max per test
   let cache: HIGCache;
   let discoveryService: HIGDiscoveryService;
   let crawleeService: CrawleeHIGService;

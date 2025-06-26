@@ -297,52 +297,47 @@ class AppleHIGMCPServer {
             },
           },
           {
-            name: 'compare_platforms',
-            description: 'Compare how a UI component or design pattern differs across Apple platforms',
+            name: 'get_design_tokens',
+            description: 'Get design system values (colors, spacing, typography) for specific components',
             inputSchema: {
               type: 'object',
               properties: {
-                componentName: {
+                component: {
                   type: 'string',
-                  description: 'Name of the component to compare across platforms',
-                },
-                platforms: {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                    enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-                  },
-                  minItems: 2,
-                  description: 'Platforms to compare',
-                },
-              },
-              required: ['componentName', 'platforms'],
-            },
-          },
-          {
-            name: 'get_latest_updates',
-            description: 'Get the latest updates to Apple\'s Human Interface Guidelines, including Liquid Glass design system changes',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                since: {
-                  type: 'string',
-                  format: 'date',
-                  description: 'Get updates since this date (ISO format)',
+                  description: 'Component name (e.g., "Button", "Navigation Bar", "Tab Bar")',
                 },
                 platform: {
                   type: 'string',
-                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS', 'universal'],
-                  description: 'Filter updates by platform',
+                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
+                  description: 'Target platform',
                 },
-                limit: {
-                  type: 'number',
-                  minimum: 1,
-                  maximum: 100,
-                  default: 20,
-                  description: 'Maximum number of updates to return',
+                tokenType: {
+                  type: 'string',
+                  enum: ['colors', 'spacing', 'typography', 'dimensions', 'all'],
+                  description: 'Type of design tokens to retrieve',
+                  default: 'all'
+                }
+              },
+              required: ['component', 'platform'],
+            },
+          },
+          {
+            name: 'get_accessibility_requirements',
+            description: 'Get accessibility requirements and guidelines for specific components',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                component: {
+                  type: 'string',
+                  description: 'Component name (e.g., "Button", "Navigation Bar", "Tab Bar")',
+                },
+                platform: {
+                  type: 'string',
+                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
+                  description: 'Target platform',
                 },
               },
+              required: ['component', 'platform'],
             },
           },
         ],
@@ -377,13 +372,13 @@ class AppleHIGMCPServer {
             break;
           }
 
-          case 'compare_platforms': {
-            result = await this.toolProvider.comparePlatforms(args as any);
+          case 'get_design_tokens': {
+            result = await this.toolProvider.getDesignTokens(args as any);
             break;
           }
 
-          case 'get_latest_updates': {
-            result = await this.toolProvider.getLatestUpdates(args as any);
+          case 'get_accessibility_requirements': {
+            result = await this.toolProvider.getAccessibilityRequirements(args as any);
             break;
           }
 
@@ -473,9 +468,6 @@ process.on('SIGTERM', async () => {
 
 // Start the server
 if (import.meta.url === `file://${process.argv[1]}`) {
-  // Handle command line arguments - ignore any extra args like 'run start'
-  const args = process.argv.slice(2);
-  
   // Always start the server regardless of arguments
   const server = new AppleHIGMCPServer();
   server.run().catch((_error) => {

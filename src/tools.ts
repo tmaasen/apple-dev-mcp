@@ -9,8 +9,6 @@ import type { HIGStaticContentProvider } from './static-content.js';
 import type { 
   SearchGuidelinesArgs, 
   GetComponentSpecArgs, 
-  ComparePlatformsArgs, 
-  GetLatestUpdatesArgs,
   SearchResult,
   HIGComponent,
   ApplePlatform
@@ -353,147 +351,78 @@ export class HIGToolProvider {
   }
 
   /**
-   * Compare guidelines across Apple platforms
+   * Get design tokens for specific components
    */
-  async comparePlatforms(args: ComparePlatformsArgs): Promise<{
-    componentName: string;
-    platforms: Array<{
-      platform: ApplePlatform;
-      guidelines: string[];
-      specifications: any;
-      differences: string[];
-    }>;
-    commonGuidelines: string[];
-    keyDifferences: string[];
+  async getDesignTokens(args: { component: string; platform: string; tokenType?: string }): Promise<{
+    component: string;
+    platform: string;
+    tokens: {
+      colors?: { [key: string]: string };
+      spacing?: { [key: string]: string };
+      typography?: { [key: string]: string };
+      dimensions?: { [key: string]: string };
+    };
   }> {
-    const { componentName, platforms } = args;
+    const { component, platform, tokenType = 'all' } = args;
     
-    // console.log(`[HIGTools] Comparing ${componentName} across platforms:`, platforms);
-    
-    try {
-      const platformData: Array<{
-        platform: ApplePlatform;
-        guidelines: string[];
-        specifications: any;
-        differences: string[];
-      }> = [];
-      
-      for (const platform of platforms) {
-        const componentSpec = await this.getComponentSpec({ componentName, platform });
-        
-        if (componentSpec.component) {
-          platformData.push({
-            platform,
-            guidelines: componentSpec.component.guidelines || [],
-            specifications: componentSpec.component.specifications || {},
-            differences: [] // Will be populated after comparison
-          });
-        }
-      }
-
-      // Find common guidelines
-      const commonGuidelines = this.findCommonElements(platformData.map(p => p.guidelines));
-      
-      // Identify key differences
-      const keyDifferences = this.identifyKeyDifferences(platformData);
-      
-      // Populate differences for each platform
-      platformData.forEach(data => {
-        data.differences = data.guidelines.filter((g: string) => !commonGuidelines.includes(g));
-      });
-
-      return {
-        componentName,
-        platforms: platformData,
-        commonGuidelines,
-        keyDifferences
-      };
-    } catch (error) {
-      // console.error('[HIGTools] Platform comparison failed:', error);
-      throw new Error(`Platform comparison failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[HIGTools] Getting design tokens for ${component} on ${platform}`);
     }
+
+    const componentLower = component.toLowerCase();
+    const designTokens = this.getDesignTokenDatabase(componentLower, platform);
+    
+    const tokens: any = {};
+    
+    if (tokenType === 'all' || tokenType === 'colors') {
+      tokens.colors = designTokens.colors;
+    }
+    if (tokenType === 'all' || tokenType === 'spacing') {
+      tokens.spacing = designTokens.spacing;
+    }
+    if (tokenType === 'all' || tokenType === 'typography') {
+      tokens.typography = designTokens.typography;
+    }
+    if (tokenType === 'all' || tokenType === 'dimensions') {
+      tokens.dimensions = designTokens.dimensions;
+    }
+
+    return {
+      component,
+      platform,
+      tokens
+    };
   }
 
   /**
-   * Get latest HIG updates and changes
+   * Get accessibility requirements for specific components
    */
-  async getLatestUpdates(args: GetLatestUpdatesArgs): Promise<{
-    updates: Array<{
-      title: string;
-      description: string;
-      date: string;
-      platform: ApplePlatform;
-      type: 'new' | 'updated' | 'deprecated';
-      url: string;
-      liquidGlassRelated: boolean;
-    }>;
-    designSystemHighlights: string[];
-    currentDesignSummary: string;
+  async getAccessibilityRequirements(args: { component: string; platform: string }): Promise<{
+    component: string;
+    platform: string;
+    requirements: {
+      minimumTouchTarget: string;
+      contrastRatio: string;
+      voiceOverSupport: string[];
+      keyboardNavigation: string[];
+      wcagCompliance: string;
+      additionalGuidelines: string[];
+    };
   }> {
-    const { platform, limit = 20 } = args;
+    const { component, platform } = args;
     
-    // console.log(`[HIGTools] Getting latest updates (since: ${since}, platform: ${platform})`);
-    
-    try {
-      // Get Liquid Glass information
-      const designSystemResource = await this.resourceProvider.getResource('hig://updates/latest-design-system');
-      const designSystemContent = designSystemResource?.content || '';
-      
-      // Extract highlights from current design system content
-      const designSystemHighlights = this.extractDesignSystemHighlights(designSystemContent);
-      
-      // Current design system summary
-      const currentDesignSummary = `Apple's current design system represents the latest evolution in interface design, featuring advanced materials, adaptive elements, and seamless integration across all Apple platforms with enhanced visual hierarchy and user experience improvements.`;
-      
-      // Generate mock updates based on current sections (in a real implementation, this would track actual changes)
-      const sections = await this.crawleeService.discoverSections();
-      let filteredSections = sections;
-      
-      if (platform && platform !== 'universal') {
-        filteredSections = sections.filter(s => s.platform === platform);
-      }
-      
-      const updates = filteredSections.slice(0, limit).map(section => ({
-        title: `Updated: ${section.title}`,
-        description: `Latest updates to ${section.title} guidelines including Liquid Glass design system integration`,
-        date: new Date().toISOString(),
-        platform: section.platform,
-        type: 'updated' as const,
-        url: section.url,
-        liquidGlassRelated: true
-      }));
-
-      // Add specific design system updates
-      const designSystemUpdates = [
-        {
-          title: 'Enhanced Design System',
-          description: 'Latest design language updates with advanced material effects and improved accessibility',
-          date: new Date().toISOString().split('T')[0] + 'T00:00:00Z',
-          platform: 'universal' as ApplePlatform,
-          type: 'updated' as const,
-          url: 'https://developer.apple.com/design/human-interface-guidelines/',
-          liquidGlassRelated: false
-        },
-        {
-          title: 'SwiftUI Enhanced APIs',
-          description: 'Updated APIs for implementing the latest design system features in SwiftUI applications',
-          date: new Date().toISOString().split('T')[0] + 'T00:00:00Z',
-          platform: 'universal' as ApplePlatform,
-          type: 'updated' as const,
-          url: 'https://developer.apple.com/documentation/swiftui',
-          liquidGlassRelated: false
-        }
-      ];
-
-      return {
-        updates: [...designSystemUpdates, ...updates].slice(0, limit),
-        designSystemHighlights,
-        currentDesignSummary
-      };
-    } catch (error) {
-      // console.error('[HIGTools] Get latest updates failed:', error);
-      throw new Error(`Failed to get latest updates: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[HIGTools] Getting accessibility requirements for ${component} on ${platform}`);
     }
+
+    const componentLower = component.toLowerCase();
+    const a11yRequirements = this.getAccessibilityDatabase(componentLower, platform);
+
+    return {
+      component,
+      platform,
+      requirements: a11yRequirements
+    };
   }
 
   /**
@@ -638,17 +567,203 @@ export class HIGToolProvider {
   }
 
   /**
-   * Extract current design system highlights
+   * Get design token database for components
    */
-  private extractDesignSystemHighlights(_content: string): string[] {
-    const highlights = [
-      'Advanced materials with enhanced visual depth',
-      'Adaptive interface elements that respond to context',
-      'Consistent implementation across all Apple platforms',
-      'Latest APIs for SwiftUI, UIKit, and AppKit',
-      'Improved accessibility and user experience features'
-    ];
+  private getDesignTokenDatabase(component: string, platform: string): any {
+    const tokens: any = {
+      colors: {},
+      spacing: {},
+      typography: {},
+      dimensions: {}
+    };
 
-    return highlights;
+    // Platform-specific system colors
+    const systemColors = {
+      iOS: {
+        primary: '#007AFF',
+        secondary: '#5856D6', 
+        success: '#34C759',
+        warning: '#FF9500',
+        destructive: '#FF3B30',
+        label: '#000000',
+        secondaryLabel: '#3C3C43',
+        background: '#FFFFFF',
+        secondaryBackground: '#F2F2F7'
+      },
+      macOS: {
+        primary: '#007AFF',
+        secondary: '#5856D6',
+        success: '#28CD41',
+        warning: '#FF9500', 
+        destructive: '#FF3B30',
+        label: '#000000',
+        secondaryLabel: '#808080',
+        background: '#FFFFFF',
+        secondaryBackground: '#F5F5F5'
+      }
+    };
+
+    // Component-specific tokens
+    switch (component) {
+      case 'button':
+        tokens.colors = systemColors[platform as keyof typeof systemColors] || systemColors.iOS;
+        tokens.spacing = {
+          paddingHorizontal: '16pt',
+          paddingVertical: '11pt',
+          marginMinimum: '8pt'
+        };
+        tokens.typography = {
+          fontSize: '17pt',
+          fontWeight: '600',
+          lineHeight: '22pt'
+        };
+        tokens.dimensions = {
+          minHeight: '44pt',
+          minWidth: '44pt',
+          cornerRadius: '8pt'
+        };
+        break;
+        
+      case 'navigation':
+      case 'navigation bar':
+        tokens.colors = {
+          background: systemColors[platform as keyof typeof systemColors]?.background || '#FFFFFF',
+          tint: systemColors[platform as keyof typeof systemColors]?.primary || '#007AFF',
+          title: systemColors[platform as keyof typeof systemColors]?.label || '#000000'
+        };
+        tokens.spacing = {
+          contentInset: '16pt',
+          titleSpacing: '8pt'
+        };
+        tokens.typography = {
+          titleFontSize: '17pt',
+          titleFontWeight: '600'
+        };
+        tokens.dimensions = {
+          height: platform === 'iOS' ? '44pt' : '52pt',
+          maxTitleWidth: '200pt'
+        };
+        break;
+        
+      case 'tab':
+      case 'tab bar':
+        tokens.colors = {
+          background: systemColors[platform as keyof typeof systemColors]?.secondaryBackground || '#F2F2F7',
+          selectedTint: systemColors[platform as keyof typeof systemColors]?.primary || '#007AFF',
+          unselectedTint: systemColors[platform as keyof typeof systemColors]?.secondaryLabel || '#8E8E93'
+        };
+        tokens.spacing = {
+          iconSpacing: '4pt',
+          horizontalPadding: '12pt'
+        };
+        tokens.typography = {
+          labelFontSize: '10pt',
+          labelFontWeight: '400'
+        };
+        tokens.dimensions = {
+          height: '49pt',
+          iconSize: '25pt',
+          maxTabs: '5'
+        };
+        break;
+        
+      default:
+        // Generic component tokens
+        tokens.colors = systemColors[platform as keyof typeof systemColors] || systemColors.iOS;
+        tokens.spacing = { padding: '16pt', margin: '8pt' };
+        tokens.typography = { fontSize: '17pt', fontWeight: '400' };
+        tokens.dimensions = { minHeight: '44pt' };
+    }
+
+    return tokens;
+  }
+
+  /**
+   * Get accessibility requirements database
+   */
+  private getAccessibilityDatabase(component: string, _platform: string): any {
+    const baseRequirements = {
+      minimumTouchTarget: '44pt x 44pt',
+      contrastRatio: '4.5:1 (WCAG AA)',
+      wcagCompliance: 'WCAG 2.1 AA',
+      voiceOverSupport: ['Accessible label', 'Accessible hint', 'Accessible value'],
+      keyboardNavigation: ['Tab navigation', 'Return key activation'],
+      additionalGuidelines: []
+    };
+
+    switch (component) {
+      case 'button':
+        return {
+          ...baseRequirements,
+          voiceOverSupport: [
+            'Clear button label describing action',
+            'Button trait for VoiceOver',
+            'State changes announced (enabled/disabled)'
+          ],
+          keyboardNavigation: [
+            'Tab order follows reading order',
+            'Space bar or Return key activation',
+            'Focus indicator clearly visible'
+          ],
+          additionalGuidelines: [
+            'Use descriptive labels, not just "tap" or "click"',
+            'Ensure sufficient spacing between buttons',
+            'Provide haptic feedback on supported devices'
+          ]
+        };
+        
+      case 'navigation':
+      case 'navigation bar':
+        return {
+          ...baseRequirements,
+          minimumTouchTarget: '44pt x 44pt for interactive elements',
+          voiceOverSupport: [
+            'Navigation bar trait',
+            'Clear title announcement',
+            'Back button with destination context'
+          ],
+          keyboardNavigation: [
+            'Tab navigation through interactive elements',
+            'Escape key for back navigation (macOS)',
+            'Command+[ for back navigation (macOS)'
+          ],
+          additionalGuidelines: [
+            'Keep navigation titles concise and descriptive',
+            'Ensure back button context is clear',
+            'Use navigation landmarks for screen readers'
+          ]
+        };
+        
+      case 'tab':
+      case 'tab bar':
+        return {
+          ...baseRequirements,
+          voiceOverSupport: [
+            'Tab bar trait',
+            'Selected state clearly announced',
+            'Tab count and position information'
+          ],
+          keyboardNavigation: [
+            'Arrow key navigation between tabs',
+            'Return/Space key for tab selection',
+            'Control+Tab for tab switching'
+          ],
+          additionalGuidelines: [
+            'Use clear, distinct tab labels',
+            'Ensure selected state is visually obvious',
+            'Badge numbers should be announced by VoiceOver'
+          ]
+        };
+        
+      default:
+        return {
+          ...baseRequirements,
+          additionalGuidelines: [
+            'Follow platform-specific accessibility guidelines',
+            'Test with VoiceOver and other assistive technologies',
+            'Ensure content is accessible in all interface modes'
+          ]
+        };
+    }
   }
 }
