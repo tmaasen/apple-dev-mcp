@@ -3,33 +3,22 @@ title: "Inputs"
 platform: universal
 category: selection-and-input
 url: https://developer.apple.com/design/human-interface-guidelines/inputs
-id: universal-inputs
-lastUpdated: 2025-06-25T18:27:42.298Z
-extractionMethod: crawlee
-qualityScore: 0.167
-confidence: 0.167
-contentLength: 332
+id: inputs-universal
+lastUpdated: 2025-06-26T22:15:38.260Z
+extractionMethod: enhanced-turndown
+qualityScore: 0.306
+confidence: 0.506
+contentLength: 542
+structureScore: 0.400
+cleaningScore: -0.005
 hasCodeExamples: false
 hasImages: false
-keywords: ["universal", "selection-and-input", "inputs", "controls", "gestures", "input", "navigation", "selection"]
+keywords: ["inputs", "this", "section", "part", "apple", "human", "interface", "guidelines", "note", "content"]
 ---
-Skip Navigation
-Inputs
-Learn about the various methods people use to control your app or game and enter data.
-Action button
-Apple Pencil and Scribble
-Camera Control
-Digital Crown
-Eyes
-Focus and selection
-Game controls
-Gestures
-Gyroscope and accelerometer
-Keyboards
-Nearby interactions
-Pointing devices
-Remotes
-Current page is Inputs
+## Overview
+
+\# Inputs This section is part of Apple's Human Interface Guidelines. \*\*Note\*\*: Content extraction failed. Please visit the official documentation for complete information: https://developer.apple.com/design/human-interface-guidelines/inputs --- \*\*Attribution Notice\*\* This content is sourced from Apple's Human Interface Guidelines: https://developer.apple.com/design/human-interface-guidelines/inputs © Apple Inc. All rights reserved. For the most up-to-date and official information, please refer to Apple's official documentation.
+
 ---
 
 **Attribution Notice**

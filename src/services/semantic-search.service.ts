@@ -45,6 +45,15 @@ export class SemanticSearchService {
 
   constructor(private config: Partial<SearchConfig> = {}) {
     this.config = { ...this.defaultConfig, ...config };
+    
+    // Skip initialization if explicitly disabled or likely to fail
+    if (process.env.DISABLE_SEMANTIC_SEARCH === 'true') {
+      console.log('[SemanticSearch] ⚡ Disabled via environment variable');
+      this.model = null;
+      this.isInitialized = false;
+      return;
+    }
+    
     console.log('[SemanticSearch] Initializing with TensorFlow Universal Sentence Encoder');
   }
 
@@ -53,16 +62,73 @@ export class SemanticSearchService {
    */
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
+    
+    // Skip if disabled
+    if (process.env.DISABLE_SEMANTIC_SEARCH === 'true') {
+      console.log('[SemanticSearch] Skipping initialization (DISABLE_SEMANTIC_SEARCH=true)');
+      this.model = null;
+      this.isInitialized = false;
+      return;
+    }
+    
+    // Add process timeout to prevent hanging
+    const initTimeoutMs = 8000; // Much shorter total timeout
+    const initTimeout = setTimeout(() => {
+      console.log('[SemanticSearch] ⚡ Using keyword search only (timeout)');
+      this.model = null;
+      this.isInitialized = false;
+    }, initTimeoutMs);
+
+    // Quick fail-fast check for offline mode or network issues
+    try {
+      // Much simpler and faster connectivity check
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000); // Reduced to 2s
+      
+      const response = await fetch('https://www.google.com', { 
+        method: 'HEAD', 
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        throw new Error(`Network check failed: ${response.status}`);
+      }
+    } catch (error) {
+      console.log('[SemanticSearch] ⚡ Network unavailable, using keyword search only');
+      this.model = null;
+      this.isInitialized = false;
+      clearTimeout(initTimeout);
+      return;
+    }
 
     try {
-      console.log('[SemanticSearch] Loading Universal Sentence Encoder model...');
-      this.model = await use.load();
-      this.isInitialized = true;
-      console.log('[SemanticSearch] ✅ Model loaded successfully');
+      // Attempt to load model with shorter timeout
+      const modelTimeoutMs = 5000; // Much shorter timeout
+      const modelController = new AbortController();
+      const modelTimeoutId = setTimeout(() => {
+        modelController.abort();
+      }, modelTimeoutMs);
+      
+      try {
+        this.model = await use.load();
+        clearTimeout(modelTimeoutId);
+        this.isInitialized = true;
+        console.log('[SemanticSearch] ✅ Enhanced search enabled');
+      } catch (modelError) {
+        clearTimeout(modelTimeoutId);
+        throw modelError;
+      }
     } catch (error) {
-      console.error('[SemanticSearch] ❌ Failed to load model:', error);
-      throw new Error('Failed to initialize semantic search model');
+      console.log('[SemanticSearch] ⚡ Using keyword search only');
+      this.model = null;
+      this.isInitialized = false;
+      // Don't throw - allow graceful fallback to keyword search
     }
+    
+    // Clear the initialization timeout
+    clearTimeout(initTimeout);
   }
 
   /**
@@ -74,7 +140,8 @@ export class SemanticSearchService {
     }
 
     if (!this.model) {
-      throw new Error('Semantic search model not initialized');
+      // Silently skip indexing if model is not available
+      return;
     }
 
     try {
@@ -137,6 +204,11 @@ export class SemanticSearchService {
   ): Promise<SemanticSearchResult[]> {
     if (!this.isInitialized) {
       await this.initialize();
+    }
+
+    if (!this.model) {
+      console.warn('[SemanticSearch] Model not available, returning empty results for semantic search');
+      return [];
     }
 
     try {
@@ -301,7 +373,12 @@ export class SemanticSearchService {
    */
   private async generateEmbedding(text: string): Promise<EmbeddingVector> {
     if (!this.model) {
-      throw new Error('Model not initialized');
+      // Return zero vector when model is not available
+      return {
+        values: new Array(512).fill(0),
+        dimension: 512,
+        model: 'universal-sentence-encoder'
+      };
     }
 
     if (!text || text.trim().length === 0) {

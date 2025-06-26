@@ -32,7 +32,10 @@
       "Bash(pkill:*)",
       "Bash(tsx test-content-processor.ts:*)",
       "Bash(npx tsx:*)",
-      "Bash(npm search \"nlp compromise\")"
+      "Bash(npm search \"nlp compromise\")",
+      "Bash(tsx:*)",
+      "Bash(timeout 60s npm run generate-content:*)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }

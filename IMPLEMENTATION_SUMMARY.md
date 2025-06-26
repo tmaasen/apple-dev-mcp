@@ -53,8 +53,8 @@ src/interfaces/content-interfaces.ts # Clean service interfaces
 **Important**: This implementation follows your guidance - there are no "enhanced" or "legacy" versions. The codebase has been cleaned up to remove all "enhanced" terminology. What exists now IS the implementation. Source control maintains the history.
 
 ### Files Renamed:
-- `enhanced-content-generator.ts` → `content-generator.ts`
-- `enhanced-tools.service.ts` → `tools.service.ts`
+- `content-generator.ts` → `content-generator.ts`
+- `tools.service.ts` → `tools.service.ts`
 - `test-phase2-semantic-search.js` → `test-semantic-search.js`
 
 ### Classes Renamed:

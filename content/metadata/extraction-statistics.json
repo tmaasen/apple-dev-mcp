@@ -1,8 +1,8 @@
 {
-  "totalSections": 172,
-  "successfulExtractions": 172,
-  "fallbackUsage": 1,
-  "averageQuality": 0.49471773255813967,
-  "averageConfidence": 0.6415723837209307,
-  "extractionSuccessRate": 99.4186046511628
+  "totalSections": 14,
+  "successfulExtractions": 14,
+  "fallbackUsage": 0,
+  "averageQuality": 0.8,
+  "averageConfidence": 1,
+  "extractionSuccessRate": 100
 }

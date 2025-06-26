@@ -32,7 +32,7 @@ jobs:
     - name: Clean and build project
       run: npm run clean:build
 
-    - name: Run tests
+    - name: Run tests (includes Phase 1 & 2 test coverage)
       run: npm test
 
   health-check:

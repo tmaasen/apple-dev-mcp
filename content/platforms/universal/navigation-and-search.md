@@ -1,77 +1,23 @@
 ---
-title: "Navigation and search"
+title: "Navigation And Search"
 platform: universal
 category: navigation
 url: https://developer.apple.com/design/human-interface-guidelines/navigation-and-search
-id: universal-navigation-and-search
-lastUpdated: 2025-06-25T18:29:30.766Z
-extractionMethod: crawlee
-qualityScore: 0.067
-confidence: 0.067
-contentLength: 134
+id: navigation-and-search-universal
+lastUpdated: 2025-06-26T22:16:17.044Z
+extractionMethod: enhanced-turndown
+qualityScore: 0.308
+confidence: 0.508
+contentLength: 587
+structureScore: 0.400
+cleaningScore: -0.005
 hasCodeExamples: false
 hasImages: false
-keywords: ["universal", "navigation", "navigation and search", "controls", "search"]
+keywords: ["navigation", "search", "this", "section", "part", "apple", "human", "interface", "guidelines", "note"]
 ---
-Skip Navigation
-Navigation and search
-Path controls
-Search fields
-Sidebars
-Tab bars
-Token fields
-Current page is Navigation and search
+## Overview
 
-## Implementation Notes
-
-- Use NavigationView/NavigationStack for SwiftUI or UINavigationController for UIKit
-- Configure navigation bar appearance for both light and dark modes
-- Ensure navigation hierarchy is logical and predictable for users
-- Test navigation with different screen sizes and orientations
-
-
-## Code Examples
-
-### SwiftUI Navigation
-
-Navigation setup with proper hierarchy and title configuration
-
-```swift
-NavigationView {
-    List {
-        // Your content here
-        ForEach(items) { item in
-            NavigationLink(destination: DetailView(item: item)) {
-                Text(item.title)
-            }
-        }
-    }
-    .navigationTitle("Title")
-    .navigationBarTitleDisplayMode(.large)
-    .toolbar {
-        ToolbarItem(placement: .navigationBarTrailing) {
-            Button("Add") {
-                // Add action
-            }
-        }
-    }
-}
-```
-
-
-
-## Design Specifications
-
-### Navigation Bar
-
-- **Height**: 44 points (compact), 96 points (large title)
-- **Title Font**: SF Pro Display, 17pt (regular), 34pt (large)
-
-
-
-## Related Guidelines
-
-- [universal Layout Guidelines](https://developer.apple.com/design/human-interface-guidelines/layout) - Layout principles and navigation structure
+\# Navigation And Search This section is part of Apple's Human Interface Guidelines. \*\*Note\*\*: Content extraction failed. Please visit the official documentation for complete information: https://developer.apple.com/design/human-interface-guidelines/navigation-and-search --- \*\*Attribution Notice\*\* This content is sourced from Apple's Human Interface Guidelines: https://developer.apple.com/design/human-interface-guidelines/navigation-and-search © Apple Inc. All rights reserved. For the most up-to-date and official information, please refer to Apple's official documentation.
 
 ---
 

@@ -4,30 +4,74 @@
  */
 
 import type { ISearchIndexer, IContentProcessor } from '../interfaces/content-interfaces.js';
-import type { HIGSection, /* SemanticIndex, */ SearchConfig } from '../types.js';
+import type { HIGSection, ContentQualityMetrics, SearchConfig } from '../types.js';
 import { SemanticSearchService } from './semantic-search.service.js';
 
+interface SearchIndexEntry {
+  id: string;
+  title: string;
+  platform: string;
+  category: string;
+  url: string;
+  keywords: string[];
+  snippet: string;
+  quality?: ContentQualityMetrics;
+  lastUpdated?: Date;
+  hasStructuredContent: boolean;
+  hasGuidelines: boolean;
+  hasExamples: boolean;
+  hasSpecifications: boolean;
+  conceptCount: number;
+}
+
 export class SearchIndexerService implements ISearchIndexer {
-  private searchIndex: Record<string, any> = {};
-  private semanticSearchService: SemanticSearchService;
+  private searchIndex: Record<string, SearchIndexEntry> = {};
+  private semanticSearchService: SemanticSearchService | null;
   private isSemanticEnabled = false;
 
   constructor(
     private contentProcessor: IContentProcessor,
     semanticConfig?: Partial<SearchConfig>
   ) {
-    this.semanticSearchService = new SemanticSearchService(semanticConfig);
-    this.initializeSemanticSearch();
+    // Check if semantic search is disabled via environment variable
+    if (process.env.DISABLE_SEMANTIC_SEARCH === 'true') {
+      console.log('[SearchIndexer] ⚡ Using keyword search only (DISABLE_SEMANTIC_SEARCH=true)');
+      this.isSemanticEnabled = false;
+      // Don't create SemanticSearchService at all when disabled
+      this.semanticSearchService = null;
+    } else {
+      this.semanticSearchService = new SemanticSearchService(semanticConfig);
+      console.log('[SearchIndexer] 🔧 Attempting semantic search initialization in background...');
+      // Initialize semantic search in background, don't block constructor
+      setTimeout(() => {
+        this.initializeSemanticSearch().catch(() => {
+          // Silently handled in initializeSemanticSearch method
+        });
+      }, 0);
+    }
   }
 
   /**
    * Initialize semantic search capabilities
    */
   private async initializeSemanticSearch(): Promise<void> {
+    if (!this.semanticSearchService) {
+      this.isSemanticEnabled = false;
+      return;
+    }
+    
     try {
       await this.semanticSearchService.initialize();
-      this.isSemanticEnabled = true;
-      console.log('[SearchIndexer] ✅ Semantic search enabled');
+      
+      // Check if semantic search actually initialized successfully
+      const stats = this.semanticSearchService.getStatistics();
+      if (stats.isInitialized && stats.modelLoaded) {
+        this.isSemanticEnabled = true;
+        console.log('[SearchIndexer] ✅ Semantic search enabled');
+      } else {
+        this.isSemanticEnabled = false;
+        console.log('[SearchIndexer] ⚠️ Semantic search disabled, using keyword search only');
+      }
     } catch (error) {
       console.warn('[SearchIndexer] ⚠️ Semantic search initialization failed, falling back to keyword search:', error);
       this.isSemanticEnabled = false;
@@ -68,17 +112,19 @@ export class SearchIndexerService implements ISearchIndexer {
       conceptCount: structuredContent?.relatedConcepts?.length || 0
     };
 
-    // Semantic indexing (background, non-blocking)
-    this.addSectionSemanticAsync(section).catch(error => {
-      console.warn(`[SearchIndexer] Background semantic indexing failed for ${section.id}:`, error);
-    });
+    // Semantic indexing (only if enabled)
+    if (this.isSemanticEnabled) {
+      this.addSectionSemanticAsync(section).catch(error => {
+        console.warn(`[SearchIndexer] Background semantic indexing failed for ${section.id}:`, error);
+      });
+    }
   }
 
   /**
    * Async semantic indexing (background operation)
    */
   private async addSectionSemanticAsync(section: HIGSection): Promise<void> {
-    if (this.isSemanticEnabled) {
+    if (this.isSemanticEnabled && this.semanticSearchService) {
       try {
         await this.semanticSearchService.indexSection(section);
       } catch (error) {
@@ -91,7 +137,12 @@ export class SearchIndexerService implements ISearchIndexer {
    * Generate enhanced search index
    */
   generateIndex(): Record<string, any> {
-    const stats = this.semanticSearchService.getStatistics();
+    const stats = this.semanticSearchService ? this.semanticSearchService.getStatistics() : {
+      totalIndexedSections: 0,
+      isInitialized: false,
+      modelLoaded: false,
+      config: {}
+    };
     
     return {
       metadata: {
@@ -137,7 +188,7 @@ export class SearchIndexerService implements ISearchIndexer {
     } = options;
 
     // Use semantic search if available and requested
-    if (useSemanticSearch && this.isSemanticEnabled) {
+    if (useSemanticSearch && this.isSemanticEnabled && this.semanticSearchService) {
       try {
         return await this.semanticSearchService.search(
           query,
@@ -217,14 +268,21 @@ export class SearchIndexerService implements ISearchIndexer {
    */
   clear(): void {
     this.searchIndex = {};
-    this.semanticSearchService.clearIndices();
+    if (this.semanticSearchService) {
+      this.semanticSearchService.clearIndices();
+    }
   }
 
   /**
    * Get indexing statistics
    */
   getStatistics() {
-    const semanticStats = this.semanticSearchService.getStatistics();
+    const semanticStats = this.semanticSearchService ? this.semanticSearchService.getStatistics() : {
+      totalIndexedSections: 0,
+      isInitialized: false,
+      modelLoaded: false,
+      config: {}
+    };
     
     return {
       keywordIndex: {

@@ -20,7 +20,8 @@ This is an Apple Human Interface Guidelines MCP (Model Context Protocol) server 
 - `npm run dev` - Start development server using tsx
 - `npm start` - Run compiled server from `dist/`
 - `npm run health-check` - Test scraper functionality
-- `npm run generate-content` - Generate static HIG content files
+- `npm run generate-content` - Generate static HIG content files (full discovery + semantic search when available)
+- `npm run generate-content:offline` - Fast offline generation (14 core sections, keyword search only)
 - `npm run validate-content` - Validate generated content
 
 ### Testing with MCP Inspector

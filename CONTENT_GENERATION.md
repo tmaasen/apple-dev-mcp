@@ -73,7 +73,7 @@ npm run health-check
 
 ### Generation Script Options
 
-The content generator (`src/generators/enhanced-content-generator.ts`) supports various configuration options:
+The content generator (`src/generators/content-generator.ts`) supports various configuration options:
 
 ```typescript
 // New configuration interface (ContentGenerationConfig)
