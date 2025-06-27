@@ -112,8 +112,7 @@ hig://visionos - Complete visionOS Human Interface Guidelines
 hig://ios/navigation - iOS navigation guidelines
 hig://ios/color-and-materials - iOS color and materials guidelines
 
-hig://updates/latest-design-system - Latest design system updates
-hig://updates/latest - Most recent HIG updates
+hig://updates/latest - Latest HIG updates and changes
 ```
 
 ### MCP Tools
