@@ -4,8 +4,8 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
+      interval: "monthly"  # Reduced frequency
+    open-pull-requests-limit: 5  # Fewer concurrent PRs
     reviewers:
       - "tmaasen"
     assignees:
