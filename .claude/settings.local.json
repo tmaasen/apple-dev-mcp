@@ -37,7 +37,9 @@
       "Bash(timeout 60s npm run generate-content:*)",
       "Bash(curl:*)",
       "Bash(cp:*)",
-      "Bash(DISABLE_SEMANTIC_SEARCH=true npm run generate-content -- --output-dir content-test)"
+      "Bash(DISABLE_SEMANTIC_SEARCH=true npm run generate-content -- --output-dir content-test)",
+      "Bash(npm whoami:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }

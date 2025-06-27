@@ -18,7 +18,6 @@ import { ContentProcessorService } from '../services/content-processor.service.j
 import { ContentQualityValidatorService } from '../services/content-quality-validator.service.js';
 import { SearchIndexerService } from '../services/search-indexer.service.js';
 import { CrossReferenceGeneratorService } from '../services/cross-reference-generator.service.js';
-// import { ContentEnhancerFactory } from '../strategies/content-enhancement-strategies.js';
 
 // Interfaces
 import type { 
