@@ -49,35 +49,33 @@ jobs:
             repo: context.repo.repo,
             tag_name: tag,
             name: `Apple HIG MCP Server ${tag}`,
-            body: `
-            ## Release ${tag}
-            
+            body: `## Release ${tag}
+
             Apple Human Interface Guidelines MCP Server release.
-            
+
             ### Installation
             \`\`\`bash
             npm install -g apple-hig-mcp@${tag}
             \`\`\`
-            
+
             ### Usage
             \`\`\`bash
             # Test the server
             npx @modelcontextprotocol/inspector apple-hig-mcp
             \`\`\`
-            
+
             ### Features
             - 🔍 Smart search across Apple's design guidelines
             - 📱 Multi-platform support (iOS, macOS, watchOS, tvOS, visionOS)
             - 🔄 Intelligent caching with graceful degradation
             - 🤖 AI-friendly markdown output
-            
-            See the [README](https://github.com/${context.repo.owner}/${context.repo.repo}#readme) for full documentation.
-            `,
+
+            See the [README](https://github.com/${context.repo.owner}/${context.repo.repo}#readme) for full documentation.`,
             draft: false,
             prerelease: tag.includes('-')
           });
           
-          console.log(\`Created release: \${release.data.html_url}\`);
+          console.log(`Created release: ${release.data.html_url}`);
           
     - name: Update README badge
       if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, '-')
