@@ -1,6 +1,6 @@
 # 🍎 Apple HIG MCP Server
 
-[![Health Check](https://github.com/tannermaasen/apple-hig-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/tannermaasen/apple-hig-mcp/actions/workflows/ci.yml)
+[![Health Check](https://github.com/tmaasen/apple-hig-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/tmaasen/apple-hig-mcp/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/apple-hig-mcp.svg)](https://www.npmjs.com/package/apple-hig-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-20%2B-green.svg)](https://nodejs.org/)
@@ -386,19 +386,21 @@ npm run dev           # Start development server
 
 | URI Pattern | Description |
 |-------------|-------------|
-| `hig://<platform>` | Complete platform guidelines |
+| `hig://<platform>` | Complete platform guidelines (ios, macos, watchos, tvos, visionos) |
 | `hig://<platform>/<category>` | Category-specific guidelines |
-| `hig://updates/liquid-glass` | Liquid Glass design system |
+| `hig://universal` | Cross-platform design principles |
+| `hig://<topic>` | Topic-specific guidelines (buttons, materials, etc.) |
+| `hig://updates/latest-design-system` | Latest design system updates |
 | `hig://updates/latest` | Latest HIG updates |
 
 ### Tools
 
 | Tool | Description | Key Arguments |
 |------|-------------|---------------|
-| `search_guidelines` | Search HIG content | `query`, `platform`, `category` |
-| `get_component_spec` | Get component details | `componentName`, `platform` |
-| `compare_platforms` | Compare across platforms | `componentName`, `platforms[]` |
-| `get_latest_updates` | Get recent changes | `since`, `platform`, `limit` |
+| `search_guidelines` | Search HIG content with semantic understanding | `query`, `platform`, `category`, `limit` |
+| `get_component_spec` | Get component specifications | `componentName`, `platform` |
+| `get_design_tokens` | Get design system values | `component`, `platform`, `tokenType` |
+| `get_accessibility_requirements` | Get accessibility guidelines | `component`, `platform` |
 
 ## 🐛 Troubleshooting
 
