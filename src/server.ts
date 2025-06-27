@@ -77,7 +77,7 @@ class AppleHIGMCPServer {
    * Validate runtime environment and configuration
    */
   private async validateEnvironment(): Promise<void> {
-    const requiredNodeVersion = '18.0.0';
+    const requiredNodeVersion = '20.0.0';
     const currentVersion = process.version.slice(1); // Remove 'v' prefix
     
     if (this.compareVersions(currentVersion, requiredNodeVersion) < 0) {
