@@ -40,7 +40,7 @@ jobs:
         run: npm run build
       
       - name: Create content directory
-        run: mkdir -p content/{platforms,metadata,images}
+        run: mkdir -p content/{platforms,metadata}
       
       - name: Generate HIG content
         run: |
@@ -49,7 +49,7 @@ jobs:
           FORCE_UPDATE: ${{ inputs.force_update }}
           NODE_ENV: production
       
-      - name: Validate generated content with Phase 1 quality checks
+      - name: Validate generated content
         run: npm run validate-content
       
       - name: Check for content changes
@@ -74,12 +74,6 @@ jobs:
           echo "**Total files:** $(find content/ -name '*.md' | wc -l)" >> update_summary.md
           echo "**Total size:** $(du -sh content/ | cut -f1)" >> update_summary.md
           echo "" >> update_summary.md
-          echo "### Quality Metrics (Phase 1 Processing):" >> update_summary.md
-          echo "- Enhanced HTML-to-markdown conversion with Turndown.js" >> update_summary.md
-          echo "- Structured content extraction (overview, guidelines, examples)" >> update_summary.md
-          echo "- Quality validation and SLA monitoring" >> update_summary.md
-          echo "- Content processed through Phase 1 pipeline" >> update_summary.md
-          echo "" >> update_summary.md
           echo "### Changed Files:" >> update_summary.md
           git diff --cached --name-only | grep -E '\.(md|json)$' | head -20 >> update_summary.md
           
@@ -94,16 +88,8 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "HIG Content Updater"
           git add content/
-          git commit -m "Update HIG content with Phase 1 processing - $(date -u '+%Y-%m-%d')
+          git commit -m "Update HIG content - $(date -u '+%Y-%m-%d')"
 
-Generated with enhanced content processing pipeline:
-- Turndown.js HTML-to-markdown conversion
-- Structured content extraction
-- Quality validation and SLA monitoring
-- Phase 1 processing improvements"
-          git push
-      
-      
       - name: Report success
         if: steps.changes.outputs.has_changes == 'true'
         run: |
@@ -123,7 +109,6 @@ Generated with enhanced content processing pipeline:
           path: content/
           retention-days: 30
       
-
   health-check:
     needs: generate-content
     runs-on: ubuntu-latest

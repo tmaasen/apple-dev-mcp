@@ -68,7 +68,6 @@ jobs:
             ### Features
             - 🔍 Smart search across Apple's design guidelines
             - 📱 Multi-platform support (iOS, macOS, watchOS, tvOS, visionOS)
-            - 🎨 Liquid Glass design system coverage
             - 🔄 Intelligent caching with graceful degradation
             - 🤖 AI-friendly markdown output
             
