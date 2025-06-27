@@ -59,8 +59,10 @@ export class HIGStaticContentProvider {
       this.contentDir = contentDir;
     } else {
       // For global npm installs, look relative to the compiled file's location
-      // In production: dist/static-content.js -> content/
-      const packageRoot = path.dirname(__dirname);
+      // In ES modules, use import.meta.url instead of __dirname
+      const currentFileUrl = new URL(import.meta.url);
+      const currentDir = path.dirname(currentFileUrl.pathname);
+      const packageRoot = path.dirname(currentDir);
       this.contentDir = path.join(packageRoot, 'content');
     }
   }
@@ -181,15 +183,7 @@ export class HIGStaticContentProvider {
       });
     }
 
-    // Special update resources
-    resources.push({
-      uri: 'hig://updates/latest-design-system',
-      name: 'Latest Design System Updates',
-      description: 'Most recent Apple design system updates and new design language features',
-      mimeType: 'text/markdown',
-      content: ''
-    });
-
+    // Special update resource
     resources.push({
       uri: 'hig://updates/latest',
       name: 'Latest HIG Updates',
@@ -488,33 +482,6 @@ export class HIGStaticContentProvider {
     name: string;
     description: string;
   }> {
-    if (updateType === 'latest-design-system') {
-      let content = `# Latest Apple Design System Updates\n\n`;
-      content += `Apple's most recent design language updates, featuring advanced materials and visual elements.\n\n`;
-      content += this.getAttributionText();
-      content += `## Recent Updates\n\n`;
-      content += `- **Enhanced Design System**: Major visual improvements with advanced materials\n`;
-      content += `- **Unified Design Language**: Consistent design patterns across all Apple platforms\n`;
-      content += `- **Updated APIs**: Latest SwiftUI, UIKit, and AppKit capabilities\n\n`;
-      
-      // Add content age information
-      if (this.metadata) {
-        const age = this.getContentAge();
-        const lastUpdated = new Date(this.metadata.lastUpdated);
-        content += `## Content Information\n\n`;
-        content += `- **Last Updated**: ${lastUpdated.toLocaleDateString()}\n`;
-        content += `- **Total Sections**: ${this.metadata.totalSections}\n`;
-        content += `- **Content Age**: ${age ? Math.floor(age / (24 * 60 * 60 * 1000)) : 'unknown'} days\n\n`;
-      }
-      
-      return {
-        content,
-        name: 'Latest Design System Updates',
-        description: 'Current Apple design language featuring advanced materials and interface elements'
-      };
-    }
-
-    // Default to latest updates
     let content = `# Latest HIG Updates\n\n`;
     content += `Recent changes and additions to Apple's Human Interface Guidelines.\n\n`;
     content += this.getAttributionText();
@@ -522,6 +489,16 @@ export class HIGStaticContentProvider {
     content += `- **Enhanced Design System**: Major visual improvements with advanced materials\n`;
     content += `- **Unified Design Language**: Consistent design patterns across all Apple platforms\n`;
     content += `- **Updated APIs**: Latest SwiftUI, UIKit, and AppKit capabilities\n\n`;
+    
+    // Add content age information
+    if (this.metadata) {
+      const age = this.getContentAge();
+      const lastUpdated = new Date(this.metadata.lastUpdated);
+      content += `## Content Information\n\n`;
+      content += `- **Last Updated**: ${lastUpdated.toLocaleDateString()}\n`;
+      content += `- **Total Sections**: ${this.metadata.totalSections}\n`;
+      content += `- **Content Age**: ${age ? Math.floor(age / (24 * 60 * 60 * 1000)) : 'unknown'} days\n\n`;
+    }
     
     return {
       content,

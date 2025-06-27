@@ -128,15 +128,7 @@ export class HIGResourceProvider {
         content: ''
       });
 
-      // Special resources for latest updates
-      resources.push({
-        uri: 'hig://updates/latest-design-system',
-        name: 'Latest Design System Updates',
-        description: 'Most recent Apple design system updates and new design language features',
-        mimeType: 'text/markdown',
-        content: ''
-      });
-
+      // Special resource for latest updates
       resources.push({
         uri: 'hig://updates/latest',
         name: 'Latest HIG Updates',

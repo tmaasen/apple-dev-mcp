@@ -175,138 +175,6 @@ This server includes comprehensive coverage of Apple's latest design language:
 - **System-wide Implementation**: Guidelines for buttons, navigation, and entire interfaces
 - **Developer APIs**: Information about updated SwiftUI, UIKit, and AppKit support
 
-## 🏗️ Architecture
-
-### Hybrid Static/Dynamic System
-
-```
-┌─────────────────┐    ┌──────────────────┐
-│   MCP Client    │    │  Apple HIG MCP   │
-│   (Claude)      │◄──►│     Server       │
-└─────────────────┘    └──────────────────┘
-                              │
-                              ▼
-                 ┌──────────────────────────────┐
-                 │     Static Content Provider    │  ◄── PRIMARY
-                 │    (Instant Markdown Files)   │
-                 └──────────────────────────────┘
-                              │ (fallback)
-                              ▼
-                 ┌──────────────────────────────┐
-                 │       Live Scraper + Cache      │  ◄── FALLBACK
-                 │      (Apple's HIG Website)      │
-                 └──────────────────────────────┘
-```
-
-### Content Generation Pipeline
-
-```
-GitHub Action (Every 4 Months)
-    │
-    ▼
-┌───────────────────────────────────────────┐
-│           Content Generator Script            │
-│  • Scrapes all ~65 HIG sections              │
-│  • Generates AI-optimized markdown files    │
-│  • Creates search indices & cross-refs      │
-└───────────────────────────────────────────┘
-    │
-    ▼
-┌───────────────────────────────────────────┐
-│              Static Content Files             │
-│  content/platforms/{ios,macos,watchos}/      │
-│  content/metadata/{search,references}/       │
-└───────────────────────────────────────────┘
-```
-
-### Key Components
-
-#### Core MCP Server
-- **HIGStaticContentProvider**: Primary content source loading pre-generated markdown files
-- **HIGScraper**: Fallback content extraction with intelligent selectors and rate limiting
-- **HIGCache**: Smart caching layer with TTL and graceful degradation (for scraping)
-- **HIGResourceProvider**: MCP resources with static-first, scraping-fallback architecture
-- **HIGToolProvider**: Interactive tools using pre-built search indices for fast results
-
-#### Content Generation Architecture (SOLID Principles)
-- **EnhancedContentGenerator**: Main orchestrator following dependency injection
-- **FileSystemService**: Single responsibility for file operations
-- **ContentProcessorService**: Processes and cleans content
-- **SearchIndexerService**: Generates search indices
-- **CrossReferenceGeneratorService**: Creates cross-references between sections
-- **ContentScraperService**: Enhanced extraction from Apple's SPA website
-- **ContentEnhancementStrategies**: Strategy pattern for platform-specific enhancements
-
-## ⚡ Performance & Reliability
-
-### Static vs Live Performance
-
-| Metric | Live Scraping | Static Content |
-|--------|---------------|----------------|
-| **Response Time** | 1-10 seconds | < 50ms (instant) |
-| **Concurrent Users** | 30 req/min limit | Unlimited |
-| **Availability** | ~95% (depends on Apple) | ~99.9% |
-| **Cache Misses** | Frequent delays | Never (pre-generated) |
-| **Apple Website Dependency** | Real-time | None during runtime |
-
-### Content Freshness Strategy
-
-- **Automated Updates**: GitHub Action runs every 4 months
-- **Manual Triggers**: Immediate updates when Apple announces changes
-- **Intelligent Monitoring**: Content age warnings for >6 months
-- **Fallback Coverage**: Live scraping ensures 100% availability
-
-### Static Content Structure
-
-```
-content/
-├── platforms/           # Organized by Apple platform
-│   ├── ios/            # iOS-specific guidelines
-│   │   ├── buttons.md
-│   │   ├── navigation.md
-│   │   └── typography.md
-│   ├── macos/          # macOS guidelines
-│   └── watchos/        # watchOS guidelines
-├── metadata/           # Search optimization
-│   ├── search-index.json      # Pre-built search indices
-│   ├── cross-references.json  # Related content links
-│   └── generation-info.json   # Content metadata
-└── images/            # Visual assets (future)
-```
-
-Each markdown file includes:
-- **Front matter**: Structured metadata (platform, category, URL, etc.)
-- **AI-optimized content**: Clean formatting, proper headers, cross-references
-- **Code examples**: SwiftUI/UIKit snippets with proper accessibility
-- **Design specifications**: Colors, spacing, typography, sizing guidelines
-- **Attribution**: Proper Apple attribution and fair use notices
-- **Table of contents**: For longer sections
-
-### Current Architecture (2025)
-
-The content generation system follows modular service architecture:
-
-```
-src/
-├── generators/
-│   └── content-generator.ts            # Main content generation orchestrator
-├── services/                           # Specialized services
-│   ├── file-system.service.ts
-│   ├── content-processor.service.ts
-│   ├── search-indexer.service.ts
-│   ├── semantic-search.service.ts
-│   ├── tools.service.ts
-│   └── crawlee-hig.service.ts
-├── interfaces/                         # Type definitions
-│   └── content-interfaces.ts
-└── static-content.ts                   # Static content provider
-```
-
-**Benefits of the current architecture:**
-- ✅ **Hybrid Performance**: Static content for speed + live scraping fallback
-- ✅ **Semantic Search**: TensorFlow-powered intelligent search capabilities  
-- ✅ **Modular**: Each service has a clear, focused responsibility
-- ✅ **Reliable**: Multiple fallback layers ensure high availability
 
 ## 🤝 Contributing
 
@@ -325,19 +193,6 @@ We welcome contributions! This project relies on community help for maintenance,
 2. Use the [scraper issue template](https://github.com/tannermaasen/apple-hig-mcp/issues/new?template=scraper_issue.md) to report problems
 3. See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines
 
-## 📋 Maintenance
-
-### Health Monitoring
-
-- **Daily Health Checks**: Automated testing of scraper functionality
-- **Dependency Updates**: Regular security and dependency updates
-- **Community Issues**: GitHub issue tracking for quick problem identification
-
-### Expected Maintenance Level
-
-- **Automated**: Content caching, health monitoring, dependency updates
-- **Community-Driven**: Scraper fixes when Apple changes their website (estimated 2-4times/year)
-- **Maintainer Time**: ~2-4 hours/month for oversight
 
 ## ⚖️ Legal & Attribution
 
@@ -390,8 +245,7 @@ npm run dev           # Start development server
 | `hig://<platform>/<category>` | Category-specific guidelines |
 | `hig://universal` | Cross-platform design principles |
 | `hig://<topic>` | Topic-specific guidelines (buttons, materials, etc.) |
-| `hig://updates/latest-design-system` | Latest design system updates |
-| `hig://updates/latest` | Latest HIG updates |
+| `hig://updates/latest` | Latest HIG changes and additions |
 
 ### Tools
 
@@ -421,16 +275,6 @@ npm run dev           # Start development server
 - Monitor memory usage
 - Adjust request rate limiting
 
-## 📞 Support
-
-- **Bug Reports**: [Issue Tracker](https://github.com/tannermaasen/apple-hig-mcp/issues)
-- **Feature Requests**: [Feature Template](https://github.com/tannermaasen/apple-hig-mcp/issues/new?template=feature_request.md)
-- **Scraper Issues**: [Scraper Template](https://github.com/tannermaasen/apple-hig-mcp/issues/new?template=scraper_issue.md)
-- **Discussions**: [GitHub Discussions](https://github.com/tannermaasen/apple-hig-mcp/discussions)
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) for details.
 
 ## 🙏 Acknowledgments
 

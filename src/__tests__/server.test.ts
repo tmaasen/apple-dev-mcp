@@ -93,7 +93,6 @@ describe('Server Component Integration', () => {
       /^hig:\/\/watchos$/,
       /^hig:\/\/tvos$/,
       /^hig:\/\/visionos$/,
-      /^hig:\/\/updates\/latest-design-system$/,
       /^hig:\/\/updates\/latest$/
     ];
     

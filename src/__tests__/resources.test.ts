@@ -45,20 +45,18 @@ describe('HIGResourceProvider', () => {
       expect(resources.length).toBeGreaterThan(0);
       expect(resources.some(r => r.uri === 'hig://ios')).toBe(true);
       expect(resources.some(r => r.uri === 'hig://macos')).toBe(true);
-      expect(resources.some(r => r.uri === 'hig://updates/latest-design-system')).toBe(true);
+      expect(resources.some(r => r.uri === 'hig://updates/latest')).toBe(true);
     });
 
-    test('should include special update resources', async () => {
+    test('should include special update resource', async () => {
       jest.spyOn(crawleeService, 'discoverSections').mockResolvedValue([]);
 
       const resources = await resourceProvider.listResources();
       
-      const designSystemResource = resources.find(r => r.uri === 'hig://updates/latest-design-system');
       const latestResource = resources.find(r => r.uri === 'hig://updates/latest');
       
-      expect(designSystemResource).toBeDefined();
-      expect(designSystemResource?.name).toContain('Design System');
       expect(latestResource).toBeDefined();
+      expect(latestResource?.name).toContain('Latest HIG Updates');
     });
   });
 
@@ -112,12 +110,12 @@ describe('HIGResourceProvider', () => {
       expect(resource?.content).toContain('iOS Visual Design');
     });
 
-    test('should get Liquid Glass update resource', async () => {
-      const resource = await resourceProvider.getResource('hig://updates/latest-design-system');
+    test('should get latest updates resource', async () => {
+      const resource = await resourceProvider.getResource('hig://updates/latest');
       
       expect(resource).toBeTruthy();
-      expect(resource?.name).toContain('Design System');
-      expect(resource?.content).toContain('Latest Apple Design System');
+      expect(resource?.name).toContain('Latest HIG Updates');
+      expect(resource?.content).toContain('Latest HIG Updates');
       expect(resource?.content).toContain('advanced materials');
       expect(resource?.content).toContain('Attribution Notice');
     });
@@ -159,7 +157,7 @@ describe('HIGResourceProvider', () => {
       const testCases = [
         { uri: 'hig://ios', expected: { type: 'platform', platform: 'iOS' } },
         { uri: 'hig://macos/layout', expected: { type: 'category', platform: 'macOS', category: 'layout' } },
-        { uri: 'hig://updates/latest-design-system', expected: { type: 'updates', updateType: 'latest-design-system' } },
+        { uri: 'hig://updates/latest', expected: { type: 'updates', updateType: 'latest' } },
         { uri: 'hig://updates', expected: { type: 'updates', updateType: 'latest' } }
       ];
 
