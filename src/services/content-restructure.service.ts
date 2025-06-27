@@ -7,7 +7,6 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import type { HIGSection } from '../types.js';
 
 export interface ContentRestructureConfig {
   currentContentDir: string;
@@ -56,7 +55,6 @@ export class ContentRestructureService {
 
     const urlTopicMap = new Map<string, TopicConsolidationPlan>();
     const universalTopics = new Set<string>();
-    const platformSpecificTopics = new Set<string>();
 
     // Analyze all files
     for (const platformDirent of platforms) {
@@ -113,7 +111,7 @@ export class ContentRestructureService {
     }
 
     // Categorize topics
-    for (const [url, consolidationPlan] of urlTopicMap) {
+    for (const [, consolidationPlan] of urlTopicMap) {
       const topic = consolidationPlan.topic;
       
       // Determine if topic should be universal

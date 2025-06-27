@@ -82,7 +82,7 @@ export class SemanticSearchService {
     // Quick fail-fast check for offline mode or network issues
     try {
       // Much simpler and faster connectivity check
-      const controller = new AbortController();
+      const controller = new globalThis.AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 2000); // Reduced to 2s
       
       const response = await fetch('https://www.google.com', { 
@@ -97,6 +97,7 @@ export class SemanticSearchService {
       }
     } catch (error) {
       console.log('[SemanticSearch] ⚡ Network unavailable, using keyword search only');
+      console.log(error);
       this.model = null;
       this.isInitialized = false;
       clearTimeout(initTimeout);
@@ -106,7 +107,7 @@ export class SemanticSearchService {
     try {
       // Attempt to load model with shorter timeout
       const modelTimeoutMs = 5000; // Much shorter timeout
-      const modelController = new AbortController();
+      const modelController = new globalThis.AbortController();
       const modelTimeoutId = setTimeout(() => {
         modelController.abort();
       }, modelTimeoutMs);
@@ -122,6 +123,7 @@ export class SemanticSearchService {
       }
     } catch (error) {
       console.log('[SemanticSearch] ⚡ Using keyword search only');
+      console.log(error);
       this.model = null;
       this.isInitialized = false;
       // Don't throw - allow graceful fallback to keyword search
