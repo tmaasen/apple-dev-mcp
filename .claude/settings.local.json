@@ -35,7 +35,9 @@
       "Bash(npm search \"nlp compromise\")",
       "Bash(tsx:*)",
       "Bash(timeout 60s npm run generate-content:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(cp:*)",
+      "Bash(DISABLE_SEMANTIC_SEARCH=true npm run generate-content -- --output-dir content-test)"
     ],
     "deny": []
   }

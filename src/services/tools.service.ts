@@ -488,15 +488,22 @@ export class HIGToolsService {
   private getFallbackSearchResults(query: string, platform?: ApplePlatform, category?: string, limit: number = 10): SearchResult[] {
     const queryLower = query.toLowerCase();
     const fallbackData = [
-      // Enhanced fallback data with better semantic context
-      { keywords: ['button', 'btn', 'press', 'tap', 'click', 'action', 'cta'], title: 'Buttons', platform: 'iOS', category: 'visual-design', url: 'https://developer.apple.com/design/human-interface-guidelines/buttons', snippet: 'Buttons initiate app-specific actions, have customizable backgrounds, and can include a title or an icon. Learn about sizing, styling, and accessibility.' },
-      { keywords: ['navigation', 'nav', 'navigate', 'menu', 'bar', 'hierarchy'], title: 'Navigation Bars', platform: 'iOS', category: 'navigation', url: 'https://developer.apple.com/design/human-interface-guidelines/navigation-bars', snippet: 'Navigation bars enable navigation through content hierarchy. Design clear navigation patterns with proper title placement and button organization.' },
-      { keywords: ['tab', 'tabs', 'bottom', 'switching', 'sections'], title: 'Tab Bars', platform: 'iOS', category: 'navigation', url: 'https://developer.apple.com/design/human-interface-guidelines/tab-bars', snippet: 'Tab bars provide quick switching between app sections. Position tabs at the bottom with clear icons and labels for optimal user experience.' },
-      { keywords: ['layout', 'grid', 'spacing', 'margin', 'responsive', 'adaptive'], title: 'Layout Fundamentals', platform: 'universal', category: 'layout', url: 'https://developer.apple.com/design/human-interface-guidelines/layout', snippet: 'Create adaptive layouts that work across devices. Use proper spacing, alignment, and responsive design principles for consistent experiences.' },
-      { keywords: ['color', 'colours', 'theme', 'dark', 'light', 'contrast', 'accessibility'], title: 'Color Guidelines', platform: 'universal', category: 'color-and-materials', url: 'https://developer.apple.com/design/human-interface-guidelines/color', snippet: 'Color enhances user experience and provides visual hierarchy. Ensure proper contrast ratios and support for both light and dark appearances.' },
-      { keywords: ['typography', 'text', 'font', 'size', 'readability', 'hierarchy'], title: 'Typography', platform: 'universal', category: 'typography', url: 'https://developer.apple.com/design/human-interface-guidelines/typography', snippet: 'Typography creates information hierarchy and improves readability. Use system fonts and proper sizing for optimal user experience across platforms.' },
-      { keywords: ['accessibility', 'a11y', 'voiceover', 'accessible', 'inclusive', 'disability'], title: 'Accessibility Best Practices', platform: 'universal', category: 'foundations', url: 'https://developer.apple.com/design/human-interface-guidelines/accessibility', snippet: 'Design inclusive experiences for all users. Implement proper accessibility features including VoiceOver support, color contrast, and alternative interaction methods.' },
-      { keywords: ['vision', 'visionos', 'spatial', 'immersive', 'ar', 'vr', '3d'], title: 'visionOS Design Principles', platform: 'visionOS', category: 'foundations', url: 'https://developer.apple.com/design/human-interface-guidelines/designing-for-visionos', snippet: 'Design for spatial computing with visionOS. Create immersive experiences that blend digital content with the physical world using depth, scale, and natural interactions.' }
+      // Topic-first fallback data prioritizing universal content
+      { keywords: ['material', 'materials', 'liquid', 'glass', 'liquid glass', 'translucent', 'transparent', 'blur', 'vibrancy'], title: 'Materials', platform: 'universal', category: 'color-and-materials', url: 'https://developer.apple.com/design/human-interface-guidelines/materials', snippet: 'Materials create depth and visual hierarchy. Liquid Glass is a dynamic material that unifies design language across Apple platforms, allowing controls and navigation without obscuring content.' },
+      { keywords: ['button', 'buttons', 'btn', 'press', 'tap', 'click', 'action', 'cta'], title: 'Buttons', platform: 'universal', category: 'selection-and-input', url: 'https://developer.apple.com/design/human-interface-guidelines/buttons', snippet: 'Buttons initiate app-specific actions, have customizable backgrounds, and can include a title or an icon. Learn about sizing, styling, and accessibility across all Apple platforms.' },
+      { keywords: ['accessibility', 'a11y', 'voiceover', 'accessible', 'inclusive', 'disability', 'assistive'], title: 'Accessibility', platform: 'universal', category: 'foundations', url: 'https://developer.apple.com/design/human-interface-guidelines/accessibility', snippet: 'Design inclusive experiences for all users. Implement proper accessibility features including VoiceOver support, color contrast, and alternative interaction methods.' },
+      { keywords: ['color', 'colours', 'theme', 'dark', 'light', 'contrast', 'palette'], title: 'Color', platform: 'universal', category: 'color-and-materials', url: 'https://developer.apple.com/design/human-interface-guidelines/color', snippet: 'Color enhances user experience and provides visual hierarchy. Ensure proper contrast ratios and support for both light and dark appearances across platforms.' },
+      { keywords: ['typography', 'text', 'font', 'fonts', 'size', 'readability', 'hierarchy'], title: 'Typography', platform: 'universal', category: 'typography', url: 'https://developer.apple.com/design/human-interface-guidelines/typography', snippet: 'Typography creates information hierarchy and improves readability. Use system fonts and proper sizing for optimal user experience across all Apple platforms.' },
+      { keywords: ['layout', 'grid', 'spacing', 'margin', 'responsive', 'adaptive', 'organization'], title: 'Layout', platform: 'universal', category: 'layout', url: 'https://developer.apple.com/design/human-interface-guidelines/layout', snippet: 'Create adaptive layouts that work across devices. Use proper spacing, alignment, and responsive design principles for consistent experiences.' },
+      { keywords: ['navigation', 'nav', 'navigate', 'menu', 'search', 'finding', 'hierarchy'], title: 'Navigation and Search', platform: 'universal', category: 'navigation', url: 'https://developer.apple.com/design/human-interface-guidelines/navigation-and-search', snippet: 'Navigation helps people find content and accomplish tasks. Design clear, consistent navigation patterns that work across all Apple platforms.' },
+      { keywords: ['alerts', 'alert', 'notification', 'popup', 'dialog', 'warning'], title: 'Alerts', platform: 'universal', category: 'presentation', url: 'https://developer.apple.com/design/human-interface-guidelines/alerts', snippet: 'Alerts convey important information that requires immediate attention. Design clear, actionable alerts that help users make informed decisions.' },
+      { keywords: ['sheets', 'sheet', 'modal', 'overlay', 'popup', 'presentation'], title: 'Sheets', platform: 'universal', category: 'presentation', url: 'https://developer.apple.com/design/human-interface-guidelines/sheets', snippet: 'Sheets present content in a focused, modal interface. Use sheets for tasks that require user attention before returning to the main interface.' },
+      { keywords: ['menus', 'menu', 'context', 'popup', 'dropdown', 'actions'], title: 'Menus', platform: 'universal', category: 'menus-and-actions', url: 'https://developer.apple.com/design/human-interface-guidelines/menus', snippet: 'Menus present a list of actions or options. Design clear, organized menus that help users quickly find and execute commands.' },
+      // Platform-specific fallbacks
+      { keywords: ['complications', 'complication', 'watch', 'watchface', 'widget'], title: 'Complications', platform: 'watchOS', category: 'system-experiences', url: 'https://developer.apple.com/design/human-interface-guidelines/complications', snippet: 'Complications display timely, relevant information on the watch face. Design complications that provide quick access to your app\'s most important data.' },
+      { keywords: ['combo', 'boxes', 'dropdown', 'select', 'picker', 'macos'], title: 'Combo Boxes', platform: 'macOS', category: 'selection-and-input', url: 'https://developer.apple.com/design/human-interface-guidelines/combo-boxes', snippet: 'Combo boxes combine a text field with a dropdown menu. Use combo boxes on macOS to provide both preset options and custom input capabilities.' },
+      { keywords: ['eyes', 'eye', 'tracking', 'gaze', 'visionos', 'spatial'], title: 'Eyes', platform: 'visionOS', category: 'selection-and-input', url: 'https://developer.apple.com/design/human-interface-guidelines/eyes', snippet: 'Eye tracking enables natural interaction in visionOS. Design interfaces that respond to eye movement while respecting user privacy and comfort.' },
+      { keywords: ['ornaments', 'ornament', 'visionos', 'spatial', 'floating'], title: 'Ornaments', platform: 'visionOS', category: 'layout', url: 'https://developer.apple.com/design/human-interface-guidelines/ornaments', snippet: 'Ornaments are UI elements that float around windows in visionOS. Use ornaments for frequently accessed controls and contextual information.' }
     ];
 
     const results: SearchResult[] = [];
@@ -523,18 +530,26 @@ export class HIGToolsService {
         relevanceScore = Math.max(relevanceScore, 0.6);
       }
       
-      // Apply filters
-      if (platform && platform !== 'universal' && item.platform !== platform && item.platform !== 'universal') {
-        return;
+      // Apply filters with topic-first logic
+      if (platform && platform !== 'universal') {
+        // If platform is specified, prefer universal content but also include platform-specific
+        if (item.platform !== platform && item.platform !== 'universal') {
+          relevanceScore *= 0.5; // Reduce relevance but don't exclude
+        }
       }
       
       if (category && item.category !== category) {
-        return;
+        relevanceScore *= 0.7; // Reduce relevance for category mismatch
+      }
+      
+      // Boost universal content (topic-first approach)
+      if (item.platform === 'universal') {
+        relevanceScore *= 1.2;
       }
       
       if (relevanceScore > 0) {
         results.push({
-          id: `enhanced-fallback-${index}`,
+          id: `topic-first-fallback-${index}`,
           title: item.title,
           url: item.url,
           platform: item.platform as ApplePlatform,

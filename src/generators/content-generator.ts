@@ -263,15 +263,85 @@ export class ContentGenerator {
       ...section,
       platform: section.platform as any,
       category: section.category as any,
-      content: this.generateBasicContentForSection(section.title, section.platform as string, section.category as string)
+      content: this.generateBasicContentForSection(section.title, section.platform as string, section.category as string),
+      lastUpdated: new Date()
     }));
   }
 
   /**
-   * Create necessary directory structure
+   * Generate basic content for a section (used for static sections)
+   */
+  private generateBasicContentForSection(title: string, platform: string, _category: string): string {
+    return `# ${title}
+
+This section is part of Apple's Human Interface Guidelines for ${platform}.
+
+**Note**: This is a placeholder. For complete and up-to-date information, please visit Apple's official documentation.
+
+## Overview
+
+${title} guidelines provide essential design principles for creating great user experiences on ${platform}.
+
+---
+
+**Attribution Notice**
+
+This content is sourced from Apple's Human Interface Guidelines.
+
+© Apple Inc. All rights reserved. For the most up-to-date and official information, please refer to Apple's official documentation.`;
+  }
+
+  /**
+   * Get the file path for a topic based on topic-first organization
+   */
+  private getTopicFilePath(section: HIGSection, filename: string): string {
+    // Universal topics go at root level
+    if (section.platform === 'universal' || this.isUniversalTopic(section)) {
+      return path.join(this.config.outputDirectory, filename);
+    }
+    
+    // Platform-specific topics go in platforms/{platform}/
+    return path.join(
+      this.config.outputDirectory,
+      'platforms',
+      section.platform.toLowerCase(),
+      filename
+    );
+  }
+
+  /**
+   * Determine if a topic should be treated as universal
+   */
+  private isUniversalTopic(section: HIGSection): boolean {
+    // Topics that should be universal based on their nature
+    const universalTopics = new Set([
+      'accessibility', 'privacy', 'inclusion', 'branding',
+      'layout', 'spatial-layout', 'typography', 'color', 'icons', 'images', 'motion',
+      'inputs', 'gestures', 'feedback', 'loading', 'onboarding', 'launching',
+      'navigation-and-search', 'searching', 'modality',
+      'alerts', 'action-sheets', 'activity-views', 'sheets', 'popovers',
+      'buttons', 'menus', 'toolbars', 'tab-bars', 'navigation-bars', 'sliders',
+      'steppers', 'toggles', 'pickers', 'progress-indicators', 'labels',
+      'text-fields', 'text-views', 'lists-and-tables', 'collections', 'scroll-views',
+      'split-views', 'boxes', 'gauges', 'charts', 'rating-indicators', 'materials',
+      'app-clips', 'app-shortcuts', 'apple-pay', 'carplay', 'healthkit', 'homekit',
+      'icloud', 'in-app-purchase', 'machine-learning', 'maps', 'nfc', 'siri',
+      'wallet', 'augmented-reality', 'game-center', 'live-activities',
+      'live-photos', 'notifications', 'shareplay', 'sign-in-with-apple',
+      'tap-to-pay-on-iphone', 'widgets'
+    ]);
+    
+    // Extract topic name from section ID or title
+    const topicName = section.id.replace(/-\w+$/, ''); // Remove platform suffix
+    
+    return universalTopics.has(topicName) || section.platform === 'universal';
+  }
+
+  /**
+   * Create necessary directory structure (topic-first organization)
    */
   private async createDirectoryStructure(): Promise<void> {
-    console.log('📁 Creating directory structure...');
+    console.log('📁 Creating topic-first directory structure...');
     
     const directories = [
       'platforms/ios',
@@ -279,10 +349,14 @@ export class ContentGenerator {
       'platforms/watchos',
       'platforms/tvos',
       'platforms/visionos',
-      'platforms/universal',
+      // Note: No platforms/universal - universal topics go at root
       'metadata'
     ];
 
+    // Create root output directory
+    await this.fileSystem.mkdir(this.config.outputDirectory, { recursive: true });
+
+    // Create platform-specific subdirectories
     for (const dir of directories) {
       await this.fileSystem.mkdir(
         path.join(this.config.outputDirectory, dir),
@@ -361,14 +435,9 @@ export class ContentGenerator {
         processingResult
       );
       
-      // Write to file
+      // Write to file using topic-first structure
       const filename = this.generateFilename(section);
-      const filePath = path.join(
-        this.config.outputDirectory,
-        'platforms',
-        section.platform.toLowerCase(),
-        filename
-      );
+      const filePath = this.getTopicFilePath(section, filename);
       
       await this.fileSystem.writeFile(filePath, finalContent);
       
@@ -390,7 +459,13 @@ export class ContentGenerator {
       const qualityEmoji = processingResult.quality.score >= 0.8 ? '🟢' : 
                           processingResult.quality.score >= 0.5 ? '🟡' : '🔴';
       const structureEmoji = processingResult.processingMetrics.structureScore >= 0.8 ? '🏗️' : '📝';
-      console.log(`${qualityEmoji}${structureEmoji} Generated: ${section.platform}/${filename} (quality: ${processingResult.quality.score.toFixed(3)}, structure: ${processingResult.processingMetrics.structureScore.toFixed(3)}, method: ${processingResult.quality.extractionMethod})`);
+      
+      // Determine display path for logging
+      const displayPath = this.isUniversalTopic(section) || section.platform === 'universal' 
+        ? filename 
+        : `${section.platform}/${filename}`;
+        
+      console.log(`${qualityEmoji}${structureEmoji} Generated: ${displayPath} (quality: ${processingResult.quality.score.toFixed(3)}, structure: ${processingResult.processingMetrics.structureScore.toFixed(3)}, method: ${processingResult.quality.extractionMethod})`);
       
     } catch (error) {
       console.error(`❌ Failed to process section ${section.title}:`, error);

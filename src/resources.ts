@@ -96,6 +96,38 @@ export class HIGResourceProvider {
         });
       }
 
+      // Topic-based resources (universal topics)
+      const universalTopics = [
+        'materials', 'buttons', 'accessibility', 'color', 'typography',
+        'layout', 'navigation-and-search', 'alerts', 'sheets', 'menus',
+        'icons', 'images', 'gestures', 'motion', 'dark-mode'
+      ];
+      
+      for (const topic of universalTopics) {
+        const topicSections = sections.filter(s => 
+          s.url.includes(`/${topic}`) || s.title.toLowerCase().includes(topic.toLowerCase())
+        );
+        
+        if (topicSections.length > 0) {
+          resources.push({
+            uri: `hig://${topic}`,
+            name: this.formatTopicName(topic),
+            description: `Cross-platform guidelines for ${this.formatTopicName(topic).toLowerCase()}`,
+            mimeType: 'text/markdown',
+            content: ''
+          });
+        }
+      }
+
+      // Add Liquid Glass as a special featured topic
+      resources.push({
+        uri: 'hig://materials',
+        name: 'Materials (including Liquid Glass)',
+        description: 'Advanced materials and the new Liquid Glass design system across all Apple platforms',
+        mimeType: 'text/markdown',
+        content: ''
+      });
+
       // Special resources for latest updates
       resources.push({
         uri: 'hig://updates/latest-design-system',
@@ -178,6 +210,16 @@ export class HIGResourceProvider {
         content = result.content;
         name = result.name;
         description = result.description;
+      } else if (parsed.type === 'topic') {
+        const result = await this.getTopicContent(parsed.topic!);
+        content = result.content;
+        name = result.name;
+        description = result.description;
+      } else if (parsed.type === 'topic-platform') {
+        const result = await this.getTopicPlatformContent(parsed.topic!, parsed.platform!);
+        content = result.content;
+        name = result.name;
+        description = result.description;
       } else {
         return null;
       }
@@ -203,13 +245,14 @@ export class HIGResourceProvider {
   }
 
   /**
-   * Parse resource URI into components
+   * Parse resource URI into components (supporting topic-first structure)
    */
   private parseResourceURI(uri: string): {
-    type: 'platform' | 'category' | 'updates';
+    type: 'platform' | 'category' | 'updates' | 'topic' | 'topic-platform';
     platform?: ApplePlatform;
     category?: HIGCategory;
     updateType?: string;
+    topic?: string;
   } | null {
     const match = uri.match(/^hig:\/\/([^/]+)(?:\/(.+))?$/);
     if (!match) {
@@ -218,6 +261,7 @@ export class HIGResourceProvider {
 
     const [, first, second] = match;
 
+    // Handle updates
     if (first === 'updates') {
       return {
         type: 'updates',
@@ -225,28 +269,54 @@ export class HIGResourceProvider {
       };
     }
 
+    // Check if first part is a platform
     const platform = this.stringToPlatform(first);
-    if (!platform) {
-      return null;
-    }
+    if (platform) {
+      if (!second) {
+        return {
+          type: 'platform',
+          platform
+        };
+      }
 
-    if (!second) {
+      const category = this.stringToCategory(second);
+      if (category) {
+        return {
+          type: 'category',
+          platform,
+          category
+        };
+      }
+
+      // Platform-specific topic (e.g., hig://ios/app-icons)
       return {
-        type: 'platform',
-        platform
+        type: 'topic-platform',
+        platform,
+        topic: second
       };
     }
 
-    const category = this.stringToCategory(second);
-    if (!category) {
-      return null;
+    // Universal topic (e.g., hig://materials, hig://buttons)
+    if (this.isValidTopicName(first)) {
+      if (second) {
+        // Topic with platform filter (e.g., hig://buttons/ios)
+        const platformFilter = this.stringToPlatform(second);
+        if (platformFilter) {
+          return {
+            type: 'topic-platform',
+            topic: first,
+            platform: platformFilter
+          };
+        }
+      }
+      
+      return {
+        type: 'topic',
+        topic: first
+      };
     }
 
-    return {
-      type: 'category',
-      platform,
-      category
-    };
+    return null;
   }
 
   /**
@@ -429,6 +499,186 @@ For the most up-to-date and official information, please refer to Apple's offici
     };
     
     return categoryMap[str] || null;
+  }
+
+  /**
+   * Check if a string is a valid topic name
+   */
+  private isValidTopicName(name: string): boolean {
+    // Check if this matches a known universal topic
+    const universalTopics = [
+      'accessibility', 'action-sheets', 'activity-rings', 'activity-views', 'airplay',
+      'alerts', 'always-on', 'app-clips', 'app-icons', 'app-shortcuts', 'apple-pay',
+      'apple-pencil-and-scribble', 'augmented-reality', 'boxes', 'branding',
+      'camera-control', 'carekit', 'carplay', 'charting-data', 'charts',
+      'collaboration-and-sharing', 'collections', 'color-wells', 'color',
+      'column-views', 'combo-boxes', 'complications', 'components', 'content',
+      'context-menus', 'controls', 'dark-mode', 'designing-for-games',
+      'designing-for-ipados', 'digit-entry-views', 'digital-crown',
+      'disclosure-controls', 'dock-menus', 'drag-and-drop', 'edit-menus',
+      'entering-data', 'eyes', 'feedback', 'file-management', 'focus-and-selection',
+      'foundations', 'game-center', 'game-controls', 'gauges', 'generative-ai',
+      'gestures', 'getting-started', 'going-full-screen', 'gyroscope-and-accelerometer',
+      'healthkit', 'home-screen-quick-actions', 'homekit', 'icloud', 'icons',
+      'id-verifier', 'image-views', 'image-wells', 'images', 'imessage-apps-and-stickers',
+      'immersive-experiences', 'in-app-purchase', 'inclusion', 'inputs', 'keyboards',
+      'labels', 'launching', 'layout-and-organization', 'layout', 'lists-and-tables',
+      'live-activities', 'live-photos', 'live-viewing-apps', 'loading', 'lockups',
+      'mac-catalyst', 'machine-learning', 'managing-accounts', 'managing-notifications',
+      'maps', 'materials', 'menus-and-actions', 'menus', 'messages-for-business',
+      'modality', 'motion', 'multitasking', 'navigation-and-search', 'nearby-interactions',
+      'nfc', 'notifications', 'offering-help', 'onboarding', 'ornaments',
+      'outline-views', 'page-controls', 'panels', 'path-controls', 'patterns',
+      'photo-editing', 'pickers', 'playing-audio', 'playing-haptics', 'playing-video',
+      'pointing-devices', 'pop-up-buttons', 'popovers', 'presentation', 'printing',
+      'privacy', 'progress-indicators', 'pull-down-buttons', 'rating-indicators',
+      'ratings-and-reviews', 'remotes', 'researchkit', 'right-to-left', 'scroll-views',
+      'search-fields', 'searching', 'segmented-controls', 'selection-and-input',
+      'settings', 'sf-symbols', 'shareplay', 'shazamkit', 'sheets', 'sidebars',
+      'sign-in-with-apple', 'siri', 'sliders', 'spatial-layout', 'split-views',
+      'status-bars', 'status', 'steppers', 'system-experiences', 'tab-bars',
+      'tab-views', 'tap-to-pay-on-iphone', 'technologies', 'text-fields', 'text-views',
+      'the-menu-bar', 'toggles', 'token-fields', 'toolbars', 'top-shelf', 'typography',
+      'undo-and-redo', 'virtual-keyboards', 'voiceover', 'wallet', 'watch-faces',
+      'web-views', 'widgets', 'windows', 'workouts', 'writing'
+    ];
+    
+    return universalTopics.includes(name.toLowerCase());
+  }
+
+  /**
+   * Get content for a universal topic
+   */
+  private async getTopicContent(topic: string): Promise<{
+    content: string;
+    name: string;
+    description: string;
+  }> {
+    // Try static content first
+    if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
+      try {
+        const resource = await this.staticContentProvider.getResource(`hig://${topic}`);
+        if (resource) {
+          return {
+            content: resource.content,
+            name: resource.name,
+            description: resource.description
+          };
+        }
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn(`[HIGResourceProvider] Static content failed for topic ${topic}, falling back to scraping:`, error);
+        }
+      }
+    }
+
+    // Fallback to scraper
+    const sections = await this.crawleeService.discoverSections();
+    const topicSections = sections.filter(s => 
+      s.url.includes(`/${topic}`) || s.title.toLowerCase().includes(topic.toLowerCase())
+    );
+
+    const topicName = this.formatTopicName(topic);
+    let content = `# ${topicName}\n\n`;
+    content += `Cross-platform design guidelines for ${topicName.toLowerCase()}.\n\n`;
+    
+    // Add attribution
+    content += this.getAttributionText();
+
+    if (topicSections.length === 0) {
+      content += `No specific content found for ${topicName}. This may be a platform-specific topic or the content may be located in a different section.\n\n`;
+      content += `Please try searching for this topic or check platform-specific resources.\n`;
+    } else {
+      for (const section of topicSections) {
+        const sectionWithContent = await this.crawleeService.fetchSectionContent(section);
+        if (sectionWithContent.content) {
+          content += `## ${section.title}\n\n`;
+          content += `**Platform:** ${section.platform}\n`;
+          content += `**URL:** ${section.url}\n\n`;
+          content += sectionWithContent.content;
+          content += '\n\n---\n\n';
+        }
+      }
+    }
+
+    return {
+      content,
+      name: topicName,
+      description: `Cross-platform guidelines for ${topicName.toLowerCase()}`
+    };
+  }
+
+  /**
+   * Get content for a topic filtered by platform
+   */
+  private async getTopicPlatformContent(topic: string, platform: ApplePlatform): Promise<{
+    content: string;
+    name: string;
+    description: string;
+  }> {
+    // Try static content first
+    if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
+      try {
+        const resource = await this.staticContentProvider.getResource(`hig://${topic}/${platform.toLowerCase()}`);
+        if (resource) {
+          return {
+            content: resource.content,
+            name: resource.name,
+            description: resource.description
+          };
+        }
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn(`[HIGResourceProvider] Static content failed for topic ${topic}/${platform}, falling back to scraping:`, error);
+        }
+      }
+    }
+
+    // Fallback to scraper
+    const sections = await this.crawleeService.discoverSections();
+    const topicPlatformSections = sections.filter(s => 
+      s.platform === platform && 
+      (s.url.includes(`/${topic}`) || s.title.toLowerCase().includes(topic.toLowerCase()))
+    );
+
+    const topicName = this.formatTopicName(topic);
+    let content = `# ${platform} ${topicName}\n\n`;
+    content += `${platform}-specific design guidelines for ${topicName.toLowerCase()}.\n\n`;
+    
+    // Add attribution
+    content += this.getAttributionText();
+
+    if (topicPlatformSections.length === 0) {
+      content += `No ${platform}-specific content found for ${topicName}.\n\n`;
+      content += `This topic may be covered in universal guidelines or may not be applicable to ${platform}.\n`;
+      content += `Try the universal topic resource: hig://${topic}\n`;
+    } else {
+      for (const section of topicPlatformSections) {
+        const sectionWithContent = await this.crawleeService.fetchSectionContent(section);
+        if (sectionWithContent.content) {
+          content += `## ${section.title}\n\n`;
+          content += `**URL:** ${section.url}\n\n`;
+          content += sectionWithContent.content;
+          content += '\n\n---\n\n';
+        }
+      }
+    }
+
+    return {
+      content,
+      name: `${platform} ${topicName}`,
+      description: `${platform}-specific guidelines for ${topicName.toLowerCase()}`
+    };
+  }
+
+  /**
+   * Format topic name for display
+   */
+  private formatTopicName(topic: string): string {
+    return topic
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   }
 
   /**

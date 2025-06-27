@@ -170,7 +170,6 @@ content/
 │   ├── search-index.json
 │   ├── cross-references.json
 │   └── generation-info.json
-└── images/            # Downloaded images and diagrams
 ```
 
 **Generation Process:**
