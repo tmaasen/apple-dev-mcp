@@ -40,42 +40,34 @@ jobs:
         
     - name: Create GitHub Release
       if: startsWith(github.ref, 'refs/tags/v')
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const tag = context.ref.replace('refs/tags/', '');
-          const release = await github.rest.repos.createRelease({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            tag_name: tag,
-            name: `Apple HIG MCP Server ${tag}`,
-            body: `## Release ${tag}
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        TAG=${GITHUB_REF#refs/tags/}
+        gh release create "$TAG" \
+          --title "Apple HIG MCP Server $TAG" \
+          --notes "## Release $TAG
 
-            Apple Human Interface Guidelines MCP Server release.
+        Apple Human Interface Guidelines MCP Server release.
 
-            ### Installation
-            \`\`\`bash
-            npm install -g apple-hig-mcp@${tag}
-            \`\`\`
+        ### Installation
+        \`\`\`bash
+        npm install -g apple-hig-mcp@$TAG
+        \`\`\`
 
-            ### Usage
-            \`\`\`bash
-            # Test the server
-            npx @modelcontextprotocol/inspector apple-hig-mcp
-            \`\`\`
+        ### Usage
+        \`\`\`bash
+        # Test the server
+        npx @modelcontextprotocol/inspector apple-hig-mcp
+        \`\`\`
 
-            ### Features
-            - 🔍 Smart search across Apple's design guidelines
-            - 📱 Multi-platform support (iOS, macOS, watchOS, tvOS, visionOS)
-            - 🔄 Intelligent caching with graceful degradation
-            - 🤖 AI-friendly markdown output
+        ### Features
+        - 🔍 Smart search across Apple's design guidelines
+        - 📱 Multi-platform support (iOS, macOS, watchOS, tvOS, visionOS)
+        - 🔄 Intelligent caching with graceful degradation
+        - 🤖 AI-friendly markdown output
 
-            See the [README](https://github.com/${context.repo.owner}/${context.repo.repo}#readme) for full documentation.`,
-            draft: false,
-            prerelease: tag.includes('-')
-          });
-          
-          console.log(`Created release: ${release.data.html_url}`);
+        See the [README](https://github.com/${{ github.repository }}#readme) for full documentation."
           
     - name: Update README badge
       if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, '-')
