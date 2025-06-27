@@ -167,7 +167,7 @@ export class ContentProcessorService implements IContentProcessor {
       this.turndown.addRule('removeNavigation', {
         filter: (node) => {
           if (node.nodeType !== 1) return false; // Only element nodes
-          const element = node as Element;
+          const element = node as globalThis.Element;
           
           // Remove common navigation patterns
           const navSelectors = [
@@ -209,7 +209,7 @@ export class ContentProcessorService implements IContentProcessor {
     this.turndown.addRule('removeHeaderFooter', {
       filter: (node) => {
         if (node.nodeType !== 1) return false;
-        const element = node as Element;
+        const element = node as globalThis.Element;
         const tagName = element.tagName?.toLowerCase();
         return tagName === 'header' || tagName === 'footer';
       },

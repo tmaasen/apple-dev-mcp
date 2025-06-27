@@ -342,7 +342,7 @@ export class CrawleeHIGService {
           // eslint-disable-next-line no-undef
           const elements = document.querySelectorAll(selector);
            
-          elements.forEach((el: Element) => el.remove());
+          elements.forEach((el: globalThis.Element) => el.remove());
         });
 
         // Convert body to markdown (simple text extraction)

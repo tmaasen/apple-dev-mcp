@@ -360,7 +360,8 @@ export class HIGDiscoveryService {
    */
   private isValidHIGUrl(url: string): boolean {
     try {
-      const urlObj = new URL(url);
+      // Use global URL constructor
+      const urlObj = globalThis.URL ? new globalThis.URL(url) : new globalThis.URL(url);
       
       // Must be from Apple's domain
       if (!urlObj.hostname.includes('apple.com')) {
@@ -445,7 +446,8 @@ export class HIGDiscoveryService {
    */
   private calculateDepth(url: string): number {
     try {
-      const urlObj = new URL(url);
+      // Use global URL constructor
+      const urlObj = globalThis.URL ? new globalThis.URL(url) : new globalThis.URL(url);
       const pathSegments = urlObj.pathname.split('/').filter(segment => segment.length > 0);
       return pathSegments.length;
     } catch {

@@ -100,7 +100,7 @@ export class SimpleHIGDiscoveryService {
           'Connection': 'keep-alive',
           'Upgrade-Insecure-Requests': '1'
         },
-        signal: AbortSignal.timeout(30000) // 30 second timeout
+        signal: globalThis.AbortSignal.timeout(30000) // 30 second timeout
       });
 
       if (!response.ok) {

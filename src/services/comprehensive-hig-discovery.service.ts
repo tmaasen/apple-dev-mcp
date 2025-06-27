@@ -216,7 +216,7 @@ export class ComprehensiveHIGDiscoveryService {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
             'Accept': 'text/html,application/xhtml+xml',
           },
-          signal: AbortSignal.timeout(8000)
+          signal: globalThis.AbortSignal.timeout(8000)
         });
 
         if (response.ok) {
