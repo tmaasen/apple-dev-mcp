@@ -477,7 +477,7 @@ export class HIGStaticContentProvider {
     };
   }
 
-  private async getUpdatesContent(updateType: string): Promise<{
+  private async getUpdatesContent(_updateType: string): Promise<{
     content: string;
     name: string;
     description: string;
