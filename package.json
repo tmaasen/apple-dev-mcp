@@ -82,6 +82,7 @@
   },
   "files": [
     "dist/**/*",
+    "content/**/*",
     "README.md",
     "LICENSE",
     "CLAUDE.md"

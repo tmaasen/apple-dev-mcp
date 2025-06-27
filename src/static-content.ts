@@ -55,7 +55,14 @@ export class HIGStaticContentProvider {
   private contentCache: Map<string, StaticSection> = new Map();
 
   constructor(contentDir?: string) {
-    this.contentDir = contentDir || path.join(process.cwd(), 'content');
+    if (contentDir) {
+      this.contentDir = contentDir;
+    } else {
+      // For global npm installs, look relative to the compiled file's location
+      // In production: dist/static-content.js -> content/
+      const packageRoot = path.dirname(__dirname);
+      this.contentDir = path.join(packageRoot, 'content');
+    }
   }
 
   /**

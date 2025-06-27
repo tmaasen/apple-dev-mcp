@@ -1,10 +1,9 @@
 # 🍎 Apple HIG MCP Server
 
-[![CI](https://github.com/tannermaasen/apple-hig-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/tannermaasen/apple-hig-mcp/actions/workflows/ci.yml)
-[![Health Check](https://github.com/tannermaasen/apple-hig-mcp/actions/workflows/daily-health-check.yml/badge.svg)](https://github.com/tannermaasen/apple-hig-mcp/actions/workflows/daily-health-check.yml)
+[![Health Check](https://github.com/tannermaasen/apple-hig-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/tannermaasen/apple-hig-mcp/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/apple-hig-mcp.svg)](https://www.npmjs.com/package/apple-hig-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-green.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
 
 A high-performance [Model Context Protocol](https://modelcontextprotocol.io/) server that provides instant access to Apple's Human Interface Guidelines with comprehensive design system coverage.
@@ -46,6 +45,14 @@ Add to your Claude Desktop configuration:
 }
 ```
 
+### Usage with Claude Code
+
+Add to Claude Code:
+
+```bash
+claude mcp add apple-hig apple-hig-mcp
+```
+
 ### Usage with MCP Inspector
 
 Test the server interactively:
@@ -58,7 +65,7 @@ npx @modelcontextprotocol/inspector apple-hig-mcp
 
 ### Prerequisites
 
-- Node.js 18.0.0 or higher
+- Node.js 20.0.0 or higher
 - npm or yarn
 
 ### Local Development
@@ -275,31 +282,31 @@ Each markdown file includes:
 - **Attribution**: Proper Apple attribution and fair use notices
 - **Table of contents**: For longer sections
 
-### Refactored Architecture (2025)
+### Current Architecture (2025)
 
-The content generation system has been completely refactored to follow SOLID principles:
+The content generation system follows modular service architecture:
 
 ```
 src/
 ├── generators/
-│   └── enhanced-content-generator.ts    # Main orchestrator
-├── services/                            # Single responsibility services
+│   └── content-generator.ts            # Main content generation orchestrator
+├── services/                           # Specialized services
 │   ├── file-system.service.ts
 │   ├── content-processor.service.ts
 │   ├── search-indexer.service.ts
-│   ├── content-scraper.service.ts
-│   └── cross-reference-generator.service.ts
-├── strategies/                          # Strategy pattern
-│   └── content-enhancement-strategies.ts
-└── interfaces/                          # Dependency injection
-    └── content-interfaces.ts
+│   ├── semantic-search.service.ts
+│   ├── tools.service.ts
+│   └── crawlee-hig.service.ts
+├── interfaces/                         # Type definitions
+│   └── content-interfaces.ts
+└── static-content.ts                   # Static content provider
 ```
 
-**Benefits of the new architecture:**
-- ✅ **Modular**: Each service has a single, clear responsibility
-- ✅ **Testable**: Dependency injection enables isolated unit testing
-- ✅ **Extensible**: Strategy pattern allows easy addition of new content types
-- ✅ **Maintainable**: Clear separation of concerns and DRY principles
+**Benefits of the current architecture:**
+- ✅ **Hybrid Performance**: Static content for speed + live scraping fallback
+- ✅ **Semantic Search**: TensorFlow-powered intelligent search capabilities  
+- ✅ **Modular**: Each service has a clear, focused responsibility
+- ✅ **Reliable**: Multiple fallback layers ensure high availability
 
 ## 🤝 Contributing
 
