@@ -41,7 +41,10 @@
       "Bash(npm whoami:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(claude config --help)"
+      "Bash(claude config --help)",
+      "Bash(echo \"Exit code: $?\")",
+      "Bash(timeout:*)",
+      "Bash(npm --version)"
     ],
     "deny": []
   }

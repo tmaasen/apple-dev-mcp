@@ -470,8 +470,8 @@ process.on('SIGTERM', async () => {
 if (import.meta.url === `file://${process.argv[1]}`) {
   // Always start the server regardless of arguments
   const server = new AppleHIGMCPServer();
-  server.run().catch((_error) => {
-    // console.error('💥 Failed to start Apple HIG MCP Server:', error);
+  server.run().catch((error) => {
+    console.error('💥 Failed to start Apple HIG MCP Server:', error);
     process.exit(1);
   });
 }
