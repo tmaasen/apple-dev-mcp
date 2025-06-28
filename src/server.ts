@@ -40,9 +40,9 @@ class AppleHIGMCPServer {
   constructor() {
     this.server = new Server(
       {
-        name: 'apple-hig-mcp',
-        version: '1.0.0',
-        description: 'Model Context Protocol server for Apple Human Interface Guidelines',
+        name: 'Apple Human Interface Guidelines',
+        version: '1.0.7',
+        description: 'Comprehensive access to Apple\'s design guidelines for iOS, macOS, watchOS, tvOS, and visionOS development',
       },
       {
         capabilities: {

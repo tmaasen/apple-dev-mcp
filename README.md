@@ -37,7 +37,7 @@ Add to your Claude Desktop configuration:
 ```json
 {
   "mcpServers": {
-    "apple-hig": {
+    "Apple HIG": {
       "command": "apple-hig-mcp",
       "args": []
     }
@@ -50,7 +50,7 @@ Add to your Claude Desktop configuration:
 Add to Claude Code:
 
 ```bash
-claude mcp add apple-hig apple-hig-mcp
+claude mcp add "Apple HIG" apple-hig-mcp
 ```
 
 ### Usage with MCP Inspector

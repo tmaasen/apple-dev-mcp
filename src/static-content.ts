@@ -53,6 +53,7 @@ export class HIGStaticContentProvider {
   private crossReferences: CrossReferences | null = null;
   private metadata: StaticContentMetadata | null = null;
   private contentCache: Map<string, StaticSection> = new Map();
+  private availabilityCache: boolean | null = null;
 
   constructor(contentDir?: string) {
     if (contentDir) {
@@ -95,14 +96,21 @@ export class HIGStaticContentProvider {
   }
 
   /**
-   * Check if static content is available
+   * Check if static content is available (cached for performance)
    */
   async isAvailable(): Promise<boolean> {
+    // Return cached result if available
+    if (this.availabilityCache !== null) {
+      return this.availabilityCache;
+    }
+
     try {
       const metadataPath = path.join(this.contentDir, 'metadata', 'generation-info.json');
       await fs.access(metadataPath);
+      this.availabilityCache = true;
       return true;
     } catch {
+      this.availabilityCache = false;
       return false;
     }
   }
@@ -287,6 +295,182 @@ export class HIGStaticContentProvider {
       const snippetLower = indexEntry.snippet.toLowerCase();
       if (snippetLower.includes(queryLower)) {
         relevanceScore += 0.5;
+      }
+
+      if (relevanceScore > 0) {
+        results.push({
+          id: indexEntry.id,
+          title: indexEntry.title,
+          url: indexEntry.url,
+          platform: indexEntry.platform,
+          relevanceScore,
+          snippet: indexEntry.snippet,
+          type: 'section'
+        });
+      }
+    }
+
+    // Sort by relevance and limit results
+    return results
+      .sort((a, b) => b.relevanceScore - a.relevanceScore)
+      .slice(0, limit);
+  }
+
+  /**
+   * Get synonym expansions for search terms
+   */
+  private expandQueryWithSynonyms(query: string): string[] {
+    const synonymMap: Record<string, string[]> = {
+      // Navigation & Layout
+      'safe area': ['layout', 'margins', 'padding', 'insets', 'edges'],
+      'layout': ['safe area', 'margins', 'padding', 'spacing', 'grid'],
+      'navigation': ['nav', 'menu', 'bar', 'header', 'title'],
+      'custom': ['custom interface', 'patterns', 'design patterns', 'user expectations'],
+      
+      // Visual Design
+      'color': ['colours', 'theme', 'dark mode', 'light mode', 'contrast'],
+      'contrast': ['accessibility', 'color', 'visibility', 'readability', 'wcag'],
+      'accessibility': ['a11y', 'voiceover', 'accessible', 'contrast', 'inclusive'],
+      
+      // Components
+      'button': ['btn', 'press', 'tap', 'click', 'action'],
+      'text': ['typography', 'font', 'label', 'title'],
+      'input': ['field', 'form', 'text field', 'entry'],
+      
+      // App Store & Guidelines
+      'app store': ['review', 'submission', 'guidelines', 'approval'],
+      'review': ['app store', 'submission', 'approval', 'guidelines'],
+      'guidelines': ['principles', 'standards', 'rules', 'best practices'],
+      
+      // Platform specific
+      'ios': ['iphone', 'ipad', 'mobile'],
+      'macos': ['mac', 'desktop'],
+      'watchos': ['watch', 'wearable'],
+      'visionos': ['vision', 'ar', 'vr', 'spatial', 'immersive'],
+      
+      // Design Concepts
+      'interface': ['ui', 'user interface', 'design'],
+      'interaction': ['gesture', 'touch', 'tap', 'swipe'],
+      'feedback': ['haptic', 'sound', 'vibration', 'response'],
+
+      // Accessibility & Touch Targets (key missing searches)
+      'touch targets': ['buttons', 'accessibility', '44pt', 'minimum size', 'tap targets'],
+      'touch target': ['button', 'accessibility', '44pt', 'minimum size', 'tap target'],
+      '44pt': ['touch targets', 'buttons', 'accessibility', 'minimum size'],
+      'minimum size': ['44pt', 'touch targets', 'buttons', 'accessibility'],
+      'wcag': ['accessibility', 'contrast', 'color', 'standards'],
+      
+      // Custom Interface Patterns
+      'custom interface': ['patterns', 'design patterns', 'user expectations', 'standards'],
+      'custom patterns': ['interface', 'design patterns', 'user expectations', 'standards'],
+      'design patterns': ['custom interface', 'patterns', 'user expectations', 'standards'],
+      'user expectations': ['patterns', 'custom interface', 'design patterns', 'familiar'],
+      'interface standards': ['guidelines', 'patterns', 'user expectations', 'design'],
+      'user interface standards': ['guidelines', 'patterns', 'expectations', 'design'],
+      
+      // Visual Effects & Styling
+      'gradients': ['color', 'visual design', 'materials', 'backgrounds'],
+      'materials': ['color', 'visual design', 'backgrounds', 'glass'],
+      
+      // Layout & Spacing
+      'spacing': ['layout', 'margins', 'padding', 'grid'],
+      'margins': ['layout', 'spacing', 'padding', 'safe area'],
+      'padding': ['layout', 'spacing', 'margins', 'safe area']
+    };
+
+    const queryLower = query.toLowerCase();
+    const expandedTerms = [query];
+    
+    // Add synonyms for exact matches
+    if (synonymMap[queryLower]) {
+      expandedTerms.push(...synonymMap[queryLower]);
+    }
+    
+    // Add synonyms for partial matches
+    for (const [term, synonyms] of Object.entries(synonymMap)) {
+      if (queryLower.includes(term) || term.includes(queryLower)) {
+        expandedTerms.push(...synonyms);
+      }
+    }
+    
+    return [...new Set(expandedTerms)]; // Remove duplicates
+  }
+
+  /**
+   * Simple keyword search on static content (fallback when advanced search fails)
+   */
+  async keywordSearchContent(query: string, platform?: ApplePlatform, category?: HIGCategory, limit: number = 10): Promise<SearchResult[]> {
+    if (!this.searchIndex) {
+      return [];
+    }
+
+    const queryLower = query.toLowerCase();
+    const expandedTerms = this.expandQueryWithSynonyms(query);
+    const queryWords = queryLower.split(/\s+/).filter(word => word.length > 1);
+    
+    // Add all expanded terms to search words
+    const allSearchTerms = [
+      ...queryWords,
+      ...expandedTerms.flatMap(term => term.toLowerCase().split(/\s+/)).filter(word => word.length > 1)
+    ];
+    const uniqueSearchTerms = [...new Set(allSearchTerms)];
+    
+    const results: SearchResult[] = [];
+
+    for (const indexEntry of Object.values(this.searchIndex)) {
+      // Apply platform filter
+      if (platform && platform !== 'universal' && 
+          indexEntry.platform !== platform && indexEntry.platform !== 'universal') {
+        continue;
+      }
+
+      // Apply category filter
+      if (category && indexEntry.category !== category) {
+        continue;
+      }
+
+      let relevanceScore = 0;
+
+      // Exact title match (highest priority)
+      const titleLower = indexEntry.title.toLowerCase();
+      if (titleLower === queryLower) {
+        relevanceScore += 5.0;
+      } else if (titleLower.includes(queryLower)) {
+        relevanceScore += 3.0;
+      } else {
+        // Individual word matches in title (including synonyms)
+        const titleWordMatches = uniqueSearchTerms.filter(word => titleLower.includes(word)).length;
+        if (titleWordMatches > 0) {
+          relevanceScore += titleWordMatches * 1.5;
+        }
+      }
+
+      // Keyword matches (including synonyms)
+      const keywordMatches = uniqueSearchTerms.filter(word => 
+        indexEntry.keywords.some(keyword => keyword.toLowerCase().includes(word) || word.includes(keyword.toLowerCase()))
+      ).length;
+      if (keywordMatches > 0) {
+        relevanceScore += keywordMatches * 1.0;
+      }
+
+      // Snippet matches (lower priority, including synonyms)
+      const snippetLower = indexEntry.snippet.toLowerCase();
+      if (snippetLower.includes(queryLower)) {
+        relevanceScore += 0.5;
+      } else {
+        const snippetWordMatches = uniqueSearchTerms.filter(word => snippetLower.includes(word)).length;
+        if (snippetWordMatches > 0) {
+          relevanceScore += snippetWordMatches * 0.3;
+        }
+      }
+
+      // Boost for exact synonym matches
+      const exactSynonymMatch = expandedTerms.some(term => 
+        titleLower.includes(term.toLowerCase()) || 
+        indexEntry.keywords.some(keyword => keyword.toLowerCase().includes(term.toLowerCase()))
+      );
+      if (exactSynonymMatch && expandedTerms.length > 1) {
+        relevanceScore += 0.8; // Bonus for synonym matches
       }
 
       if (relevanceScore > 0) {

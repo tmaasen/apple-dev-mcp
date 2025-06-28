@@ -76,39 +76,50 @@ export class HIGToolProvider {
     try {
       let results: SearchResult[] = [];
       
-      // Try static content search first (with timeout protection)
+      // Try static content search first (more reliable, less aggressive timeouts)
       try {
-        if (this.staticContentProvider) {
-          const isAvailable = await Promise.race([
-            this.staticContentProvider.isAvailable(),
-            new Promise<boolean>((_, reject) => setTimeout(() => reject(new Error('Timeout')), 2000))
+        if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
+          // Try regular static search with longer timeout for complex searches
+          results = await Promise.race([
+            this.staticContentProvider.searchContent(query.trim(), platform, category, limit),
+            new Promise<SearchResult[]>((_, reject) => setTimeout(() => reject(new Error('Search timeout')), 8000))
           ]);
           
-          if (isAvailable) {
-            results = await Promise.race([
-              this.staticContentProvider.searchContent(query.trim(), platform, category, limit),
-              new Promise<SearchResult[]>((_, reject) => setTimeout(() => reject(new Error('Search timeout')), 3000))
-            ]);
-            
-            if (process.env.NODE_ENV === 'development') {
-              console.log(`[HIGTools] Using static content search for: "${query}"`);
-            }
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`[HIGTools] Using static content search for: "${query}"`);
           }
         }
       } catch (staticError) {
         if (process.env.NODE_ENV === 'development') {
-          console.warn('[HIGTools] Static search failed or timed out, using fallback:', staticError);
+          console.warn('[HIGTools] Static search failed or timed out, falling back to keyword search:', staticError);
         }
-        // Continue to fallback
+        // Continue to keyword search fallback
       }
       
-      // If static search failed or returned no results, use simple fallback
+      // If static search failed or returned no results, try keyword search on static content
       if (!results || results.length === 0) {
-        // Simple keyword matching fallback
-        results = this.getFallbackSearchResults(query.trim(), platform, category, limit);
+        try {
+          // Try simple keyword search on static content first
+          if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
+            results = await this.staticContentProvider.keywordSearchContent(query.trim(), platform, category, limit);
+            
+            if (process.env.NODE_ENV === 'development') {
+              console.log(`[HIGTools] Using static keyword search for: "${query}"`);
+            }
+          }
+        } catch (keywordError) {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('[HIGTools] Static keyword search failed, using minimal fallback:', keywordError);
+          }
+        }
         
-        if (process.env.NODE_ENV === 'development') {
-          console.log(`[HIGTools] Using fallback search for: "${query}"`);
+        // Only use hardcoded fallback if static content completely unavailable
+        if (!results || results.length === 0) {
+          results = this.getMinimalFallbackResults(query.trim(), platform, category, limit);
+          
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`[HIGTools] Using minimal fallback search for: "${query}"`);
+          }
         }
       }
 
@@ -133,14 +144,14 @@ export class HIGToolProvider {
   }
 
   /**
-   * Fallback search that returns relevant results based on keyword matching
+   * Minimal fallback search with hardcoded results (last resort only)
    */
-  private getFallbackSearchResults(query: string, platform?: ApplePlatform, category?: string, limit: number = 10): SearchResult[] {
+  private getMinimalFallbackResults(query: string, platform?: ApplePlatform, category?: string, limit: number = 10): SearchResult[] {
     const queryLower = query.toLowerCase();
     const fallbackData = [
-      // Buttons
-      { keywords: ['button', 'btn', 'press', 'tap', 'click'], title: 'Buttons', platform: 'iOS', category: 'visual-design', url: 'https://developer.apple.com/design/human-interface-guidelines/buttons', snippet: 'Buttons initiate app-specific actions, have customizable backgrounds, and can include a title or an icon.' },
-      { keywords: ['button', 'btn'], title: 'macOS Buttons', platform: 'macOS', category: 'visual-design', url: 'https://developer.apple.com/design/human-interface-guidelines/buttons', snippet: 'macOS buttons trigger immediate actions and can display text, icons, or both.' },
+      // Buttons & Touch Targets
+      { keywords: ['button', 'btn', 'press', 'tap', 'click'], title: 'Buttons', platform: 'iOS', category: 'visual-design', url: 'https://developer.apple.com/design/human-interface-guidelines/buttons', snippet: 'Buttons initiate app-specific actions, have customizable backgrounds, and can include a title or an icon. Minimum touch target size is 44pt x 44pt.' },
+      { keywords: ['touch', 'targets', '44pt', 'minimum', 'size', 'accessibility'], title: 'Touch Targets & Accessibility', platform: 'iOS', category: 'foundations', url: 'https://developer.apple.com/design/human-interface-guidelines/accessibility', snippet: 'Interactive elements must be large enough for people to interact with easily. A minimum touch target size of 44pt x 44pt ensures accessibility.' },
       
       // Navigation
       { keywords: ['navigation', 'nav', 'navigate', 'menu', 'bar'], title: 'Navigation Bars', platform: 'iOS', category: 'navigation', url: 'https://developer.apple.com/design/human-interface-guidelines/navigation-bars', snippet: 'A navigation bar appears at the top of an app screen, enabling navigation through a hierarchy of content.' },
@@ -151,17 +162,23 @@ export class HIGToolProvider {
       { keywords: ['color', 'colours', 'theme', 'dark', 'light'], title: 'Color', platform: 'universal', category: 'color-and-materials', url: 'https://developer.apple.com/design/human-interface-guidelines/color', snippet: 'Color can indicate interactivity, impart vitality, and provide visual continuity.' },
       { keywords: ['typography', 'text', 'font', 'size'], title: 'Typography', platform: 'universal', category: 'typography', url: 'https://developer.apple.com/design/human-interface-guidelines/typography', snippet: 'Typography can help you clarify a hierarchy of information and make it easy for people to find what they\'re looking for.' },
       
+      // Accessibility & Contrast
+      { keywords: ['accessibility', 'a11y', 'voiceover', 'accessible'], title: 'Accessibility', platform: 'universal', category: 'foundations', url: 'https://developer.apple.com/design/human-interface-guidelines/accessibility', snippet: 'People use Apple accessibility features to personalize how they interact with their devices in ways that work for them.' },
+      { keywords: ['contrast', 'color', 'wcag', 'visibility', 'readability'], title: 'Color Contrast & Accessibility', platform: 'universal', category: 'foundations', url: 'https://developer.apple.com/design/human-interface-guidelines/accessibility', snippet: 'Ensure sufficient color contrast for text and UI elements. Follow WCAG guidelines with minimum 4.5:1 contrast ratio for normal text.' },
+      
+      // Custom Interface Patterns  
+      { keywords: ['custom', 'interface', 'patterns', 'design', 'user', 'expectations'], title: 'Custom Interface Patterns', platform: 'universal', category: 'foundations', url: 'https://developer.apple.com/design/human-interface-guidelines/', snippet: 'When creating custom interfaces, maintain consistency with platform conventions and user expectations to ensure familiarity and usability.' },
+      { keywords: ['user', 'interface', 'standards', 'guidelines', 'principles'], title: 'User Interface Standards', platform: 'universal', category: 'foundations', url: 'https://developer.apple.com/design/human-interface-guidelines/', snippet: 'Follow established interface standards and design principles to create intuitive, accessible, and consistent user experiences across Apple platforms.' },
+      
+      // Visual Effects
+      { keywords: ['gradients', 'materials', 'visual', 'effects'], title: 'Materials & Visual Effects', platform: 'universal', category: 'color-and-materials', url: 'https://developer.apple.com/design/human-interface-guidelines/materials', snippet: 'Use system materials and visual effects thoughtfully to create depth and hierarchy while maintaining clarity and performance.' },
+      
       // Input & Controls
       { keywords: ['input', 'field', 'form', 'text'], title: 'Text Fields', platform: 'iOS', category: 'selection-and-input', url: 'https://developer.apple.com/design/human-interface-guidelines/text-fields', snippet: 'A text field is a rectangular area in which people enter or edit small, specific pieces of text.' },
       { keywords: ['picker', 'select', 'choose'], title: 'Pickers', platform: 'iOS', category: 'selection-and-input', url: 'https://developer.apple.com/design/human-interface-guidelines/pickers', snippet: 'A picker displays one or more scrollable lists of distinct values that people can choose from.' },
       
-      // Accessibility
-      { keywords: ['accessibility', 'a11y', 'voiceover', 'accessible'], title: 'Accessibility', platform: 'universal', category: 'foundations', url: 'https://developer.apple.com/design/human-interface-guidelines/accessibility', snippet: 'People use Apple accessibility features to personalize how they interact with their devices in ways that work for them.' },
-      
-      // visionOS specific
+      // Platform specific
       { keywords: ['vision', 'visionos', 'spatial', 'immersive', 'ar', 'vr'], title: 'Designing for visionOS', platform: 'visionOS', category: 'foundations', url: 'https://developer.apple.com/design/human-interface-guidelines/designing-for-visionos', snippet: 'visionOS brings together digital and physical worlds, creating opportunities for new types of immersive experiences.' },
-      
-      // watchOS specific  
       { keywords: ['watch', 'watchos', 'complication', 'crown'], title: 'Designing for watchOS', platform: 'watchOS', category: 'foundations', url: 'https://developer.apple.com/design/human-interface-guidelines/designing-for-watchos', snippet: 'Apple Watch is a highly personal device that people wear on their wrist, making it instantly accessible.' }
     ];
 
