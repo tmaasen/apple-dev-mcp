@@ -44,98 +44,106 @@ export class HIGResourceProvider {
     }
 
     try {
-      const sections = await this.crawleeService.discoverSections();
-      const resources: HIGResource[] = [];
-
-      // Platform-specific resource collections
-      const platforms: ApplePlatform[] = ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'];
-      
-      for (const platform of platforms) {
-        const platformSections = sections.filter(s => s.platform === platform);
+      // Curated high-value resources (replaces auto-generation of 80+ resources)
+      const curatedResources: Array<{uri: string, name: string, description: string}> = [
+        // Core Platforms (most requested)
+        {
+          uri: 'hig://ios',
+          name: 'iOS Human Interface Guidelines',
+          description: 'Complete design guidelines for iOS development, including iPhone and iPad'
+        },
+        {
+          uri: 'hig://macos',
+          name: 'macOS Human Interface Guidelines', 
+          description: 'Complete design guidelines for macOS development'
+        },
         
-        if (platformSections.length > 0) {
-          resources.push({
-            uri: `hig://${platform.toLowerCase()}`,
-            name: `${platform} Human Interface Guidelines`,
-            description: `Complete design guidelines for ${platform} development, including the latest Liquid Glass design system updates`,
-            mimeType: 'text/markdown',
-            content: '' // Will be populated when requested
-          });
-
-          // Category-specific resources for each platform
-          const categories: HIGCategory[] = [
-            'foundations', 'layout', 'navigation', 'presentation', 
-            'selection-and-input', 'visual-design', 'color-and-materials',
-            'typography', 'motion', 'technologies'
-          ];
-
-          for (const category of categories) {
-            const categorySections = platformSections.filter(s => s.category === category);
-            if (categorySections.length > 0) {
-              resources.push({
-                uri: `hig://${platform.toLowerCase()}/${category}`,
-                name: `${platform} ${this.formatCategoryName(category)}`,
-                description: `${platform} guidelines for ${this.formatCategoryName(category).toLowerCase()}`,
-                mimeType: 'text/markdown',
-                content: ''
-              });
-            }
-          }
-        }
-      }
-
-      // Universal/cross-platform resources
-      const universalSections = sections.filter(s => s.platform === 'universal');
-      if (universalSections.length > 0) {
-        resources.push({
+        // Essential Cross-Platform Topics (high usage)
+        {
+          uri: 'hig://buttons',
+          name: 'Button Guidelines',
+          description: 'Button design principles, sizing (44pt minimum), and interaction patterns across all platforms'
+        },
+        {
+          uri: 'hig://accessibility',
+          name: 'Accessibility Guidelines',
+          description: 'Accessibility requirements, WCAG compliance, VoiceOver support, and inclusive design principles'
+        },
+        {
+          uri: 'hig://color',
+          name: 'Color Guidelines',
+          description: 'Color usage, contrast requirements (4.5:1 ratio), dark mode, and accessibility considerations'
+        },
+        {
+          uri: 'hig://typography',
+          name: 'Typography Guidelines',
+          description: 'Typography hierarchy, font usage, and text accessibility across Apple platforms'
+        },
+        {
+          uri: 'hig://layout',
+          name: 'Layout Guidelines', 
+          description: 'Layout principles, safe areas, margins, spacing, and responsive design patterns'
+        },
+        
+        // Emerging/Important Platforms
+        {
+          uri: 'hig://visionos',
+          name: 'visionOS Human Interface Guidelines',
+          description: 'Spatial design guidelines for Apple Vision Pro and mixed reality experiences'
+        },
+        {
+          uri: 'hig://watchos',
+          name: 'watchOS Human Interface Guidelines',
+          description: 'Design guidelines for Apple Watch apps and complications'
+        },
+        
+        // High-Demand Platform-Specific
+        {
+          uri: 'hig://ios/visual-design',
+          name: 'iOS Visual Design',
+          description: 'iOS-specific visual design elements, materials, and interface components'
+        },
+        {
+          uri: 'hig://ios/foundations',
+          name: 'iOS Design Foundations',
+          description: 'Core iOS design principles, patterns, and foundational concepts'
+        },
+        {
+          uri: 'hig://ios/navigation',
+          name: 'iOS Navigation',
+          description: 'iOS navigation patterns, tab bars, navigation bars, and user flow design'
+        },
+        
+        // Advanced Topics
+        {
+          uri: 'hig://materials',
+          name: 'Materials & Effects',
+          description: 'Advanced materials, Liquid Glass design system, and visual effects across platforms'
+        },
+        {
+          uri: 'hig://navigation-and-search',
+          name: 'Navigation & Search',
+          description: 'Navigation patterns, search interfaces, and information architecture'
+        },
+        
+        // Special Resources
+        {
+          uri: 'hig://updates/latest',
+          name: 'Latest HIG Updates',
+          description: 'Most recent changes and additions to Apple\'s Human Interface Guidelines'
+        },
+        {
           uri: 'hig://universal',
-          name: 'Universal Design Guidelines',
-          description: 'Cross-platform design principles and the Liquid Glass design system',
-          mimeType: 'text/markdown',
-          content: ''
-        });
-      }
-
-      // Topic-based resources (universal topics)
-      const universalTopics = [
-        'materials', 'buttons', 'accessibility', 'color', 'typography',
-        'layout', 'navigation-and-search', 'alerts', 'sheets', 'menus',
-        'icons', 'images', 'gestures', 'motion', 'dark-mode'
-      ];
-      
-      for (const topic of universalTopics) {
-        const topicSections = sections.filter(s => 
-          s.url.includes(`/${topic}`) || s.title.toLowerCase().includes(topic.toLowerCase())
-        );
-        
-        if (topicSections.length > 0) {
-          resources.push({
-            uri: `hig://${topic}`,
-            name: this.formatTopicName(topic),
-            description: `Cross-platform guidelines for ${this.formatTopicName(topic).toLowerCase()}`,
-            mimeType: 'text/markdown',
-            content: ''
-          });
+          name: 'Universal Design Principles',
+          description: 'Cross-platform design principles and patterns applicable to all Apple platforms'
         }
-      }
+      ];
 
-      // Add Liquid Glass as a special featured topic
-      resources.push({
-        uri: 'hig://materials',
-        name: 'Materials (including Liquid Glass)',
-        description: 'Advanced materials and the new Liquid Glass design system across all Apple platforms',
+      const resources: HIGResource[] = curatedResources.map(resource => ({
+        ...resource,
         mimeType: 'text/markdown',
-        content: ''
-      });
-
-      // Special resource for latest updates
-      resources.push({
-        uri: 'hig://updates/latest',
-        name: 'Latest HIG Updates',
-        description: 'Most recent changes and additions to Apple\'s Human Interface Guidelines',
-        mimeType: 'text/markdown',
-        content: ''
-      });
+        content: '' // Will be populated when requested
+      }));
 
       // Cache for 2 hours
       this.cache.set(cacheKey, resources, 7200);

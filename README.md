@@ -50,7 +50,14 @@ Add to your Claude Desktop configuration:
 Add to Claude Code:
 
 ```bash
+# Basic installation
 claude mcp add "Apple HIG" apple-hig-mcp
+
+# For faster startup (recommended)
+claude mcp add "Apple HIG" apple-hig-mcp --env DISABLE_SEMANTIC_SEARCH=true
+
+# For debugging and development
+claude mcp add "Apple HIG" apple-hig-mcp --env NODE_ENV=development
 ```
 
 ### Usage with MCP Inspector
@@ -100,18 +107,36 @@ npx @modelcontextprotocol/inspector apple-hig-mcp
 
 ### MCP Resources
 
-Access complete platform guidelines:
-
+#### Platform Guidelines
 ```
 hig://ios - Complete iOS Human Interface Guidelines
 hig://macos - Complete macOS Human Interface Guidelines  
 hig://watchos - Complete watchOS Human Interface Guidelines
 hig://tvos - Complete tvOS Human Interface Guidelines
 hig://visionos - Complete visionOS Human Interface Guidelines
+hig://universal - Cross-platform design principles
+```
 
-hig://ios/navigation - iOS navigation guidelines
-hig://ios/color-and-materials - iOS color and materials guidelines
+#### Popular Topics (Cross-Platform)
+```
+hig://buttons - Button design guidelines
+hig://accessibility - Accessibility requirements  
+hig://color - Color usage principles
+hig://typography - Typography guidelines
+hig://layout - Layout and spacing
+hig://materials - Materials including Liquid Glass
+hig://navigation-and-search - Navigation patterns
+```
 
+#### Platform-Specific Resources
+```
+hig://ios/foundations - iOS design foundations
+hig://ios/visual-design - iOS visual design elements
+hig://ios/navigation - iOS navigation patterns
+```
+
+#### Special Resources
+```
 hig://updates/latest - Latest HIG updates and changes
 ```
 
