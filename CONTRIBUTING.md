@@ -22,7 +22,7 @@ This project adheres to a code of conduct. By participating, you are expected to
 
 ### Prerequisites
 
-- Node.js 20.0.0 or higher
+- Node.js 18.0.0 or higher
 - npm or yarn
 - Git
 
