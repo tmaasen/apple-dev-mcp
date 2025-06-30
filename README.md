@@ -10,6 +10,29 @@ A high-performance [Model Context Protocol](https://modelcontextprotocol.io/) se
 
 Perfect for developers using AI-assisted development who want fast, reliable access to Apple's design guidelines while building iOS, macOS, watchOS, tvOS, and visionOS applications.
 
+## 📖 Table of Contents
+
+- [✨ Features](#-features)
+- [🚀 Quick Start](#-quick-start)
+- [🔧 Platform Setup](#-platform-setup)
+  - [Claude Desktop](#claude-desktop)
+  - [Claude Code](#claude-code)
+  - [Cursor IDE](#cursor-ide)
+  - [Windsurf IDE](#windsurf-ide)
+  - [VS Code (Preview)](#vs-code-preview)
+  - [Configuration Notes](#configuration-notes)
+- [🔧 Development Setup](#-development-setup)
+- [📖 Usage Examples](#-usage-examples)
+  - [MCP Resources](#mcp-resources)
+  - [MCP Tools](#mcp-tools)
+- [🎨 Current Apple Design System](#-current-apple-design-system)
+- [🤝 Contributing](#-contributing)
+- [⚖️ Legal & Attribution](#️-legal--attribution)
+- [🧪 Testing](#-testing)
+- [📦 API Reference](#-api-reference)
+- [🐛 Troubleshooting](#-troubleshooting)
+- [🙏 Acknowledgments](#-acknowledgments)
+
 ## ✨ Features
 
 - ⚡ **Ultra-Fast**: Instant responses via pre-generated static content (no scraping delays)
@@ -30,10 +53,33 @@ Perfect for developers using AI-assisted development who want fast, reliable acc
 npm install -g apple-hig-mcp
 ```
 
-### Usage with Claude Desktop
+## 🔧 Platform Setup
 
-Add to your Claude Desktop configuration:
+### Claude Desktop
 
+Add to your Claude Desktop configuration file (`claude_desktop_config.json`):
+
+#### Option 1: NPX (Recommended - No Install Required)
+```json
+{
+  "mcpServers": {
+    "Apple HIG": {
+      "command": "npx",
+      "args": ["-y", "apple-hig-mcp"]
+    }
+  }
+}
+```
+
+#### Option 2: Global Install (Most Reliable)
+First install globally:
+```bash
+npm install -g apple-hig-mcp
+```
+
+Then configure:
+
+**macOS/Linux:**
 ```json
 {
   "mcpServers": {
@@ -45,20 +91,165 @@ Add to your Claude Desktop configuration:
 }
 ```
 
-### Usage with Claude Code
-
-Add to Claude Code:
-
-```bash
-# Basic installation
-claude mcp add "Apple HIG" apple-hig-mcp
-
-# For faster startup (recommended)
-claude mcp add "Apple HIG" apple-hig-mcp --env DISABLE_SEMANTIC_SEARCH=true
-
-# For debugging and development
-claude mcp add "Apple HIG" apple-hig-mcp --env NODE_ENV=development
+**Windows:**
+```json
+{
+  "mcpServers": {
+    "Apple HIG": {
+      "command": "apple-hig-mcp.cmd",
+      "args": []
+    }
+  }
+}
 ```
+
+#### Troubleshooting Claude Desktop
+If you get connection errors, try the direct path approach:
+
+**macOS/Linux:**
+```json
+{
+  "mcpServers": {
+    "Apple HIG": {
+      "command": "node",
+      "args": ["/usr/local/lib/node_modules/apple-hig-mcp/dist/server.js"]
+    }
+  }
+}
+```
+
+**Windows:**
+```json
+{
+  "mcpServers": {
+    "Apple HIG": {
+      "command": "node",
+      "args": ["C:\\Users\\YourUsername\\AppData\\Roaming\\npm\\node_modules\\apple-hig-mcp\\dist\\server.js"]
+    }
+  }
+}
+```
+
+### Claude Code
+
+#### Method 1: Settings UI (Easiest)
+1. Run `/settings` in Claude Code
+2. Add a new MCP server:
+   - **Name**: `Apple HIG`
+   - **Command**: `npx`
+   - **Args**: `["-y", "apple-hig-mcp"]`
+
+#### Method 2: Direct Configuration
+Add to your Claude Code settings:
+```json
+{
+  "mcpServers": {
+    "Apple HIG": {
+      "command": "npx",
+      "args": ["-y", "apple-hig-mcp"]
+    }
+  }
+}
+```
+
+### Cursor IDE
+
+#### Method 1: One-Click Install
+1. Open Cursor
+2. Go to **Settings** → **Features** → **Model Context Protocol**
+3. Search for "Apple HIG" in the MCP directory
+4. Click **Install**
+
+#### Method 2: Manual Configuration
+Create `.cursor/mcp.json` in your project root:
+```json
+{
+  "mcpServers": {
+    "Apple HIG": {
+      "command": "npx",
+      "args": ["-y", "apple-hig-mcp"]
+    }
+  }
+}
+```
+
+### Windsurf IDE
+
+#### Setup Steps
+1. Open Windsurf
+2. Go to **Settings** → **Advanced** → **Cascade** → **Model Context Protocol**
+3. Enable MCP
+4. Click the **Hammer Icon** in the Cascade toolbar
+5. Click **Configure** to open the MCP configuration file
+
+#### Configuration
+```json
+{
+  "mcpServers": {
+    "Apple HIG": {
+      "command": "npx",
+      "args": ["-y", "apple-hig-mcp"]
+    }
+  }
+}
+```
+
+### VS Code (Preview)
+
+#### Prerequisites
+- GitHub Copilot extension installed
+- Agent mode enabled (`chat.agent.enabled: true`)
+
+#### Setup Methods
+1. **Command Palette** (Easiest):
+   - Run `MCP: Add Server`
+   - Select **NPM** as package manager
+   - Enter `apple-hig-mcp`
+
+2. **Manual Configuration**:
+   Create `.vscode/mcp.json` in your workspace:
+   ```json
+   {
+     "mcpServers": {
+       "Apple HIG": {
+         "command": "npx",
+         "args": ["-y", "apple-hig-mcp"]
+       }
+     }
+   }
+   ```
+
+3. **Manage Servers**:
+   - Run `MCP: List Servers` to view status
+   - Use `MCP: Start/Stop/Restart` commands as needed
+
+### Configuration Notes
+
+#### Environment Variables (Optional)
+For development or debugging, add environment variables:
+```json
+{
+  "mcpServers": {
+    "Apple HIG": {
+      "command": "npx",
+      "args": ["-y", "apple-hig-mcp"],
+      "env": {
+        "NODE_ENV": "development",
+        "DISABLE_SEMANTIC_SEARCH": "true"
+      }
+    }
+  }
+}
+```
+
+#### Configuration File Locations
+- **Claude Desktop**: 
+  - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+  - Windows: `%AppData%\Claude\claude_desktop_config.json`
+- **Cursor**: `.cursor/mcp.json` in project root
+- **Windsurf**: Accessible via Cascade settings
+- **VS Code**: `.vscode/mcp.json` in workspace
+- **Claude Code**: Accessible via `/settings` command
 
 ### Usage with MCP Inspector
 

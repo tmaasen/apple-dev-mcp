@@ -45,12 +45,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tannermaasen/apple-hig-mcp.git"
+    "url": "https://github.com/tmaasen/apple-hig-mcp.git"
   },
   "bugs": {
-    "url": "https://github.com/tannermaasen/apple-hig-mcp/issues"
+    "url": "https://github.com/tmaasen/apple-hig-mcp/issues"
   },
-  "homepage": "https://github.com/tannermaasen/apple-hig-mcp#readme",
+  "homepage": "https://github.com/tmaasen/apple-hig-mcp#readme",
   "dependencies": {
     "@crawlee/playwright": "^3.13.8",
     "@crawlee/utils": "^3.13.8",
