@@ -53,58 +53,11 @@ Perfect for developers using AI-assisted development who want fast, reliable acc
 npm install -g apple-hig-mcp
 ```
 
-## 🔧 Platform Setup
+## 🔧 Platform-Specific Setup
 
 ### Claude Desktop
 
 Add to your Claude Desktop configuration file (`claude_desktop_config.json`):
-
-#### Option 1: NPX (Recommended - No Install Required)
-```json
-{
-  "mcpServers": {
-    "Apple HIG": {
-      "command": "npx",
-      "args": ["-y", "apple-hig-mcp"]
-    }
-  }
-}
-```
-
-#### Option 2: Global Install (Most Reliable)
-First install globally:
-```bash
-npm install -g apple-hig-mcp
-```
-
-Then configure:
-
-**macOS/Linux:**
-```json
-{
-  "mcpServers": {
-    "Apple HIG": {
-      "command": "apple-hig-mcp",
-      "args": []
-    }
-  }
-}
-```
-
-**Windows:**
-```json
-{
-  "mcpServers": {
-    "Apple HIG": {
-      "command": "apple-hig-mcp.cmd",
-      "args": []
-    }
-  }
-}
-```
-
-#### Troubleshooting Claude Desktop
-If you get connection errors, try the direct path approach:
 
 **macOS/Linux:**
 ```json
@@ -135,10 +88,10 @@ If you get connection errors, try the direct path approach:
 #### Method 1: Command Line (Recommended)
 ```bash
 # For local project scope
-claude mcp add "Apple HIG" node -- /usr/local/lib/node_modules/apple-hig-mcp/dist/server.js
+claude mcp add "Apple HIG" node /usr/local/lib/node_modules/apple-hig-mcp/dist/server.js
 
 # For user-wide scope (available in all projects)
-claude mcp add -s user "Apple HIG" node -- /usr/local/lib/node_modules/apple-hig-mcp/dist/server.js
+claude mcp add -s user "Apple HIG" node /usr/local/lib/node_modules/apple-hig-mcp/dist/server.js
 ```
 
 #### Method 2: Project Configuration File  
@@ -159,47 +112,9 @@ Create `.mcp.json` in your project root:
 claude mcp add "Apple HIG" npx -- -y apple-hig-mcp
 ```
 
-**Note**: If using the command line method, first install globally:
-```bash
-npm install -g apple-hig-mcp
-```
-
 ### Cursor IDE
 
-#### Step 1: Install Globally
-```bash
-npm install -g apple-hig-mcp
-```
-
-#### Step 2: Configure MCP
-Create `.cursor/mcp.json` in your project root:
-
-**macOS/Linux:**
-```json
-{
-  "mcpServers": {
-    "Apple HIG": {
-      "command": "apple-hig-mcp",
-      "args": []
-    }
-  }
-}
-```
-
-**Windows:**
-```json
-{
-  "mcpServers": {
-    "Apple HIG": {
-      "command": "apple-hig-mcp.cmd",
-      "args": []
-    }
-  }
-}
-```
-
-#### Troubleshooting Cursor
-If you get "0 tools configured" or connection errors, try the direct Node.js path:
+Create `.cursor/mcp.json` in your project root, or go to the Cursor settings where you have MCP integrations
 
 **macOS/Linux:**
 ```json
@@ -240,12 +155,25 @@ npm list -g apple-hig-mcp
 5. Click **Configure** to open the MCP configuration file
 
 #### Configuration
+**macOS/Linux:**
 ```json
 {
   "mcpServers": {
     "Apple HIG": {
-      "command": "npx",
-      "args": ["-y", "apple-hig-mcp"]
+      "command": "node",
+      "args": ["/usr/local/lib/node_modules/apple-hig-mcp/dist/server.js"]
+    }
+  }
+}
+```
+
+**Windows:**
+```json
+{
+  "mcpServers": {
+    "Apple HIG": {
+      "command": "node",
+      "args": ["C:\\Users\\YourUsername\\AppData\\Roaming\\npm\\node_modules\\apple-hig-mcp\\dist\\server.js"]
     }
   }
 }
@@ -257,30 +185,47 @@ npm list -g apple-hig-mcp
 - GitHub Copilot extension installed
 - Agent mode enabled (`chat.agent.enabled: true`)
 
-#### Setup Methods
-1. **Command Palette** (Easiest):
-   - Run `MCP: Add Server`
-   - Select **NPM** as package manager
-   - Enter `apple-hig-mcp`
+#### Configuration
+Create `.vscode/mcp.json` in your workspace:
 
-2. **Manual Configuration**:
-   Create `.vscode/mcp.json` in your workspace:
-   ```json
-   {
-     "mcpServers": {
-       "Apple HIG": {
-         "command": "npx",
-         "args": ["-y", "apple-hig-mcp"]
-       }
-     }
-   }
-   ```
+**macOS/Linux:**
+```json
+{
+  "mcpServers": {
+    "Apple HIG": {
+      "command": "node",
+      "args": ["/usr/local/lib/node_modules/apple-hig-mcp/dist/server.js"]
+    }
+  }
+}
+```
 
-3. **Manage Servers**:
-   - Run `MCP: List Servers` to view status
-   - Use `MCP: Start/Stop/Restart` commands as needed
+**Windows:**
+```json
+{
+  "mcpServers": {
+    "Apple HIG": {
+      "command": "node",
+      "args": ["C:\\Users\\YourUsername\\AppData\\Roaming\\npm\\node_modules\\apple-hig-mcp\\dist\\server.js"]
+    }
+  }
+}
+```
+
+#### Manage Servers
+- Run `MCP: List Servers` to view status
+- Use `MCP: Start/Stop/Restart` commands as needed
 
 ### Configuration Notes
+
+#### Why Not NPX?
+We recommend using the direct file path approach instead of `npx` for this MCP server because:
+- **Large Dependencies**: This server includes TensorFlow for semantic search, which can cause timeout issues with `npx`
+- **Performance**: Direct file path execution is faster and more reliable
+- **Consistency**: Avoids potential version conflicts and download delays
+- **Enterprise Networks**: Direct paths work better with corporate firewalls and proxy configurations
+
+If you prefer using `npx`, it's still supported but may experience longer startup times.
 
 #### Environment Variables (Optional)
 For development or debugging, add environment variables:
@@ -288,8 +233,8 @@ For development or debugging, add environment variables:
 {
   "mcpServers": {
     "Apple HIG": {
-      "command": "npx",
-      "args": ["-y", "apple-hig-mcp"],
+      "command": "node",
+      "args": ["/usr/local/lib/node_modules/apple-hig-mcp/dist/server.js"],
       "env": {
         "NODE_ENV": "development",
         "DISABLE_SEMANTIC_SEARCH": "true"
@@ -322,34 +267,6 @@ npx @modelcontextprotocol/inspector apple-hig-mcp
 
 - Node.js 18.0.0 or higher
 - npm or yarn
-
-### Local Development
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/tannermaasen/apple-hig-mcp.git
-   cd apple-hig-mcp
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Build the project:**
-   ```bash
-   npm run build
-   ```
-
-4. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
-
-5. **Test with MCP Inspector:**
-   ```bash
-   npx @modelcontextprotocol/inspector dist/server.js
-   ```
 
 ## 📖 Usage Examples
 
