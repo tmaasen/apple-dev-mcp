@@ -132,24 +132,36 @@ If you get connection errors, try the direct path approach:
 
 ### Claude Code
 
-#### Method 1: Settings UI (Easiest)
-1. Run `/settings` in Claude Code
-2. Add a new MCP server:
-   - **Name**: `Apple HIG`
-   - **Command**: `npx`
-   - **Args**: `["-y", "apple-hig-mcp"]`
+#### Method 1: Command Line (Recommended)
+```bash
+# For local project scope
+claude mcp add "Apple HIG" node -- /usr/local/lib/node_modules/apple-hig-mcp/dist/server.js
 
-#### Method 2: Direct Configuration
-Add to your Claude Code settings:
+# For user-wide scope (available in all projects)
+claude mcp add -s user "Apple HIG" node -- /usr/local/lib/node_modules/apple-hig-mcp/dist/server.js
+```
+
+#### Method 2: Project Configuration File  
+Create `.mcp.json` in your project root:
 ```json
 {
   "mcpServers": {
     "Apple HIG": {
-      "command": "npx",
-      "args": ["-y", "apple-hig-mcp"]
+      "command": "node",
+      "args": ["/usr/local/lib/node_modules/apple-hig-mcp/dist/server.js"]
     }
   }
 }
+```
+
+#### Method 3: NPX (Alternative)
+```bash
+claude mcp add "Apple HIG" npx -- -y apple-hig-mcp
+```
+
+**Note**: If using the command line method, first install globally:
+```bash
+npm install -g apple-hig-mcp
 ```
 
 ### Cursor IDE
