@@ -154,23 +154,68 @@ Add to your Claude Code settings:
 
 ### Cursor IDE
 
-#### Method 1: One-Click Install
-1. Open Cursor
-2. Go to **Settings** → **Features** → **Model Context Protocol**
-3. Search for "Apple HIG" in the MCP directory
-4. Click **Install**
+#### Step 1: Install Globally
+```bash
+npm install -g apple-hig-mcp
+```
 
-#### Method 2: Manual Configuration
+#### Step 2: Configure MCP
 Create `.cursor/mcp.json` in your project root:
+
+**macOS/Linux:**
 ```json
 {
   "mcpServers": {
     "Apple HIG": {
-      "command": "npx",
-      "args": ["-y", "apple-hig-mcp"]
+      "command": "apple-hig-mcp",
+      "args": []
     }
   }
 }
+```
+
+**Windows:**
+```json
+{
+  "mcpServers": {
+    "Apple HIG": {
+      "command": "apple-hig-mcp.cmd",
+      "args": []
+    }
+  }
+}
+```
+
+#### Troubleshooting Cursor
+If you get "0 tools configured" or connection errors, try the direct Node.js path:
+
+**macOS/Linux:**
+```json
+{
+  "mcpServers": {
+    "Apple HIG": {
+      "command": "node",
+      "args": ["/usr/local/lib/node_modules/apple-hig-mcp/dist/server.js"]
+    }
+  }
+}
+```
+
+**Windows:**
+```json
+{
+  "mcpServers": {
+    "Apple HIG": {
+      "command": "node",
+      "args": ["C:\\Users\\YourUsername\\AppData\\Roaming\\npm\\node_modules\\apple-hig-mcp\\dist\\server.js"]
+    }
+  }
+}
+```
+
+Find your exact path with:
+```bash
+npm list -g apple-hig-mcp
 ```
 
 ### Windsurf IDE
