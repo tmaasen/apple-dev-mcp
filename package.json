@@ -1,6 +1,6 @@
 {
   "name": "apple-hig-mcp",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "High-performance MCP server providing instant access to Apple's Human Interface Guidelines via hybrid static/dynamic content delivery",
   "main": "dist/server.js",
   "type": "module",
