@@ -5,7 +5,7 @@
  * Uses advanced keyword matching, stemming, and relevance scoring.
  */
 
-import type { HIGSection, SearchResult, ApplePlatform, HIGCategory } from '../types.js';
+import type { SearchResult, ApplePlatform, HIGCategory } from '../types.js';
 
 export interface EnhancedSearchConfig {
   maxResults: number;

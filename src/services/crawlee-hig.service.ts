@@ -293,10 +293,11 @@ export class CrawleeHIGService {
                   case 'h3':
                   case 'h4':
                   case 'h5':
-                  case 'h6':
+                  case 'h6': {
                     const level = parseInt(tagName[1]);
                     text += '\n' + '#'.repeat(level) + ' ' + (child.textContent || '') + '\n\n';
                     break;
+                  }
                   case 'p':
                     text += (child.textContent || '') + '\n\n';
                     break;
@@ -369,10 +370,11 @@ export class CrawleeHIGService {
                   case 'h3':
                   case 'h4':
                   case 'h5':
-                  case 'h6':
+                  case 'h6': {
                     const level = parseInt(tagName[1]);
                     text += '\n' + '#'.repeat(level) + ' ' + (child.textContent || '') + '\n\n';
                     break;
+                  }
                   case 'p':
                     text += (child.textContent || '') + '\n\n';
                     break;

@@ -6,21 +6,7 @@ import { SearchIndexerService } from '../services/search-indexer.service.js';
 import { ContentProcessorService } from '../services/content-processor.service.js';
 import type { HIGSection } from '../types.js';
 
-// Mock the semantic search service to avoid TensorFlow dependencies
-jest.mock('../services/semantic-search.service.js', () => ({
-  SemanticSearchService: jest.fn().mockImplementation(() => ({
-    initialize: jest.fn().mockResolvedValue(undefined),
-    indexSection: jest.fn().mockResolvedValue(undefined),
-    search: jest.fn().mockResolvedValue([]),
-    getStatistics: jest.fn().mockReturnValue({
-      totalIndexedSections: 0,
-      isInitialized: false,
-      modelLoaded: false,
-      config: {}
-    }),
-    clearIndices: jest.fn()
-  }))
-}));
+// TensorFlow and semantic search removed - using keyword search only
 
 describe('SearchIndexerService', () => {
   let indexer: SearchIndexerService;
@@ -220,9 +206,9 @@ describe('SearchIndexerService', () => {
       expect(index).toHaveProperty('keywordIndex');
       expect(index).toHaveProperty('searchCapabilities');
 
-      expect(index.metadata.version).toBe('2.0-semantic');
+      expect(index.metadata.version).toBe('2.0-keyword');
       expect(index.metadata.totalSections).toBe(2);
-      expect(index.metadata.indexType).toBe('hybrid-semantic-keyword');
+      expect(index.metadata.indexType).toBe('keyword-only');
 
       expect(index.searchCapabilities.keywordSearch).toBe(true);
       expect(index.searchCapabilities.structuredContentSearch).toBe(true);
@@ -232,9 +218,9 @@ describe('SearchIndexerService', () => {
     it('should include semantic search capabilities when available', () => {
       const index = indexer.generateIndex();
 
-      expect(index.searchCapabilities).toHaveProperty('semanticSearch');
-      expect(index.searchCapabilities).toHaveProperty('conceptSearch');
-      expect(index.searchCapabilities).toHaveProperty('intentRecognition');
+      expect(index.searchCapabilities).toHaveProperty('keywordSearch');
+      expect(index.searchCapabilities).toHaveProperty('structuredContentSearch');
+      expect(index.searchCapabilities).toHaveProperty('crossPlatformSearch');
     });
   });
 
@@ -247,7 +233,6 @@ describe('SearchIndexerService', () => {
       const stats = indexer.getStatistics();
 
       expect(stats).toHaveProperty('keywordIndex');
-      expect(stats).toHaveProperty('semanticIndex');
       expect(stats).toHaveProperty('capabilities');
 
       expect(stats.keywordIndex.totalEntries).toBe(2);

@@ -51,7 +51,9 @@
       "WebFetch(domain:www.npmjs.com)",
       "WebFetch(domain:www.npmjs.com)",
       "WebFetch(domain:www.npmjs.com)",
-      "WebFetch(domain:www.npmjs.com)"
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(NODE_ENV=test npm test -- --testNamePattern=\"should filter by category\")",
+      "Bash(NODE_ENV=test npm test)"
     ],
     "deny": []
   }

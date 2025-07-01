@@ -1,11 +1,10 @@
 /**
  * Enhanced Search Indexer Service
- * Single Responsibility: Generate and manage search indices with semantic enhancement
+ * Single Responsibility: Generate and manage search indices with keyword-based search
  */
 
 import type { ISearchIndexer, IContentProcessor } from '../interfaces/content-interfaces.js';
 import type { HIGSection, ContentQualityMetrics, SearchConfig } from '../types.js';
-import { SemanticSearchService } from './semantic-search.service.js';
 
 interface SearchIndexEntry {
   id: string;
@@ -26,75 +25,33 @@ interface SearchIndexEntry {
 
 export class SearchIndexerService implements ISearchIndexer {
   private searchIndex: Record<string, SearchIndexEntry> = {};
-  private semanticSearchService: SemanticSearchService | null;
-  private isSemanticEnabled = false;
 
   constructor(
     private contentProcessor: IContentProcessor,
-    semanticConfig?: Partial<SearchConfig>
+    _keywordConfig?: Partial<SearchConfig>
   ) {
-    // Check if semantic search is disabled via environment variable
-    if (process.env.DISABLE_SEMANTIC_SEARCH === 'true') {
-      console.log('[SearchIndexer] ⚡ Using keyword search only (DISABLE_SEMANTIC_SEARCH=true)');
-      this.isSemanticEnabled = false;
-      // Don't create SemanticSearchService at all when disabled
-      this.semanticSearchService = null;
-    } else {
-      this.semanticSearchService = new SemanticSearchService(semanticConfig);
-      console.log('[SearchIndexer] 🔧 Attempting semantic search initialization in background...');
-      // Initialize semantic search in background, don't block constructor
-      setTimeout(() => {
-        this.initializeSemanticSearch().catch(() => {
-          // Silently handled in initializeSemanticSearch method
-        });
-      }, 0);
-    }
+    console.log('[SearchIndexer] ⚡ Using keyword search only');
   }
 
   /**
-   * Initialize semantic search capabilities
-   */
-  private async initializeSemanticSearch(): Promise<void> {
-    if (!this.semanticSearchService) {
-      this.isSemanticEnabled = false;
-      return;
-    }
-    
-    try {
-      await this.semanticSearchService.initialize();
-      
-      // Check if semantic search actually initialized successfully
-      const stats = this.semanticSearchService.getStatistics();
-      if (stats.isInitialized && stats.modelLoaded) {
-        this.isSemanticEnabled = true;
-        console.log('[SearchIndexer] ✅ Semantic search enabled');
-      } else {
-        this.isSemanticEnabled = false;
-        console.log('[SearchIndexer] ⚠️ Semantic search disabled, using keyword search only');
-      }
-    } catch (error) {
-      console.warn('[SearchIndexer] ⚠️ Semantic search initialization failed, falling back to keyword search:', error);
-      this.isSemanticEnabled = false;
-    }
-  }
-
-  /**
-   * Add section to both traditional and semantic indices (synchronous version for interface compatibility)
+   * Add section to search index
    */
   addSection(section: HIGSection): void {
-    if (!section.content) {
-      console.warn(`Skipping section ${section.id} - no content available`);
+    // Validate required fields
+    if (!section.title) {
+      throw new Error('Section title is required');
+    }
+    
+    // Skip sections without content
+    if (!section.content && !(section as any).structuredContent) {
       return;
     }
-
-    // Traditional indexing
-    const keywords = this.contentProcessor.extractKeywords(section.content, section);
-    const snippet = this.contentProcessor.extractSnippet(section.content);
-
-    // Enhanced index entry with structured content support
-    const structuredContent = (section as any).structuredContent;
     
-    this.searchIndex[section.id] = {
+    const keywords = this.extractKeywords(section);
+    const snippet = this.generateSnippet(section);
+    const structureAnalysis = this.analyzeContentStructure(section);
+
+    const entry: SearchIndexEntry = {
       id: section.id,
       title: section.title,
       platform: section.platform,
@@ -103,230 +60,235 @@ export class SearchIndexerService implements ISearchIndexer {
       keywords,
       snippet,
       quality: section.quality,
-      lastUpdated: section.lastUpdated,
-      // Enhanced fields for better search
-      hasStructuredContent: !!structuredContent,
-      hasGuidelines: structuredContent?.guidelines?.length > 0,
-      hasExamples: structuredContent?.examples?.length > 0,
-      hasSpecifications: !!structuredContent?.specifications,
-      conceptCount: structuredContent?.relatedConcepts?.length || 0
+      lastUpdated: new Date(),
+      ...structureAnalysis
     };
 
-    // Semantic indexing (only if enabled)
-    if (this.isSemanticEnabled) {
-      this.addSectionSemanticAsync(section).catch(error => {
-        console.warn(`[SearchIndexer] Background semantic indexing failed for ${section.id}:`, error);
-      });
-    }
+    this.searchIndex[section.id] = entry;
   }
 
   /**
-   * Async semantic indexing (background operation)
+   * Generate search index metadata
    */
-  private async addSectionSemanticAsync(section: HIGSection): Promise<void> {
-    if (this.isSemanticEnabled && this.semanticSearchService) {
-      try {
-        await this.semanticSearchService.indexSection(section);
-      } catch (error) {
-        console.warn(`[SearchIndexer] Failed to semantically index section ${section.id}:`, error);
-      }
-    }
-  }
+  generateIndex(): any {
 
-  /**
-   * Generate enhanced search index
-   */
-  generateIndex(): Record<string, any> {
-    const stats = this.semanticSearchService ? this.semanticSearchService.getStatistics() : {
-      totalIndexedSections: 0,
-      isInitialized: false,
-      modelLoaded: false,
-      config: {}
-    };
-    
     return {
       metadata: {
-        version: '2.0-semantic',
+        version: '2.0-keyword',
         totalSections: Object.keys(this.searchIndex).length,
-        semanticEnabled: this.isSemanticEnabled,
-        semanticStats: stats,
+        semanticEnabled: false,
+        semanticStats: {
+          totalIndexedSections: 0,
+          isInitialized: false,
+          modelLoaded: false,
+          config: {}
+        },
         lastUpdated: new Date().toISOString(),
-        indexType: 'hybrid-semantic-keyword'
+        indexType: 'keyword-only'
       },
-      keywordIndex: { ...this.searchIndex },
+      keywordIndex: this.searchIndex,
       searchCapabilities: {
         keywordSearch: true,
-        semanticSearch: this.isSemanticEnabled,
+        exactMatch: true,
+        fieldBoostingSupported: true,
         structuredContentSearch: true,
-        conceptSearch: this.isSemanticEnabled,
-        intentRecognition: this.isSemanticEnabled,
-        crossPlatformSearch: true,
-        categoryFiltering: true,
-        qualityFiltering: true
+        crossPlatformSearch: true
       }
     };
   }
 
   /**
-   * Perform enhanced search with semantic capabilities
+   * Perform keyword-based search
    */
   async search(
-    query: string,
-    sections: HIGSection[],
-    options: {
+    query: string, 
+    sectionsOrOptions?: any[] | {
+      limit?: number;
       platform?: string;
       category?: string;
-      limit?: number;
+      minScore?: number;
       useSemanticSearch?: boolean;
-    } = {}
-  ) {
+    },
+    options?: {
+      limit?: number;
+      platform?: string;
+      category?: string;
+      minScore?: number;
+      useSemanticSearch?: boolean;
+    }
+  ): Promise<any[]> {
+    // Handle both old and new method signatures
+    let searchOptions: any = {};
+    
+    if (Array.isArray(sectionsOrOptions)) {
+      // Old signature: search(query, sections, options)
+      searchOptions = options || {};
+    } else {
+      // New signature: search(query, options)
+      searchOptions = sectionsOrOptions || {};
+    }
     const {
+      limit = 10,
       platform,
       category,
-      limit = 10,
-      useSemanticSearch = this.isSemanticEnabled
-    } = options;
+      minScore = 0.1
+    } = searchOptions;
 
-    // Use semantic search if available and requested
-    if (useSemanticSearch && this.isSemanticEnabled && this.semanticSearchService) {
-      try {
-        return await this.semanticSearchService.search(
-          query,
-          sections,
-          platform as any,
-          category as any,
-          limit
-        );
-      } catch (error) {
-        console.warn('[SearchIndexer] Semantic search failed, falling back to keyword search:', error);
-      }
-    }
-
-    // Fallback to traditional keyword search
-    return this.keywordSearch(query, sections, { platform, category, limit });
-  }
-
-  /**
-   * Traditional keyword-based search
-   */
-  private keywordSearch(
-    query: string,
-    sections: HIGSection[],
-    options: { platform?: string; category?: string; limit?: number }
-  ) {
-    const { platform, category, limit = 10 } = options;
-    const queryLower = query.toLowerCase();
-    const queryWords = queryLower.split(/\s+/).filter(word => word.length > 2);
-
-    const results = sections
-      .map(section => {
-        const indexEntry = this.searchIndex[section.id];
-        if (!indexEntry) return null;
-
+    // Simple keyword-based search through the index
+    const results = Object.values(this.searchIndex)
+      .map(entry => {
         let score = 0;
+        const queryLower = query.toLowerCase();
+        const queryWords = queryLower.split(/\s+/).filter(word => word.length > 2);
 
-        // Title matching (highest weight)
-        if (section.title.toLowerCase().includes(queryLower)) {
-          score += 10;
+        // Title matches (highest weight)
+        if (entry.title.toLowerCase().includes(queryLower)) {
+          score += 3.0;
+        } else {
+          const titleMatches = queryWords.filter(word => 
+            entry.title.toLowerCase().includes(word)
+          ).length;
+          score += titleMatches * 1.5;
         }
 
-        // Keyword matching
-        const keywordMatches = indexEntry.keywords.filter((keyword: string) =>
-          queryWords.some(word => keyword.toLowerCase().includes(word))
+        // Keyword matches
+        const keywordMatches = queryWords.filter(word =>
+          entry.keywords.some(keyword => keyword.toLowerCase().includes(word))
         ).length;
-        score += keywordMatches * 3;
+        score += keywordMatches * 1.0;
 
-        // Content matching
-        const contentMatches = queryWords.filter(word =>
-          (section.content || '').toLowerCase().includes(word)
-        ).length;
-        score += contentMatches;
+        // Snippet matches
+        if (entry.snippet.toLowerCase().includes(queryLower)) {
+          score += 0.5;
+        }
 
-        // Platform and category filtering/boosting
-        if (platform && section.platform === platform) score += 2;
-        else if (platform && section.platform !== platform && section.platform !== 'universal') return null;
-
-        if (category && section.category === category) score += 2;
-        else if (category && section.category !== category) return null;
-
-        return {
-          ...indexEntry,
-          relevanceScore: score,
-          snippet: indexEntry.snippet,
-          type: 'section' as const
-        };
+        return { ...entry, score, relevanceScore: score };
       })
-      .filter(result => result !== null && result.relevanceScore > 0)
-      .sort((a, b) => b.relevanceScore - a.relevanceScore)
+      .filter(result => {
+        if (result.score < minScore) return false;
+        if (platform && result.platform !== platform && result.platform !== 'universal') return false;
+        if (category && result.category !== category) return false;
+        return true;
+      })
+      .sort((a, b) => b.score - a.score)
       .slice(0, limit);
 
     return results;
   }
 
   /**
-   * Clear all indices
+   * Extract keywords from section content
    */
-  clear(): void {
-    this.searchIndex = {};
-    if (this.semanticSearchService) {
-      this.semanticSearchService.clearIndices();
-    }
+  private extractKeywords(section: HIGSection): string[] {
+    const text = `${section.title} ${section.content || ''} ${section.url}`.toLowerCase();
+    const words = text.match(/\b\w{3,}\b/g) || [];
+    
+    // Remove common words
+    const commonWords = new Set([
+      'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'had', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'man', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy', 'did', 'its', 'let', 'put', 'say', 'she', 'too', 'use'
+    ]);
+
+    const keywords = [...new Set(words)]
+      .filter(word => !commonWords.has(word))
+      .slice(0, 20); // Limit to top 20 keywords
+
+    return keywords;
   }
 
   /**
-   * Get indexing statistics
+   * Generate snippet for search results
    */
-  getStatistics() {
-    const semanticStats = this.semanticSearchService ? this.semanticSearchService.getStatistics() : {
-      totalIndexedSections: 0,
-      isInitialized: false,
-      modelLoaded: false,
-      config: {}
-    };
-    
-    return {
-      keywordIndex: {
-        totalEntries: Object.keys(this.searchIndex).length,
-        averageKeywordsPerSection: this.calculateAverageKeywords(),
-      },
-      semanticIndex: semanticStats,
-      capabilities: {
-        semanticSearchEnabled: this.isSemanticEnabled,
-        supportedFeatures: [
-          'keyword-search',
-          'platform-filtering',
-          'category-filtering',
-          'quality-scoring',
-          ...(this.isSemanticEnabled ? [
-            'semantic-similarity',
-            'intent-recognition',
-            'concept-matching',
-            'contextual-relevance'
-          ] : [])
-        ]
-      }
-    };
+  private generateSnippet(section: HIGSection): string {
+    const content = section.content || '';
+    const cleanContent = content.replace(/#{1,6}\s+/g, '').replace(/\n+/g, ' ').trim();
+    return cleanContent.length > 200 ? cleanContent.substring(0, 200) + '...' : cleanContent;
   }
 
-  private calculateAverageKeywords(): number {
-    const entries = Object.values(this.searchIndex);
-    if (entries.length === 0) return 0;
+  /**
+   * Analyze content structure
+   */
+  private analyzeContentStructure(section: HIGSection): {
+    hasStructuredContent: boolean;
+    hasGuidelines: boolean;
+    hasExamples: boolean;
+    hasSpecifications: boolean;
+    conceptCount: number;
+  } {
+    const content = section.content || '';
+    const structured = (section as any).structuredContent;
     
-    const totalKeywords = entries.reduce((sum, entry: any) => 
-      sum + (entry.keywords?.length || 0), 0
-    );
+    const analysis = {
+      hasStructuredContent: content.includes('##') || content.includes('###') || !!structured,
+      hasGuidelines: /guidelines?|best practices?|recommendations?/i.test(content) || 
+                    !!(structured?.guidelines && structured.guidelines.length > 0),
+      hasExamples: /example|for instance|such as/i.test(content) ||
+                  !!(structured?.examples && structured.examples.length > 0),
+      hasSpecifications: /specification|requirement|standard/i.test(content) ||
+                        !!structured?.specifications,
+      conceptCount: (content.match(/##\s+/g) || []).length +
+                   (structured?.relatedConcepts?.length || 0)
+    };
     
-    return totalKeywords / entries.length;
+    
+    return analysis;
   }
 
+  /**
+   * Clear search index
+   */
+  clear(): void {
+    this.searchIndex = {};
+  }
+
+  /**
+   * Get index size
+   */
   getIndexSize(): number {
     return Object.keys(this.searchIndex).length;
   }
 
   /**
-   * Check if semantic search is available
+   * Get indexing statistics
+   */
+  getStatistics(): any {
+    const entries = Object.values(this.searchIndex);
+    const averageKeywordsPerSection = entries.length > 0 
+      ? entries.reduce((sum, entry) => sum + entry.keywords.length, 0) / entries.length 
+      : 0;
+    
+    return {
+      totalSections: entries.length,
+      averageKeywordCount: averageKeywordsPerSection,
+      keywordIndex: {
+        totalEntries: entries.length,
+        averageKeywordsPerSection,
+        lastUpdated: new Date().toISOString()
+      },
+      capabilities: {
+        supportedFeatures: [
+          'keyword-search',
+          'field-boosting',
+          'exact-match',
+          'partial-match',
+          'platform-filtering',
+          'category-filtering'
+        ],
+        semanticSearchEnabled: false
+      }
+    };
+  }
+
+  /**
+   * Check if keyword search is available
+   */
+  isKeywordSearchEnabled(): boolean {
+    return true;
+  }
+
+  /**
+   * Check if semantic search is enabled (always false now)
    */
   isSemanticSearchEnabled(): boolean {
-    return this.isSemanticEnabled;
+    return false;
   }
 }

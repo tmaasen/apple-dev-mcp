@@ -20,7 +20,7 @@ This is an Apple Human Interface Guidelines MCP (Model Context Protocol) server 
 - `npm run dev` - Start development server using tsx
 - `npm start` - Run compiled server from `dist/`
 - `npm run health-check` - Test scraper functionality
-- `npm run generate-content` - Generate static HIG content files (full discovery + semantic search when available)
+- `npm run generate-content` - Generate static HIG content files (full discovery + enhanced keyword search)
 - `npm run generate-content:offline` - Fast offline generation (14 core sections, keyword search only)
 - `npm run validate-content` - Validate generated content
 
@@ -65,18 +65,18 @@ The project uses a hybrid static/dynamic architecture with static content genera
    - Prefers static content, falls back to scraping
    - Generates comprehensive content with proper Apple attribution
 
-6. **HIGToolsService** (`src/services/tools.service.ts`) - MCP Tools implementation with semantic search
-   - Interactive search with semantic understanding and intent recognition
-   - Four main tools: `search_guidelines`, `get_component_spec`, `compare_platforms`, `get_latest_updates`
-   - Multi-factor relevance scoring (semantic + keyword + structure + context)
-   - Uses semantic embeddings via TensorFlow Universal Sentence Encoder
-   - Graceful fallback to keyword search when semantic models unavailable
+6. **HIGToolsService** (`src/services/tools.service.ts`) - MCP Tools implementation with enhanced keyword search
+   - Interactive search with advanced keyword matching and intent recognition
+   - Four main tools: `search_guidelines`, `get_component_spec`, `get_design_tokens`, `get_accessibility_requirements`
+   - Multi-factor relevance scoring (keyword + structure + context + synonym expansion)
+   - Enhanced keyword search with synonym expansion and intelligent matching
+   - Optimized for fast response times without external model dependencies
 
-7. **SemanticSearchService** (`src/services/semantic-search.service.ts`) - Advanced search capabilities
-   - TensorFlow Universal Sentence Encoder for vector similarity matching
-   - Query analysis with intent recognition and entity extraction (using compromise NLP)
+7. **EnhancedKeywordSearchService** (`src/services/enhanced-keyword-search.service.ts`) - Advanced search capabilities
+   - Sophisticated keyword matching with synonym expansion and stemming
+   - Query analysis with intent recognition and entity extraction
    - Multi-dimensional relevance scoring with configurable weights
-   - Support for contextual search across Apple platform design patterns
+   - Support for contextual search across Apple platform design patterns without external dependencies
 
 8. **ContentProcessor** (`src/services/content-processor.service.ts`) - Content processing pipeline
    - HTML to markdown conversion using Turndown.js (images removed for MCP efficiency)
@@ -94,9 +94,9 @@ MCP Client → AppleHIGMCPServer → HIGResourceProvider/HIGToolsService
                                      HIGScraper → HIGCache → Apple's Website
 
 Search Flow:
-Query → SemanticSearchService → TensorFlow USE Model (embeddings)
+Query → EnhancedKeywordSearchService → Advanced Keyword Matching + Synonym Expansion
                             ↓
-                    Multi-factor Scoring (semantic + keyword + structure + context)
+                    Multi-factor Scoring (keyword + synonym + structure + context)
                             ↓
                     Ranked Results (with intent recognition and boost factors)
 ```
@@ -104,17 +104,17 @@ Query → SemanticSearchService → TensorFlow USE Model (embeddings)
 ### Content Generation and Processing
 
 ```
-GitHub Action (every 4 months) → ContentGenerator → Semantic Processing Pipeline
+GitHub Action (every 4 months) → ContentGenerator → Enhanced Content Processing Pipeline
                                         ↓
                                 ContentProcessor (Turndown.js + Structure Extraction)
                                         ↓
                                 Quality Validation + SLA Monitoring
                                         ↓
-                        Markdown Files + Search Indices + Semantic Embeddings
+                        Markdown Files + Search Indices + Enhanced Keyword Indexes
                                         ↓
                                 content/ directory
                                         ↓
-                        HIGStaticContentProvider + SemanticSearchService
+                        HIGStaticContentProvider + EnhancedKeywordSearchService
 ```
 
 ### Key Patterns
@@ -125,11 +125,11 @@ GitHub Action (every 4 months) → ContentGenerator → Semantic Processing Pipe
 
 **Performance Optimization**: Static content provides instant responses (no scraping delays) and scales to unlimited concurrent users.
 
-**Semantic Search Enhancement**: Multi-factor relevance scoring combines semantic similarity (via TensorFlow Universal Sentence Encoder), keyword matching, content structure analysis, and contextual relevance for superior search results.
+**Enhanced Keyword Search**: Multi-factor relevance scoring combines advanced keyword matching with synonym expansion, content structure analysis, and contextual relevance for superior search results.
 
 **Intent Recognition**: Query analysis extracts user intent (find_component, find_guideline, compare_platforms, etc.) and entities (components, platforms, properties) for more accurate results.
 
-**Graceful AI Fallback**: When TensorFlow models are unavailable (network restrictions, etc.), the system seamlessly falls back to optimized keyword search with enhanced relevance scoring.
+**Optimized Performance**: The system uses fast keyword-based search with intelligent synonym expansion and relevance scoring, providing consistent performance without external model dependencies.
 
 **Respectful Scraping**: Rate limiting, appropriate user agents, and fallback to known URLs when Apple's SPA architecture prevents dynamic discovery.
 

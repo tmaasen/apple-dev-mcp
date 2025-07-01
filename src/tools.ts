@@ -47,8 +47,21 @@ export class HIGToolProvider {
     const { query, platform, category, limit = 10 } = args;
     
     // Validate required parameters
-    if (!query || typeof query !== 'string' || query.trim().length === 0) {
-      throw new Error('Invalid query: must be a non-empty string');
+    if (typeof query !== 'string') {
+      throw new Error('Invalid query: must be a string');
+    }
+    
+    // Handle empty/whitespace queries gracefully
+    if (query.trim().length === 0) {
+      return {
+        results: [],
+        total: 0,
+        query: query.trim(),
+        filters: {
+          platform,
+          category
+        }
+      };
     }
     
     if (query.length > 100) {

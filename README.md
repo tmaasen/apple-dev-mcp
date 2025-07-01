@@ -220,7 +220,7 @@ Create `.vscode/mcp.json` in your workspace:
 
 #### Why Not NPX?
 We recommend using the direct file path approach instead of `npx` for this MCP server because:
-- **Large Dependencies**: This server includes TensorFlow for semantic search, which can cause timeout issues with `npx`
+- **Optimized Dependencies**: This server uses efficient keyword-based search without heavy ML dependencies
 - **Performance**: Direct file path execution is faster and more reliable
 - **Consistency**: Avoids potential version conflicts and download delays
 - **Enterprise Networks**: Direct paths work better with corporate firewalls and proxy configurations
@@ -237,7 +237,7 @@ For development or debugging, add environment variables:
       "args": ["/usr/local/lib/node_modules/apple-hig-mcp/dist/server.js"],
       "env": {
         "NODE_ENV": "development",
-        "DISABLE_SEMANTIC_SEARCH": "true"
+        "SEARCH_CONFIG": "keyword-optimized"
       }
     }
   }
@@ -440,7 +440,7 @@ npm run dev           # Start development server
 
 | Tool | Description | Key Arguments |
 |------|-------------|---------------|
-| `search_guidelines` | Search HIG content with semantic understanding | `query`, `platform`, `category`, `limit` |
+| `search_guidelines` | Search HIG content with enhanced keyword matching | `query`, `platform`, `category`, `limit` |
 | `get_component_spec` | Get component specifications | `componentName`, `platform` |
 | `get_design_tokens` | Get design system values | `component`, `platform`, `tokenType` |
 | `get_accessibility_requirements` | Get accessibility guidelines | `component`, `platform` |

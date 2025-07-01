@@ -9,14 +9,7 @@ import { SearchIndexerService } from '../services/search-indexer.service.js';
 import type { HIGSection } from '../types.js';
 
 // Mock external dependencies for integration testing
-jest.mock('@tensorflow-models/universal-sentence-encoder', () => ({
-  load: jest.fn().mockResolvedValue({
-    embed: jest.fn().mockResolvedValue({
-      data: jest.fn().mockResolvedValue(new Float32Array(512).fill(0.5)),
-      dispose: jest.fn()
-    })
-  })
-}));
+// TensorFlow removed - no longer needed
 
 jest.mock('compromise', () => ({
   __esModule: true,
