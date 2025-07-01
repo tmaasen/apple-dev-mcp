@@ -4,7 +4,7 @@ platform: universal
 category: selection-and-input
 url: https://developer.apple.com/design/human-interface-guidelines/inputs
 id: inputs-universal
-lastUpdated: 2025-06-26T23:23:19.543Z
+lastUpdated: 2025-06-30T12:44:09.964Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.306
 confidence: 0.506

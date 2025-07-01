@@ -1,10 +1,10 @@
 ---
 title: "Text Views"
 platform: universal
-category: visual-design
+category: selection-and-input
 url: https://developer.apple.com/design/human-interface-guidelines/text-views
-id: text-views-universal
-lastUpdated: 2025-06-26T23:25:11.040Z
+id: text-views
+lastUpdated: 2025-07-01T00:52:19.052Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.676
 confidence: 0.876

@@ -1,10 +1,10 @@
 ---
 title: "Collections"
 platform: universal
-category: visual-design
+category: layout
 url: https://developer.apple.com/design/human-interface-guidelines/collections
-id: collections-universal
-lastUpdated: 2025-06-26T23:25:17.825Z
+id: collections
+lastUpdated: 2025-07-01T00:51:24.355Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.610
 confidence: 0.810

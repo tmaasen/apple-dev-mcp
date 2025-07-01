@@ -3,8 +3,8 @@ title: "Apple Pay"
 platform: universal
 category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/apple-pay
-id: apple-pay-universal
-lastUpdated: 2025-06-26T23:25:43.637Z
+id: apple-pay
+lastUpdated: 2025-07-01T00:54:22.379Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

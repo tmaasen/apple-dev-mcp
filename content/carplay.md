@@ -1,10 +1,10 @@
 ---
-title: "Carplay"
+title: "CarPlay"
 platform: universal
 category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/carplay
-id: carplay-universal
-lastUpdated: 2025-06-26T23:25:45.699Z
+id: carplay
+lastUpdated: 2025-07-01T00:54:31.137Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

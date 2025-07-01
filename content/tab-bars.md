@@ -1,20 +1,19 @@
 ---
 title: "Tab Bars"
-platform: "universal"
-category: "visual-design"
-url: "https://developer.apple.com/design/human-interface-guidelines/tab-bars"
-id: "tab-bars-universal"
-lastUpdated: "2025-06-26T23:24:45.566Z"
-extractionMethod: "enhanced-turndown"
-qualityScore: 0.8
-confidence: 1
+platform: universal
+category: navigation
+url: https://developer.apple.com/design/human-interface-guidelines/tab-bars
+id: tab-bars
+lastUpdated: 2025-07-01T00:51:42.476Z
+extractionMethod: enhanced-turndown
+qualityScore: 0.800
+confidence: 1.000
 contentLength: 9099
-structureScore: 0.5
+structureScore: 0.500
 cleaningScore: 0.118
 hasCodeExamples: false
 hasImages: false
-keywords: ["tab","bars","bar","lets","people","navigate","between","top","level","sections"]
-consolidatedFrom: []
+keywords: ["tab", "bars", "bar", "lets", "people", "navigate", "between", "top", "level", "sections"]
 ---
 ## Overview
 

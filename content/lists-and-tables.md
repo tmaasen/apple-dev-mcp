@@ -1,10 +1,10 @@
 ---
-title: "Lists And Tables"
+title: "Lists and Tables"
 platform: universal
-category: visual-design
+category: layout
 url: https://developer.apple.com/design/human-interface-guidelines/lists-and-tables
-id: lists-and-tables-universal
-lastUpdated: 2025-06-26T23:25:11.150Z
+id: lists-and-tables
+lastUpdated: 2025-07-01T00:51:31.162Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

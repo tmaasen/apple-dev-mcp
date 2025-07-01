@@ -4,7 +4,7 @@ platform: universal
 category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/app-clips
 id: app-clips-universal
-lastUpdated: 2025-06-26T23:25:36.906Z
+lastUpdated: 2025-06-30T12:46:14.810Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

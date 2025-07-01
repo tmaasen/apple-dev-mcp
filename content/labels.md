@@ -4,7 +4,7 @@ platform: universal
 category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/labels
 id: labels-universal
-lastUpdated: 2025-06-26T23:25:02.530Z
+lastUpdated: 2025-06-30T12:45:37.810Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

@@ -1,10 +1,10 @@
 ---
 title: "Top Shelf"
 platform: tvOS
-category: foundations
+category: system-capabilities
 url: https://developer.apple.com/design/human-interface-guidelines/top-shelf
-id: top-shelf-tvos
-lastUpdated: 2025-06-26T23:28:25.741Z
+id: top-shelf
+lastUpdated: 2025-07-01T00:54:04.080Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

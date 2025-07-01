@@ -4,7 +4,7 @@ platform: universal
 category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/maps
 id: maps-universal
-lastUpdated: 2025-06-26T23:26:04.319Z
+lastUpdated: 2025-06-30T12:46:42.538Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

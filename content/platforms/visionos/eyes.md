@@ -1,10 +1,10 @@
 ---
 title: "Eyes"
 platform: visionOS
-category: foundations
+category: selection-and-input
 url: https://developer.apple.com/design/human-interface-guidelines/eyes
-id: eyes-visionos
-lastUpdated: 2025-06-26T23:28:34.515Z
+id: eyes
+lastUpdated: 2025-07-01T00:54:12.944Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

@@ -4,7 +4,7 @@ platform: universal
 category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/progress-indicators
 id: progress-indicators-universal
-lastUpdated: 2025-06-26T23:25:02.714Z
+lastUpdated: 2025-06-30T12:45:38.150Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

@@ -3,8 +3,8 @@ title: "Sheets"
 platform: universal
 category: presentation
 url: https://developer.apple.com/design/human-interface-guidelines/sheets
-id: sheets-universal
-lastUpdated: 2025-06-26T23:24:28.393Z
+id: sheets
+lastUpdated: 2025-07-01T00:52:00.779Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

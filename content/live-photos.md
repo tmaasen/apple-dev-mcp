@@ -4,7 +4,7 @@ platform: universal
 category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/live-photos
 id: live-photos-universal
-lastUpdated: 2025-06-26T23:26:22.134Z
+lastUpdated: 2025-06-30T12:47:01.384Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.761
 confidence: 0.961

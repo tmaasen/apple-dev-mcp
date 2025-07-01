@@ -277,7 +277,52 @@ export class CrawleeHIGService {
     for (const selector of selectors) {
       try {
         const content = await page.$eval(selector, (element: any) => {
-          return this.convertElementToMarkdown(element);
+          // Simple text extraction with basic markdown formatting
+          const extractText = (el: any): string => {
+            let text = '';
+            
+            for (const child of el.childNodes) {
+              if (child.nodeType === 3) { // Text node
+                text += child.textContent || '';
+              } else if (child.nodeType === 1) { // Element node
+                const tagName = child.tagName?.toLowerCase();
+                
+                switch (tagName) {
+                  case 'h1':
+                  case 'h2':
+                  case 'h3':
+                  case 'h4':
+                  case 'h5':
+                  case 'h6':
+                    const level = parseInt(tagName[1]);
+                    text += '\n' + '#'.repeat(level) + ' ' + (child.textContent || '') + '\n\n';
+                    break;
+                  case 'p':
+                    text += (child.textContent || '') + '\n\n';
+                    break;
+                  case 'li':
+                    text += '- ' + (child.textContent || '') + '\n';
+                    break;
+                  case 'code':
+                    text += '`' + (child.textContent || '') + '`';
+                    break;
+                  case 'strong':
+                  case 'b':
+                    text += '**' + (child.textContent || '') + '**';
+                    break;
+                  case 'em':
+                  case 'i':
+                    text += '*' + (child.textContent || '') + '*';
+                    break;
+                  default:
+                    text += extractText(child);
+                }
+              }
+            }
+            return text;
+          };
+          
+          return extractText(element);
         });
 
         if (content && content.length > 500) {
@@ -308,7 +353,52 @@ export class CrawleeHIGService {
     for (const selector of selectors) {
       try {
         const content = await page.$eval(selector, (element: any) => {
-          return this.convertElementToMarkdown(element);
+          // Simple text extraction with basic markdown formatting
+          const extractText = (el: any): string => {
+            let text = '';
+            
+            for (const child of el.childNodes) {
+              if (child.nodeType === 3) { // Text node
+                text += child.textContent || '';
+              } else if (child.nodeType === 1) { // Element node
+                const tagName = child.tagName?.toLowerCase();
+                
+                switch (tagName) {
+                  case 'h1':
+                  case 'h2':
+                  case 'h3':
+                  case 'h4':
+                  case 'h5':
+                  case 'h6':
+                    const level = parseInt(tagName[1]);
+                    text += '\n' + '#'.repeat(level) + ' ' + (child.textContent || '') + '\n\n';
+                    break;
+                  case 'p':
+                    text += (child.textContent || '') + '\n\n';
+                    break;
+                  case 'li':
+                    text += '- ' + (child.textContent || '') + '\n';
+                    break;
+                  case 'code':
+                    text += '`' + (child.textContent || '') + '`';
+                    break;
+                  case 'strong':
+                  case 'b':
+                    text += '**' + (child.textContent || '') + '**';
+                    break;
+                  case 'em':
+                  case 'i':
+                    text += '*' + (child.textContent || '') + '*';
+                    break;
+                  default:
+                    text += extractText(child);
+                }
+              }
+            }
+            return text;
+          };
+          
+          return extractText(element);
         });
 
         if (content && content.length > 300) {

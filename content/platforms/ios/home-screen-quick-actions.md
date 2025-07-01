@@ -1,10 +1,10 @@
 ---
 title: "Home Screen Quick Actions"
 platform: iOS
-category: foundations
+category: system-capabilities
 url: https://developer.apple.com/design/human-interface-guidelines/home-screen-quick-actions
-id: home-screen-quick-actions-ios
-lastUpdated: 2025-06-26T23:26:48.908Z
+id: home-screen-quick-actions
+lastUpdated: 2025-07-01T00:53:21.500Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

@@ -4,7 +4,7 @@ platform: universal
 category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/charts
 id: charts-universal
-lastUpdated: 2025-06-26T23:25:28.042Z
+lastUpdated: 2025-06-30T12:46:05.538Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

@@ -7,6 +7,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import type { HIGResource, ApplePlatform, HIGCategory, SearchResult } from './types.js';
+import { EnhancedKeywordSearchService } from './services/enhanced-keyword-search.service.js';
 
 interface StaticContentMetadata {
   lastUpdated: string;
@@ -54,6 +55,7 @@ export class HIGStaticContentProvider {
   private metadata: StaticContentMetadata | null = null;
   private contentCache: Map<string, StaticSection> = new Map();
   private availabilityCache: boolean | null = null;
+  private enhancedSearch: EnhancedKeywordSearchService;
 
   constructor(contentDir?: string) {
     if (contentDir) {
@@ -66,6 +68,12 @@ export class HIGStaticContentProvider {
       const packageRoot = path.dirname(currentDir);
       this.contentDir = path.join(packageRoot, 'content');
     }
+    
+    // Initialize enhanced search service
+    this.enhancedSearch = new EnhancedKeywordSearchService({
+      maxResults: 20,
+      minScore: 0.2
+    });
   }
 
   /**
@@ -247,73 +255,22 @@ export class HIGStaticContentProvider {
   }
 
   /**
-   * Search static content
+   * Search static content with enhanced keyword matching and synonym expansion
    */
   async searchContent(query: string, platform?: ApplePlatform, category?: HIGCategory, limit: number = 10): Promise<SearchResult[]> {
     if (!this.searchIndex) {
       throw new Error('Search index not available');
     }
 
-    const queryLower = query.toLowerCase();
-    const queryWords = queryLower.split(/\s+/).filter(word => word.length > 2);
-    const results: SearchResult[] = [];
-
-    for (const indexEntry of Object.values(this.searchIndex)) {
-      // Apply platform filter
-      if (platform && platform !== 'universal' && 
-          indexEntry.platform !== platform && indexEntry.platform !== 'universal') {
-        continue;
-      }
-
-      // Apply category filter
-      if (category && indexEntry.category !== category) {
-        continue;
-      }
-
-      let relevanceScore = 0;
-
-      // Check title matches
-      const titleLower = indexEntry.title.toLowerCase();
-      if (titleLower.includes(queryLower)) {
-        relevanceScore += 3.0;
-      } else {
-        const titleWordMatches = queryWords.filter(word => titleLower.includes(word)).length;
-        if (titleWordMatches > 0) {
-          relevanceScore += titleWordMatches * 1.5;
-        }
-      }
-
-      // Check keyword matches
-      const keywordMatches = queryWords.filter(word => 
-        indexEntry.keywords.some(keyword => keyword.includes(word))
-      ).length;
-      if (keywordMatches > 0) {
-        relevanceScore += keywordMatches * 1.0;
-      }
-
-      // Check snippet matches
-      const snippetLower = indexEntry.snippet.toLowerCase();
-      if (snippetLower.includes(queryLower)) {
-        relevanceScore += 0.5;
-      }
-
-      if (relevanceScore > 0) {
-        results.push({
-          id: indexEntry.id,
-          title: indexEntry.title,
-          url: indexEntry.url,
-          platform: indexEntry.platform,
-          relevanceScore,
-          snippet: indexEntry.snippet,
-          type: 'section'
-        });
-      }
-    }
-
-    // Sort by relevance and limit results
-    return results
-      .sort((a, b) => b.relevanceScore - a.relevanceScore)
-      .slice(0, limit);
+    // Use enhanced search service with synonym expansion and better relevance scoring
+    const sections = Object.values(this.searchIndex).filter(entry => entry != null);
+    const results = await this.enhancedSearch.search(query, sections, platform, category);
+    
+    // Convert to expected format and add type field
+    return results.slice(0, limit).map(result => ({
+      ...result,
+      type: 'section' as const
+    }));
   }
 
   /**
@@ -555,7 +512,8 @@ export class HIGStaticContentProvider {
   private async loadSearchIndex(): Promise<void> {
     const indexPath = path.join(this.contentDir, 'metadata', 'search-index.json');
     const data = await fs.readFile(indexPath, 'utf-8');
-    this.searchIndex = JSON.parse(data);
+    const indexData = JSON.parse(data);
+    this.searchIndex = indexData.keywordIndex || indexData;
   }
 
   private async loadCrossReferences(): Promise<void> {
@@ -568,7 +526,7 @@ export class HIGStaticContentProvider {
     if (!this.searchIndex) return 0;
 
     return Object.values(this.searchIndex).filter(entry =>
-      entry.platform === platform && entry.category === category
+      entry && entry.platform === platform && entry.category === category
     ).length;
   }
 

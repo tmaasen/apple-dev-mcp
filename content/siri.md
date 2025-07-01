@@ -3,8 +3,8 @@ title: "Siri"
 platform: universal
 category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/siri
-id: siri-universal
-lastUpdated: 2025-06-26T23:26:11.374Z
+id: siri
+lastUpdated: 2025-07-01T00:54:24.507Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

@@ -1,10 +1,10 @@
 ---
 title: "Scroll Views"
 platform: universal
-category: visual-design
+category: layout
 url: https://developer.apple.com/design/human-interface-guidelines/scroll-views
-id: scroll-views-universal
-lastUpdated: 2025-06-26T23:25:19.609Z
+id: scroll-views
+lastUpdated: 2025-07-01T00:51:33.349Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

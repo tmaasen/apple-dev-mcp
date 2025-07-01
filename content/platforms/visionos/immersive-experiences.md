@@ -1,10 +1,10 @@
 ---
 title: "Immersive Experiences"
 platform: visionOS
-category: foundations
+category: system-capabilities
 url: https://developer.apple.com/design/human-interface-guidelines/immersive-experiences
-id: immersive-experiences-visionos
-lastUpdated: 2025-06-26T23:28:32.324Z
+id: immersive-experiences
+lastUpdated: 2025-07-01T00:54:15.244Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

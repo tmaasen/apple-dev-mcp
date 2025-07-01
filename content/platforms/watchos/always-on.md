@@ -1,10 +1,10 @@
 ---
 title: "Always On"
 platform: watchOS
-category: foundations
+category: system-capabilities
 url: https://developer.apple.com/design/human-interface-guidelines/always-on
-id: always-on-watchos
-lastUpdated: 2025-06-26T23:28:08.069Z
+id: always-on
+lastUpdated: 2025-07-01T00:53:54.970Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

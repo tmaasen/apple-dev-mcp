@@ -4,7 +4,7 @@ platform: iOS
 category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/requesting-permission
 id: requesting-permission-ios
-lastUpdated: 2025-06-26T23:27:06.404Z
+lastUpdated: 2025-06-30T12:47:46.364Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.307
 confidence: 0.507

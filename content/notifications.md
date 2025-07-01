@@ -1,10 +1,10 @@
 ---
 title: "Notifications"
 platform: universal
-category: technologies
+category: presentation
 url: https://developer.apple.com/design/human-interface-guidelines/notifications
-id: notifications-universal
-lastUpdated: 2025-06-26T23:26:28.606Z
+id: notifications
+lastUpdated: 2025-07-01T00:52:09.530Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

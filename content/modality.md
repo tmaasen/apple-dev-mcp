@@ -1,10 +1,10 @@
 ---
 title: "Modality"
 platform: universal
-category: navigation
+category: presentation
 url: https://developer.apple.com/design/human-interface-guidelines/modality
-id: modality-universal
-lastUpdated: 2025-06-26T23:24:19.707Z
+id: modality
+lastUpdated: 2025-07-01T00:52:07.416Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

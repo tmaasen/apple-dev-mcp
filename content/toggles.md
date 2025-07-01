@@ -1,10 +1,10 @@
 ---
 title: "Toggles"
 platform: universal
-category: visual-design
+category: selection-and-input
 url: https://developer.apple.com/design/human-interface-guidelines/toggles
-id: toggles-universal
-lastUpdated: 2025-06-26T23:24:54.060Z
+id: toggles
+lastUpdated: 2025-07-01T00:52:27.902Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

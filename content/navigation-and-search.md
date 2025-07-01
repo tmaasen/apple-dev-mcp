@@ -4,20 +4,20 @@ platform: universal
 category: navigation
 url: https://developer.apple.com/design/human-interface-guidelines/navigation-and-search
 id: navigation-and-search-universal
-lastUpdated: 2025-06-26T23:23:58.326Z
+lastUpdated: 2025-06-30T12:44:42.154Z
 extractionMethod: enhanced-turndown
-qualityScore: 0.308
-confidence: 0.508
-contentLength: 587
-structureScore: 0.400
-cleaningScore: -0.005
+qualityScore: 0.318
+confidence: 0.518
+contentLength: 118
+structureScore: 0.500
+cleaningScore: 0.184
 hasCodeExamples: false
 hasImages: false
-keywords: ["navigation", "search", "this", "section", "part", "apple", "human", "interface", "guidelines", "note"]
+keywords: ["navigation", "search", "path", "controls", "fields", "sidebars", "tab", "bars", "token", "current"]
 ---
-## Overview
+## Content
 
-\# Navigation And Search This section is part of Apple's Human Interface Guidelines. \*\*Note\*\*: Content extraction failed. Please visit the official documentation for complete information: https://developer.apple.com/design/human-interface-guidelines/navigation-and-search --- \*\*Attribution Notice\*\* This content is sourced from Apple's Human Interface Guidelines: https://developer.apple.com/design/human-interface-guidelines/navigation-and-search © Apple Inc. All rights reserved. For the most up-to-date and official information, please refer to Apple's official documentation.
+Navigation and search Path controls Search fields Sidebars Tab bars Token fields Current page is Navigation and search
 
 ---
 

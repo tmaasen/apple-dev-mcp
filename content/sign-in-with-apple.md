@@ -1,10 +1,10 @@
 ---
-title: "Sign In With Apple"
+title: "Sign in with Apple"
 platform: universal
 category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/sign-in-with-apple
-id: sign-in-with-apple-universal
-lastUpdated: 2025-06-26T23:26:30.765Z
+id: sign-in-with-apple
+lastUpdated: 2025-07-01T00:54:24.307Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

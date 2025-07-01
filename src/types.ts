@@ -95,9 +95,11 @@ export interface SearchResult {
   title: string;
   url: string;
   platform: ApplePlatform;
+  category?: HIGCategory;
   relevanceScore: number;
   snippet: string;
   type: 'section' | 'component' | 'guideline';
+  highlights?: string[];
 }
 
 export interface HIGUpdate {

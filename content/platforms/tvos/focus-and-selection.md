@@ -1,10 +1,10 @@
 ---
-title: "Focus And Selection"
+title: "Focus and Selection"
 platform: tvOS
 category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/focus-and-selection
-id: focus-and-selection-tvos
-lastUpdated: 2025-06-26T23:28:16.562Z
+id: focus-and-selection
+lastUpdated: 2025-07-01T00:53:56.981Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

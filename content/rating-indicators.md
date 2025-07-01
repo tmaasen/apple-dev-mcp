@@ -4,7 +4,7 @@ platform: universal
 category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/rating-indicators
 id: rating-indicators-universal
-lastUpdated: 2025-06-26T23:25:34.643Z
+lastUpdated: 2025-06-30T12:46:12.595Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.427
 confidence: 0.627

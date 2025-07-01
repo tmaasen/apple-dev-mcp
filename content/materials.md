@@ -1,10 +1,10 @@
 ---
 title: "Materials"
 platform: universal
-category: foundations
+category: color-and-materials
 url: https://developer.apple.com/design/human-interface-guidelines/materials
-id: materials-universal
-lastUpdated: 2025-06-26T23:28:43.543Z
+id: materials
+lastUpdated: 2025-07-01T00:53:03.609Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

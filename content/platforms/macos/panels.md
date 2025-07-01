@@ -1,10 +1,10 @@
 ---
 title: "Panels"
 platform: macOS
-category: foundations
+category: presentation
 url: https://developer.apple.com/design/human-interface-guidelines/panels
-id: panels-macos
-lastUpdated: 2025-06-26T23:27:48.812Z
+id: panels
+lastUpdated: 2025-07-01T00:53:38.949Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

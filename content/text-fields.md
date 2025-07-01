@@ -1,10 +1,10 @@
 ---
 title: "Text Fields"
 platform: universal
-category: visual-design
+category: selection-and-input
 url: https://developer.apple.com/design/human-interface-guidelines/text-fields
-id: text-fields-universal
-lastUpdated: 2025-06-26T23:25:09.044Z
+id: text-fields
+lastUpdated: 2025-07-01T00:52:18.123Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

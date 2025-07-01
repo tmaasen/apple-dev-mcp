@@ -1,10 +1,10 @@
 ---
 title: "Complications"
 platform: watchOS
-category: foundations
+category: system-capabilities
 url: https://developer.apple.com/design/human-interface-guidelines/complications
-id: complications-watchos
-lastUpdated: 2025-06-26T23:27:59.476Z
+id: complications
+lastUpdated: 2025-07-01T00:53:47.989Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

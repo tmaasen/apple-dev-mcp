@@ -44,7 +44,14 @@
       "Bash(claude config --help)",
       "Bash(echo \"Exit code: $?\")",
       "Bash(timeout:*)",
-      "Bash(npm --version)"
+      "Bash(npm --version)",
+      "Bash(echo:*)",
+      "Bash(npm ls:*)",
+      "Bash(npm info:*)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:www.npmjs.com)"
     ],
     "deny": []
   }

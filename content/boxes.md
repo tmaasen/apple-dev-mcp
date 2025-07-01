@@ -4,7 +4,7 @@ platform: universal
 category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/boxes
 id: boxes-universal
-lastUpdated: 2025-06-26T23:25:26.010Z
+lastUpdated: 2025-06-30T12:46:03.310Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.575
 confidence: 0.775

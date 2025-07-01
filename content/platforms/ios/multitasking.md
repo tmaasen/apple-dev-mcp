@@ -4,7 +4,7 @@ platform: iOS
 category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/multitasking
 id: multitasking-ios
-lastUpdated: 2025-06-26T23:26:49.048Z
+lastUpdated: 2025-06-30T12:47:29.000Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

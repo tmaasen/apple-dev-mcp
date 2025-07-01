@@ -1,20 +1,19 @@
 ---
 title: "Navigation Bars"
-platform: "universal"
-category: "visual-design"
-url: "https://developer.apple.com/design/human-interface-guidelines/navigation-bars"
-id: "navigation-bars-universal"
-lastUpdated: "2025-06-26T23:24:45.552Z"
-extractionMethod: "enhanced-turndown"
-qualityScore: 0.8
-confidence: 1
+platform: universal
+category: navigation
+url: https://developer.apple.com/design/human-interface-guidelines/navigation-bars
+id: navigation-bars
+lastUpdated: 2025-07-01T00:51:40.226Z
+extractionMethod: enhanced-turndown
+qualityScore: 0.800
+confidence: 1.000
 contentLength: 15040
-structureScore: 0.5
+structureScore: 0.500
 cleaningScore: 0.106
 hasCodeExamples: false
 hasImages: false
-keywords: ["june","2025","added","guidance","grouping","bar","items","updated","using","symbols"]
-consolidatedFrom: []
+keywords: ["june", "2025", "added", "guidance", "grouping", "bar", "items", "updated", "using", "symbols"]
 ---
 ## Overview
 

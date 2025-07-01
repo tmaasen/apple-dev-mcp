@@ -4,7 +4,7 @@ platform: universal
 category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/healthkit
 id: healthkit-universal
-lastUpdated: 2025-06-26T23:25:45.910Z
+lastUpdated: 2025-06-30T12:46:24.058Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

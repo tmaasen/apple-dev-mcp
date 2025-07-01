@@ -3,8 +3,8 @@ title: "Augmented Reality"
 platform: universal
 category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/augmented-reality
-id: augmented-reality-universal
-lastUpdated: 2025-06-26T23:26:13.150Z
+id: augmented-reality
+lastUpdated: 2025-07-01T00:54:33.410Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000

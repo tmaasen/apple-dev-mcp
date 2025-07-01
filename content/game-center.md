@@ -4,7 +4,7 @@ platform: universal
 category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/game-center
 id: game-center-universal
-lastUpdated: 2025-06-26T23:26:20.324Z
+lastUpdated: 2025-06-30T12:46:59.506Z
 extractionMethod: enhanced-turndown
 qualityScore: 0.800
 confidence: 1.000
