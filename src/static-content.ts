@@ -281,6 +281,10 @@ export class HIGStaticContentProvider {
    */
   async searchContent(query: string, platform?: ApplePlatform, category?: HIGCategory, limit: number = 10): Promise<SearchResult[]> {
     if (!this.searchIndex) {
+      await this.initialize();
+    }
+    
+    if (!this.searchIndex) {
       throw new Error('Search index not available');
     }
 

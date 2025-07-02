@@ -278,8 +278,21 @@ export class HIGToolProvider {
         console.log(`[HIGTools] Getting component spec for: ${trimmedComponentName} (platform: ${platform || 'any'})`);
       }
       
-      // Use fallback approach to avoid timeouts
-      const component = this.getComponentSpecFallback(trimmedComponentName, platform);
+      // Try to get component from static content first
+      let component: HIGComponent | null = null;
+      
+      if (this.staticContentProvider) {
+        try {
+          component = await this.getComponentFromStaticContent(trimmedComponentName, platform);
+        } catch (error) {
+          console.warn(`Failed to get component from static content: ${error}`);
+        }
+      }
+      
+      // Fall back to predefined components if static content fails
+      if (!component) {
+        component = this.getComponentSpecFallback(trimmedComponentName, platform);
+      }
       
       if (!component) {
         return {
@@ -306,6 +319,126 @@ export class HIGToolProvider {
       
       throw new Error(`Failed to get component specification: ${errorMessage}`);
     }
+  }
+
+  private async getComponentFromStaticContent(componentName: string, platform?: ApplePlatform): Promise<HIGComponent | null> {
+    if (!this.staticContentProvider) {
+      return null;
+    }
+
+    // Search for the component in static content
+    const searchQuery = componentName.toLowerCase().replace(/\s+/g, ' ');
+    const searchResults = await this.staticContentProvider.searchContent(searchQuery, platform, undefined, 3);
+    
+    if (searchResults.length === 0) {
+      return null;
+    }
+
+    // Find the best match (highest relevance score)
+    const bestMatch = searchResults[0];
+    
+    // Get the full content for this component
+    let fullContent = '';
+    try {
+      const section = await this.staticContentProvider.getSection(bestMatch.id);
+      fullContent = section?.content || bestMatch.snippet;
+    } catch {
+      fullContent = bestMatch.snippet;
+    }
+
+    // Extract guidelines and examples from content
+    const guidelines = this.extractGuidelines(fullContent);
+    const examples = this.extractExamples(fullContent);
+    const specifications = this.extractSpecifications(fullContent);
+
+    return {
+      id: bestMatch.id,
+      title: bestMatch.title,
+      description: bestMatch.snippet || `${bestMatch.title} component specifications and guidelines.`,
+      platforms: [bestMatch.platform] as ApplePlatform[],
+      url: bestMatch.url,
+      specifications,
+      guidelines,
+      examples,
+      lastUpdated: new Date()
+    };
+  }
+
+  private extractGuidelines(content: string): string[] {
+    const guidelines: string[] = [];
+    
+    // Look for common guideline patterns
+    const guidelinePatterns = [
+      /(?:^|\n)\s*[-•]\s*(.+?)(?=\n|$)/gm,
+      /(?:^|\n)\s*\d+\.\s*(.+?)(?=\n|$)/gm,
+      /(?:consider|should|must|avoid|ensure)\s+(.+?)(?:[.!]|$)/gim
+    ];
+
+    for (const pattern of guidelinePatterns) {
+      const matches = content.match(pattern);
+      if (matches) {
+        matches.forEach(match => {
+          const cleaned = match.replace(/^[-•\d.\s]+/, '').trim();
+          if (cleaned.length > 10 && cleaned.length < 200) {
+            guidelines.push(cleaned);
+          }
+        });
+      }
+    }
+
+    return guidelines.slice(0, 5); // Return top 5 guidelines
+  }
+
+  private extractExamples(content: string): string[] {
+    const examples: string[] = [];
+    
+    // Look for example patterns
+    const examplePatterns = [
+      /example[s]?[:\s]+(.+?)(?=\n\n|$)/gim,
+      /for example[,\s]+(.+?)(?=[.!]|$)/gim,
+      /such as[:\s]+(.+?)(?=[.!]|$)/gim
+    ];
+
+    for (const pattern of examplePatterns) {
+      const matches = content.match(pattern);
+      if (matches) {
+        matches.forEach(match => {
+          const cleaned = match.replace(/^(examples?[:\s]+|for example[,\s]+|such as[:\s]+)/i, '').trim();
+          if (cleaned.length > 5 && cleaned.length < 100) {
+            examples.push(cleaned);
+          }
+        });
+      }
+    }
+
+    return examples.slice(0, 3); // Return top 3 examples
+  }
+
+  private extractSpecifications(content: string): { [key: string]: any } {
+    const specs: { [key: string]: any } = {};
+    
+    // Look for measurement patterns
+    const heightMatch = content.match(/height[:\s]+(\d+(?:\.\d+)?)\s*pt/i);
+    if (heightMatch) {
+      specs.height = heightMatch[1] + 'pt';
+    }
+
+    const widthMatch = content.match(/width[:\s]+(\d+(?:\.\d+)?)\s*pt/i);
+    if (widthMatch) {
+      specs.width = widthMatch[1] + 'pt';
+    }
+
+    const minSizeMatch = content.match(/minimum[:\s]+(\d+(?:\.\d+)?)\s*pt/i);
+    if (minSizeMatch) {
+      specs.minimumSize = minSizeMatch[1] + 'pt';
+    }
+
+    // Touch target size is commonly 44pt
+    if (content.toLowerCase().includes('touch target') || content.toLowerCase().includes('44')) {
+      specs.touchTarget = '44pt x 44pt';
+    }
+
+    return specs;
   }
 
   /**
@@ -353,6 +486,34 @@ export class HIGToolProvider {
         },
         guidelines: ['Use tab bars for peer categories of content', 'Avoid using a tab bar for actions', 'Badge tabs sparingly'],
         examples: ['Standard tab bar', 'Customizable tab bar', 'Translucent tab bar'],
+        lastUpdated: new Date()
+      },
+      'text field': {
+        id: 'text-fields-fallback',
+        title: 'Text Fields',
+        description: 'Text fields let people enter and edit text in a single line or multiple lines.',
+        platforms: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
+        url: 'https://developer.apple.com/design/human-interface-guidelines/text-fields',
+        specifications: {
+          dimensions: { height: '44pt', minHeight: '36pt' },
+          touchTarget: '44pt x 44pt'
+        },
+        guidelines: ['Make text fields recognizable and easy to target', 'Use secure text fields for sensitive data', 'Provide clear feedback for validation errors', 'Use appropriate keyboard types for different content'],
+        examples: ['Standard text field', 'Search field', 'Secure text field', 'Multi-line text field'],
+        lastUpdated: new Date()
+      },
+      'textfield': {
+        id: 'text-fields-fallback',
+        title: 'Text Fields',
+        description: 'Text fields let people enter and edit text in a single line or multiple lines.',
+        platforms: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
+        url: 'https://developer.apple.com/design/human-interface-guidelines/text-fields',
+        specifications: {
+          dimensions: { height: '44pt', minHeight: '36pt' },
+          touchTarget: '44pt x 44pt'
+        },
+        guidelines: ['Make text fields recognizable and easy to target', 'Use secure text fields for sensitive data', 'Provide clear feedback for validation errors', 'Use appropriate keyboard types for different content'],
+        examples: ['Standard text field', 'Search field', 'Secure text field', 'Multi-line text field'],
         lastUpdated: new Date()
       }
     };
@@ -474,65 +635,6 @@ export class HIGToolProvider {
     return (start > 0 ? '...' : '') + snippet + (end < content.length ? '...' : '');
   }
 
-  /**
-   * Extract component specifications from content
-   */
-  private extractSpecifications(content: string): any {
-    const specs: any = {};
-    
-    // Look for common specification patterns
-    const dimensionMatch = content.match(/(?:width|height|size):\s*([^.\n]+)/gi);
-    if (dimensionMatch) {
-      specs.dimensions = dimensionMatch.map(m => m.trim());
-    }
-
-    const colorMatch = content.match(/(?:color|background):\s*([^.\n]+)/gi);
-    if (colorMatch) {
-      specs.colors = colorMatch.map(m => m.trim());
-    }
-
-    const spacingMatch = content.match(/(?:padding|margin|spacing):\s*([^.\n]+)/gi);
-    if (spacingMatch) {
-      specs.spacing = spacingMatch.map(m => m.trim());
-    }
-
-    return Object.keys(specs).length > 0 ? specs : undefined;
-  }
-
-  /**
-   * Extract guidelines from content
-   */
-  private extractGuidelines(content: string): string[] {
-    const guidelines: string[] = [];
-    
-    // Look for bullet points and numbered lists
-    const bulletMatch = content.match(/^[-*•]\s+(.+)$/gm);
-    if (bulletMatch) {
-      guidelines.push(...bulletMatch.map(m => m.replace(/^[-*•]\s+/, '').trim()));
-    }
-
-    const numberedMatch = content.match(/^\d+\.\s+(.+)$/gm);
-    if (numberedMatch) {
-      guidelines.push(...numberedMatch.map(m => m.replace(/^\d+\.\s+/, '').trim()));
-    }
-
-    return guidelines.slice(0, 10); // Limit to 10 guidelines
-  }
-
-  /**
-   * Extract examples from content
-   */
-  private extractExamples(content: string): string[] {
-    const examples: string[] = [];
-    
-    // Look for common example patterns
-    const exampleMatch = content.match(/(?:example|for example|such as):\s*([^.\n]+)/gi);
-    if (exampleMatch) {
-      examples.push(...exampleMatch.map(m => m.replace(/^(?:example|for example|such as):\s*/i, '').trim()));
-    }
-
-    return examples.slice(0, 5); // Limit to 5 examples
-  }
 
   /**
    * Find related components

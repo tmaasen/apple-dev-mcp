@@ -48,6 +48,8 @@ export interface ComponentSpec {
     secondary?: string;
     background?: string;
   };
+  touchTarget?: string;
+  minimumSize?: string;
 }
 
 // Enhanced structured content interfaces for Phase 1
