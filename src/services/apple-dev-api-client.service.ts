@@ -12,7 +12,7 @@ import type { FrameworkInfo } from '../types.js';
 const BASE_URL = 'https://developer.apple.com/tutorials/data';
 
 const HEADERS = {
-  'User-Agent': 'Apple-Ecosystem-MCP/2.0.0 (Educational/Development Purpose; Enhanced HIG Integration)',
+  'User-Agent': 'Apple-Dev-MCP (Development Purpose)',
   'Referer': 'https://developer.apple.com/documentation',
   'DNT': '1'
 };

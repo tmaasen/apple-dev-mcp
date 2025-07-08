@@ -348,8 +348,6 @@ export interface SearchConfig {
   };
 }
 
-// Technical Documentation Integration Types (Apple Ecosystem MCP Enhancement)
-
 export interface TechnicalDocumentation {
   id: string;
   symbol: string;

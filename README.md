@@ -117,7 +117,7 @@ Add to your Claude Desktop configuration file (`claude_desktop_config.json`):
 claude mcp add "Apple Dev" node /usr/local/lib/node_modules/apple-dev-mcp/dist/server.js
 
 # For user-wide scope (available in all projects)
-claude mcp add -s user "Apple Ecosystem" node /usr/local/lib/node_modules/apple-dev-mcp/dist/server.js
+claude mcp add -s user "Apple Dev" node /usr/local/lib/node_modules/apple-dev-mcp/dist/server.js
 ```
 
 #### Method 2: Project Configuration File  
@@ -333,7 +333,7 @@ hig://updates/latest - Latest HIG updates and changes
 
 ### MCP Tools (13 Available)
 
-The Apple Ecosystem MCP server provides 13 tools available across four categories:
+The Apple Dev MCP server provides 13 tools available across four categories:
 
 #### 🎨 Design Guidelines Tools
 
@@ -645,6 +645,7 @@ npm run dev           # Start development server
 
 ## 🙏 Acknowledgments
 
+- [MightyDillah](https://github.com/MightyDillah/apple-doc-mcp) for another great Apple Development MCP that I gained inspiration from. Thank you!
 - Apple Inc. for creating comprehensive design guidelines
 - [Model Context Protocol](https://modelcontextprotocol.io/) team for the excellent framework
 - Open source community for contributions and maintenance
