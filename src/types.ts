@@ -347,3 +347,211 @@ export interface SearchConfig {
     recentContent: number;
   };
 }
+
+// Technical Documentation Integration Types (Apple Ecosystem MCP Enhancement)
+
+export interface TechnicalDocumentation {
+  id: string;
+  symbol: string;
+  framework: string;
+  symbolKind: string;
+  platforms: string[];
+  abstract: string;
+  apiReference: string;
+  codeExamples: string[];
+  relatedSymbols: string[];
+  url: string;
+  lastUpdated: Date;
+}
+
+export interface TechnicalSearchResult {
+  title: string;
+  description: string;
+  path: string;
+  framework: string;
+  symbolKind?: string;
+  platforms?: string;
+  url: string;
+  relevanceScore: number;
+  type: 'technical';
+}
+
+export interface UnifiedSearchResult {
+  id: string;
+  title: string;
+  type: 'design' | 'technical' | 'combined';
+  url: string;
+  relevanceScore: number;
+  snippet: string;
+  
+  // Design content (from existing HIG system)
+  designContent?: {
+    platform: ApplePlatform;
+    category?: HIGCategory;
+    guidelines?: string[];
+    specifications?: ComponentSpec;
+  };
+  
+  // Technical content (from Apple API)
+  technicalContent?: {
+    framework: string;
+    symbolKind: string;
+    platforms: string[];
+    abstract: string;
+    codeExamples: string[];
+  };
+  
+  // Combined guidance (fusion of both)
+  combinedGuidance?: {
+    designPrinciples: string[];
+    implementationSteps: string[];
+    crossPlatformConsiderations: string[];
+    accessibilityNotes: string[];
+  };
+}
+
+export interface DesignTechnicalMapping {
+  designGuideline: string;
+  designUrl: string;
+  relatedSymbols: string[];
+  implementationExamples: string[];
+  platforms: ApplePlatform[];
+  mappingConfidence: number; // 0-1 confidence in the mapping
+}
+
+export interface CrossReferenceEntry {
+  id: string;
+  sourceType: 'design' | 'technical';
+  sourceId: string;
+  targetType: 'design' | 'technical';
+  targetId: string;
+  relationshipType: 'implements' | 'related' | 'example' | 'platform-specific';
+  confidence: number;
+  lastUpdated: Date;
+}
+
+export interface FrameworkInfo {
+  name: string;
+  description: string;
+  platforms: string[];
+  topicSections: string[];
+  url: string;
+  relatedHIGSections?: string[];
+}
+
+export interface UpdateCheckResult {
+  source: 'hig-static' | 'api-documentation' | 'git-repository';
+  isUpdateAvailable: boolean;
+  currentVersion?: string;
+  latestVersion?: string;
+  lastChecked: Date;
+  updateInstructions?: string;
+  changelog?: string[];
+}
+
+// Enhanced MCP Tool interfaces for technical documentation
+
+export interface GetTechnicalDocumentationArgs {
+  path: string;
+  includeDesignGuidance?: boolean;
+  includeRelatedSymbols?: boolean;
+  includeCodeExamples?: boolean;
+}
+
+export interface SearchUnifiedArgs {
+  query: string;
+  searchType?: 'design' | 'technical' | 'both';
+  platform?: ApplePlatform;
+  category?: HIGCategory;
+  framework?: string;
+  symbolType?: string;
+  includeImplementation?: boolean;
+  limit?: number;
+}
+
+export interface ListTechnologiesArgs {
+  includeDesignMapping?: boolean;
+  platform?: ApplePlatform;
+  category?: 'framework' | 'symbol' | 'all';
+}
+
+export interface GetImplementationGuideArgs {
+  componentName: string;
+  platform?: ApplePlatform;
+  includeAccessibility?: boolean;
+  includeCodeExamples?: boolean;
+}
+
+export interface CheckUpdatesArgs {
+  sources?: ('hig-static' | 'api-documentation' | 'git-repository')[];
+  includeChangelog?: boolean;
+}
+
+// Content Fusion Types
+
+export interface ContentFusionResult {
+  id: string;
+  title: string;
+  type: 'implementation-guide' | 'component-spec' | 'platform-comparison';
+  
+  designSection: {
+    principles: string[];
+    specifications: ComponentSpec;
+    guidelines: string[];
+    examples: string[];
+  };
+  
+  technicalSection: {
+    framework: string;
+    symbol: string;
+    apiReference: string;
+    codeExamples: string[];
+    platforms: string[];
+  };
+  
+  fusedGuidance: {
+    overview: string;
+    implementationSteps: string[];
+    bestPractices: string[];
+    commonPitfalls: string[];
+    accessibilityConsiderations: string[];
+    platformDifferences: string[];
+  };
+  
+  lastUpdated: Date;
+  confidenceScore: number;
+}
+
+export interface WildcardSearchPattern {
+  pattern: string;
+  type: 'prefix' | 'suffix' | 'contains' | 'exact';
+  caseSensitive: boolean;
+}
+
+export interface EnhancedCacheEntry<T> extends CacheEntry<T> {
+  source: 'hig-static' | 'api-documentation' | 'scraped' | 'fused';
+  quality: number;
+  lastValidated: Date;
+  invalidationRules: string[];
+}
+
+// Git Update Types (adapted from MightyDillah's approach)
+
+export interface GitUpdateStatus {
+  branch: string;
+  status: string;
+  behindCount: number;
+  aheadCount: number;
+  localCommit: string;
+  remoteCommit: string;
+  hasUpdates: boolean;
+  hasLocalChanges: boolean;
+  lastChecked: Date;
+}
+
+export interface UpdateNotification {
+  type: 'info' | 'warning' | 'error';
+  message: string;
+  actionRequired?: boolean;
+  instructions?: string[];
+}

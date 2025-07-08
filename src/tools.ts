@@ -6,12 +6,20 @@ import type { CrawleeHIGService } from './services/crawlee-hig.service.js';
 import type { HIGCache } from './cache.js';
 import type { HIGResourceProvider } from './resources.js';
 import type { HIGStaticContentProvider } from './static-content.js';
+import { AppleDevAPIClient } from './services/apple-dev-api-client.service.js';
+import { UpdateCheckerService } from './services/update-checker.service.js';
 import type { 
   SearchGuidelinesArgs, 
   GetComponentSpecArgs, 
   SearchResult,
   HIGComponent,
-  ApplePlatform
+  ApplePlatform,
+  GetTechnicalDocumentationArgs,
+  ListTechnologiesArgs,
+  TechnicalDocumentation,
+  FrameworkInfo,
+  TechnicalSearchResult,
+  CheckUpdatesArgs
 } from './types.js';
 
 export class HIGToolProvider {
@@ -19,12 +27,16 @@ export class HIGToolProvider {
   private _cache: HIGCache;
   private resourceProvider: HIGResourceProvider;
   private staticContentProvider?: HIGStaticContentProvider;
+  private appleDevAPIClient: AppleDevAPIClient;
+  private updateCheckerService: UpdateCheckerService;
 
-  constructor(crawleeService: CrawleeHIGService, cache: HIGCache, resourceProvider: HIGResourceProvider, staticContentProvider?: HIGStaticContentProvider) {
+  constructor(crawleeService: CrawleeHIGService, cache: HIGCache, resourceProvider: HIGResourceProvider, staticContentProvider?: HIGStaticContentProvider, appleDevAPIClient?: AppleDevAPIClient) {
     this.crawleeService = crawleeService;
     this._cache = cache;
     this.resourceProvider = resourceProvider;
     this.staticContentProvider = staticContentProvider;
+    this.appleDevAPIClient = appleDevAPIClient || new AppleDevAPIClient(cache);
+    this.updateCheckerService = new UpdateCheckerService(cache, staticContentProvider);
   }
 
   /**
@@ -617,6 +629,309 @@ export class HIGToolProvider {
   }
 
   /**
+   * Get technical documentation for Apple frameworks and symbols
+   */
+  async getTechnicalDocumentation(args: GetTechnicalDocumentationArgs): Promise<{
+    documentation: TechnicalDocumentation | null;
+    designGuidance?: SearchResult[];
+    success: boolean;
+    error?: string;
+  }> {
+    // Input validation
+    if (!args || typeof args !== 'object') {
+      throw new Error('Invalid arguments: expected object');
+    }
+    
+    const { path, includeDesignGuidance = false } = args;
+    
+    // Validate required parameters
+    if (!path || typeof path !== 'string' || path.trim().length === 0) {
+      throw new Error('Invalid path: must be a non-empty string');
+    }
+    
+    if (path.length > 200) {
+      throw new Error('Path too long: maximum 200 characters allowed');
+    }
+    
+    try {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[HIGTools] Getting technical documentation for: ${path}`);
+      }
+      
+      const documentation = await this.appleDevAPIClient.getTechnicalDocumentation(path.trim());
+      
+      // Optionally include design guidance
+      let designGuidance: SearchResult[] | undefined;
+      if (includeDesignGuidance && this.staticContentProvider) {
+        try {
+          const designQuery = this.extractDesignRelevantTerms(documentation.symbol);
+          designGuidance = await this.staticContentProvider.searchContent(designQuery, undefined, undefined, 3);
+        } catch (error) {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('[HIGTools] Failed to get design guidance:', error);
+          }
+        }
+      }
+      
+      return {
+        documentation,
+        designGuidance,
+        success: true
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`[HIGTools] Technical documentation failed for ${path}:`, error);
+      }
+      
+      return {
+        documentation: null,
+        success: false,
+        error: errorMessage
+      };
+    }
+  }
+
+  /**
+   * List available Apple technologies/frameworks
+   */
+  async listTechnologies(args: ListTechnologiesArgs = {}): Promise<{
+    frameworks: FrameworkInfo[];
+    totalCount: number;
+    success: boolean;
+    error?: string;
+  }> {
+    try {
+      const { includeDesignMapping = false, platform, category = 'all' } = args;
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[HIGTools] Listing technologies (category: ${category}, platform: ${platform})`);
+      }
+      
+      const technologies = await this.appleDevAPIClient.getTechnologies();
+      const frameworks: FrameworkInfo[] = [];
+      
+      // Filter technologies based on category
+      const filteredTechnologies = Object.values(technologies).filter(tech => {
+        if (category === 'framework') {
+          return tech.kind === 'symbol' && tech.role === 'collection';
+        } else if (category === 'symbol') {
+          return tech.kind === 'symbol' && tech.role !== 'collection';
+        }
+        return true; // 'all' category
+      });
+      
+      // Convert to FrameworkInfo format
+      for (const tech of filteredTechnologies.slice(0, 50)) { // Limit to prevent overload
+        try {
+          const frameworkInfo = await this.appleDevAPIClient.getFrameworkInfo(tech.title);
+          
+          // Platform filtering
+          if (platform && frameworkInfo.platforms.length > 0) {
+            const hasRequestedPlatform = frameworkInfo.platforms.some(p => 
+              p.toLowerCase().includes(platform.toLowerCase())
+            );
+            if (!hasRequestedPlatform) continue;
+          }
+          
+          // Add design mapping if requested
+          if (includeDesignMapping && this.staticContentProvider) {
+            try {
+              const designQuery = this.extractDesignRelevantTerms(tech.title);
+              const designResults = await this.staticContentProvider.searchContent(designQuery, undefined, undefined, 2);
+              frameworkInfo.relatedHIGSections = designResults.map(result => result.title);
+            } catch {
+              // Continue without design mapping
+            }
+          }
+          
+          frameworks.push(frameworkInfo);
+        } catch (error) {
+          // Continue with other frameworks if one fails
+          if (process.env.NODE_ENV === 'development') {
+            console.warn(`[HIGTools] Failed to get framework info for ${tech.title}:`, error);
+          }
+        }
+      }
+      
+      return {
+        frameworks,
+        totalCount: frameworks.length,
+        success: true
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[HIGTools] List technologies failed:', error);
+      }
+      
+      return {
+        frameworks: [],
+        totalCount: 0,
+        success: false,
+        error: errorMessage
+      };
+    }
+  }
+
+  /**
+   * Search technical documentation symbols
+   */
+  async searchTechnicalDocumentation(args: {
+    query: string;
+    framework?: string;
+    symbolType?: string;
+    platform?: string;
+    maxResults?: number;
+  }): Promise<{
+    results: TechnicalSearchResult[];
+    total: number;
+    query: string;
+    success: boolean;
+    error?: string;
+  }> {
+    // Input validation
+    if (!args || typeof args !== 'object') {
+      throw new Error('Invalid arguments: expected object');
+    }
+    
+    const { query, framework, symbolType, platform, maxResults = 20 } = args;
+    
+    // Validate required parameters
+    if (typeof query !== 'string') {
+      throw new Error('Invalid query: must be a string');
+    }
+    
+    if (query.trim().length === 0) {
+      return {
+        results: [],
+        total: 0,
+        query: query.trim(),
+        success: true
+      };
+    }
+    
+    if (query.length > 100) {
+      throw new Error('Query too long: maximum 100 characters allowed');
+    }
+    
+    if (typeof maxResults !== 'number' || maxResults < 1 || maxResults > 100) {
+      throw new Error('Invalid maxResults: must be a number between 1 and 100');
+    }
+    
+    try {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[HIGTools] Searching technical documentation for: "${query}"`);
+      }
+      
+      let results: TechnicalSearchResult[];
+      
+      if (framework) {
+        // Search within specific framework
+        results = await this.appleDevAPIClient.searchFramework(framework, query.trim(), {
+          symbolType,
+          platform,
+          maxResults,
+          includeRelevanceScore: true
+        });
+      } else {
+        // Global search across all frameworks
+        results = await this.appleDevAPIClient.searchGlobal(query.trim(), {
+          symbolType,
+          platform,
+          maxResults,
+          includeRelevanceScore: true
+        });
+      }
+      
+      // Add type field to results
+      const typedResults = results.map(result => ({
+        ...result,
+        type: 'technical' as const
+      }));
+      
+      return {
+        results: typedResults,
+        total: typedResults.length,
+        query: query.trim(),
+        success: true
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`[HIGTools] Technical search failed for "${query}":`, error);
+      }
+      
+      return {
+        results: [],
+        total: 0,
+        query: query.trim(),
+        success: false,
+        error: errorMessage
+      };
+    }
+  }
+
+  /**
+   * Check for updates across all content sources
+   */
+  async checkUpdates(args: CheckUpdatesArgs = {}): Promise<{
+    updates: any[];
+    notifications: any[];
+    summary: string;
+    hasUpdates: boolean;
+    gitStatus?: any;
+    success: boolean;
+    error?: string;
+  }> {
+    try {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[HIGTools] Checking for updates...`);
+      }
+      
+      const result = await this.updateCheckerService.checkUpdates(args);
+      
+      // Also get detailed git status
+      let gitStatus;
+      try {
+        gitStatus = await this.updateCheckerService.getGitStatus();
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[HIGTools] Could not get git status:', error);
+        }
+      }
+      
+      return {
+        ...result,
+        gitStatus,
+        success: true
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[HIGTools] Update check failed:', error);
+      }
+      
+      return {
+        updates: [],
+        notifications: [{
+          type: 'error',
+          message: `Update check failed: ${errorMessage}`,
+          actionRequired: false
+        }],
+        summary: '❌ Update check failed',
+        hasUpdates: false,
+        success: false,
+        error: errorMessage
+      };
+    }
+  }
+
+  /**
    * Extract enhanced snippet with more context
    */
   private extractEnhancedSnippet(content: string, query: string, maxLength: number = 300): string {
@@ -633,6 +948,89 @@ export class HIGToolProvider {
     const snippet = content.substring(start, end);
 
     return (start > 0 ? '...' : '') + snippet + (end < content.length ? '...' : '');
+  }
+
+  /**
+   * Extract design-relevant terms from technical symbols for cross-referencing
+   */
+  private extractDesignRelevantTerms(symbol: string): string {
+    const symbolLower = symbol.toLowerCase();
+    
+    // Map technical symbols to design-relevant terms
+    const designMappings: Record<string, string[]> = {
+      'button': ['button', 'buttons', 'interactive', 'touch target'],
+      'uibutton': ['button', 'buttons', 'interactive', 'touch target'],
+      'view': ['layout', 'view', 'container', 'hierarchy'],
+      'uiview': ['layout', 'view', 'container', 'hierarchy'],
+      'label': ['text', 'typography', 'labels', 'content'],
+      'uilabel': ['text', 'typography', 'labels', 'content'],
+      'textfield': ['input', 'text field', 'form', 'data entry'],
+      'uitextfield': ['input', 'text field', 'form', 'data entry'],
+      'textview': ['text', 'content', 'editing', 'input'],
+      'uitextview': ['text', 'content', 'editing', 'input'],
+      'imageview': ['image', 'visual', 'media', 'content'],
+      'uiimageview': ['image', 'visual', 'media', 'content'],
+      'navigationbar': ['navigation', 'navigation bar', 'hierarchy'],
+      'uinavigationbar': ['navigation', 'navigation bar', 'hierarchy'],
+      'tabbar': ['tab bar', 'navigation', 'organization'],
+      'uitabbar': ['tab bar', 'navigation', 'organization'],
+      'scrollview': ['scroll', 'content', 'layout', 'navigation'],
+      'uiscrollview': ['scroll', 'content', 'layout', 'navigation'],
+      'tableview': ['table', 'list', 'data', 'organization'],
+      'uitableview': ['table', 'list', 'data', 'organization'],
+      'collectionview': ['collection', 'grid', 'layout', 'organization'],
+      'uicollectionview': ['collection', 'grid', 'layout', 'organization'],
+      'picker': ['picker', 'selection', 'input', 'data entry'],
+      'uipicker': ['picker', 'selection', 'input', 'data entry'],
+      'switch': ['toggle', 'switch', 'control', 'input'],
+      'uiswitch': ['toggle', 'switch', 'control', 'input'],
+      'slider': ['slider', 'control', 'input', 'range'],
+      'uislider': ['slider', 'control', 'input', 'range'],
+      'stepper': ['stepper', 'control', 'input', 'increment'],
+      'uistepper': ['stepper', 'control', 'input', 'increment'],
+      'segmentedcontrol': ['segmented control', 'selection', 'navigation'],
+      'uisegmentedcontrol': ['segmented control', 'selection', 'navigation'],
+      'activityindicator': ['loading', 'progress', 'feedback'],
+      'uiactivityindicator': ['loading', 'progress', 'feedback'],
+      'progressview': ['progress', 'feedback', 'loading'],
+      'uiprogressview': ['progress', 'feedback', 'loading'],
+      'alert': ['alert', 'dialog', 'notification', 'feedback'],
+      'uialert': ['alert', 'dialog', 'notification', 'feedback'],
+      'actionsheet': ['action sheet', 'menu', 'selection'],
+      'uiactionsheet': ['action sheet', 'menu', 'selection'],
+      'popover': ['popover', 'overlay', 'context'],
+      'uipopover': ['popover', 'overlay', 'context'],
+      'toolbar': ['toolbar', 'navigation', 'actions'],
+      'uitoolbar': ['toolbar', 'navigation', 'actions'],
+      'searchbar': ['search', 'input', 'discovery'],
+      'uisearchbar': ['search', 'input', 'discovery'],
+      'pagecontrol': ['page control', 'navigation', 'paging'],
+      'uipagecontrol': ['page control', 'navigation', 'paging']
+    };
+    
+    // Check for direct mappings
+    for (const [tech, design] of Object.entries(designMappings)) {
+      if (symbolLower.includes(tech)) {
+        return design.join(' ');
+      }
+    }
+    
+    // Extract common UI-related terms
+    const uiTerms = [
+      'button', 'view', 'label', 'text', 'image', 'navigation', 'tab', 'scroll',
+      'table', 'collection', 'picker', 'switch', 'slider', 'stepper', 'control',
+      'activity', 'progress', 'alert', 'action', 'popover', 'toolbar', 'search',
+      'page', 'menu', 'modal', 'sheet', 'bar', 'field', 'indicator'
+    ];
+    
+    const foundTerms = uiTerms.filter(term => symbolLower.includes(term));
+    
+    if (foundTerms.length > 0) {
+      return foundTerms.join(' ');
+    }
+    
+    // Fallback to the original symbol name
+    return symbol;
   }
 
 

@@ -27,6 +27,8 @@ import { CrawleeHIGService } from './services/crawlee-hig.service.js';
 import { HIGResourceProvider } from './resources.js';
 import { HIGToolProvider } from './tools.js';
 import { HIGStaticContentProvider } from './static-content.js';
+import { AppleDevAPIClient } from './services/apple-dev-api-client.service.js';
+import { UpdateCheckerService } from './services/update-checker.service.js';
 
 class AppleHIGMCPServer {
   private server: Server;
@@ -35,14 +37,16 @@ class AppleHIGMCPServer {
   private staticContentProvider: HIGStaticContentProvider;
   private resourceProvider: HIGResourceProvider;
   private toolProvider: HIGToolProvider;
+  private appleDevAPIClient: AppleDevAPIClient;
+  private updateCheckerService: UpdateCheckerService;
   private useStaticContent: boolean = false;
 
   constructor() {
     this.server = new Server(
       {
-        name: 'Apple Human Interface Guidelines',
-        version: '1.0.7',
-        description: 'Comprehensive access to Apple\'s design guidelines for iOS, macOS, watchOS, tvOS, and visionOS development',
+        name: 'Apple Ecosystem MCP',
+        version: '2.0.0',
+        description: 'Complete Apple development guidance: Human Interface Guidelines (design) + Technical Documentation (API) for iOS, macOS, watchOS, tvOS, and visionOS',
       },
       {
         capabilities: {
@@ -67,8 +71,10 @@ class AppleHIGMCPServer {
     this.cache = new HIGCache(3600); // 1 hour default TTL
     this.crawleeService = new CrawleeHIGService(this.cache);
     this.staticContentProvider = new HIGStaticContentProvider();
+    this.appleDevAPIClient = new AppleDevAPIClient(this.cache);
+    this.updateCheckerService = new UpdateCheckerService(this.cache, this.staticContentProvider);
     this.resourceProvider = new HIGResourceProvider(this.crawleeService, this.cache, this.staticContentProvider);
-    this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.resourceProvider, this.staticContentProvider);
+    this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.resourceProvider, this.staticContentProvider, this.appleDevAPIClient);
 
     this.setupHandlers();
   }
@@ -340,6 +346,117 @@ class AppleHIGMCPServer {
               required: ['component', 'platform'],
             },
           },
+          {
+            name: 'get_technical_documentation',
+            description: 'Get Apple API documentation for frameworks and symbols with optional design guidance',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                path: {
+                  type: 'string',
+                  description: 'Documentation path (e.g., "documentation/SwiftUI/Button") or symbol path',
+                },
+                includeDesignGuidance: {
+                  type: 'boolean',
+                  description: 'Include related design guidelines from HIG',
+                  default: false,
+                },
+                includeRelatedSymbols: {
+                  type: 'boolean',
+                  description: 'Include related symbols and references',
+                  default: true,
+                },
+                includeCodeExamples: {
+                  type: 'boolean',
+                  description: 'Include code examples when available',
+                  default: true,
+                },
+              },
+              required: ['path'],
+            },
+          },
+          {
+            name: 'list_technologies',
+            description: 'List available Apple technologies, frameworks, and symbols',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                includeDesignMapping: {
+                  type: 'boolean',
+                  description: 'Include related HIG design sections',
+                  default: false,
+                },
+                platform: {
+                  type: 'string',
+                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
+                  description: 'Filter by target platform',
+                },
+                category: {
+                  type: 'string',
+                  enum: ['framework', 'symbol', 'all'],
+                  description: 'Filter by technology category',
+                  default: 'all',
+                },
+              },
+              required: [],
+            },
+          },
+          {
+            name: 'search_technical_documentation',
+            description: 'Search Apple technical documentation with wildcard support',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                query: {
+                  type: 'string',
+                  description: 'Search query (supports wildcards: * and ?)',
+                },
+                framework: {
+                  type: 'string',
+                  description: 'Search within specific framework only',
+                },
+                symbolType: {
+                  type: 'string',
+                  description: 'Filter by symbol type (class, protocol, struct, etc.)',
+                },
+                platform: {
+                  type: 'string',
+                  description: 'Filter by platform (iOS, macOS, etc.)',
+                },
+                maxResults: {
+                  type: 'number',
+                  description: 'Maximum number of results (default: 20)',
+                  minimum: 1,
+                  maximum: 100,
+                },
+              },
+              required: ['query'],
+            },
+          },
+          {
+            name: 'check_updates',
+            description: 'Check for available updates for git repository, static content, and API documentation',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                sources: {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: ['git-repository', 'hig-static', 'api-documentation'],
+                  },
+                  description: 'Sources to check for updates',
+                  default: ['git-repository', 'hig-static', 'api-documentation'],
+                },
+                includeChangelog: {
+                  type: 'boolean',
+                  description: 'Include changelog information when available',
+                  default: false,
+                },
+              },
+              required: [],
+            },
+          },
         ],
       };
     });
@@ -379,6 +496,26 @@ class AppleHIGMCPServer {
 
           case 'get_accessibility_requirements': {
             result = await this.toolProvider.getAccessibilityRequirements(args as any);
+            break;
+          }
+
+          case 'get_technical_documentation': {
+            result = await this.toolProvider.getTechnicalDocumentation(args as any);
+            break;
+          }
+
+          case 'list_technologies': {
+            result = await this.toolProvider.listTechnologies(args as any);
+            break;
+          }
+
+          case 'search_technical_documentation': {
+            result = await this.toolProvider.searchTechnicalDocumentation(args as any);
+            break;
+          }
+
+          case 'check_updates': {
+            result = await this.toolProvider.checkUpdates(args as any);
             break;
           }
 
@@ -424,8 +561,11 @@ class AppleHIGMCPServer {
     try {
       // Development-only startup logging
       if (process.env.NODE_ENV === 'development') {
-        console.log('🍎 Apple Human Interface Guidelines MCP Server starting...');
-        console.log('📖 Providing up-to-date access to Apple design guidelines');
+        console.log('🍎 Apple Ecosystem MCP Server starting...');
+        console.log('📖 Providing complete Apple development guidance:');
+        console.log('   • Human Interface Guidelines (design principles)');
+        console.log('   • Technical Documentation (API reference)');
+        console.log('   • Unified search across both sources');
         console.log('ℹ️  This server respects Apple\'s content and provides fair use access');
         console.log('ℹ️  for educational and development purposes.');
         console.log('');
@@ -434,17 +574,25 @@ class AppleHIGMCPServer {
       // Initialize the server components
       await this.initialize();
 
+      // Check for updates on startup (non-blocking)
+      this.updateCheckerService.checkAndNotifyUpdates().catch(() => {
+        // Silent fail - don't crash on startup update check issues
+      });
+
       const transport = new StdioServerTransport();
       await this.server.connect(transport);
       
       if (process.env.NODE_ENV === 'development') {
-        console.log(`🚀 Apple HIG MCP Server is ready! (Mode: ${this.useStaticContent ? 'Static Content' : 'Live Scraping'})`);
+        console.log(`🚀 Apple Ecosystem MCP Server is ready!`);
+        console.log(`   • Design Guidelines: ${this.useStaticContent ? 'Static Content' : 'Live Scraping'}`);
+        console.log(`   • Technical Documentation: Apple API (cached)`);
+        console.log(`   • Tools: ${this.toolProvider ? '7 tools available' : 'Initializing...'}`);
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       
       // Always log startup errors
-      console.error('💥 Failed to start Apple HIG MCP Server:', errorMessage);
+      console.error('💥 Failed to start Apple Ecosystem MCP Server:', errorMessage);
       
       if (process.env.NODE_ENV === 'development') {
         console.error('Full error details:', error);
@@ -457,12 +605,12 @@ class AppleHIGMCPServer {
 
 // Handle graceful shutdown
 process.on('SIGINT', async () => {
-  // console.log('\n🛑 Shutting down Apple HIG MCP Server...');
+  // console.log('\n🛑 Shutting down Apple Ecosystem MCP Server...');
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-  // console.log('\n🛑 Shutting down Apple HIG MCP Server...');
+  // console.log('\n🛑 Shutting down Apple Ecosystem MCP Server...');
   process.exit(0);
 });
 
@@ -471,7 +619,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   // Always start the server regardless of arguments
   const server = new AppleHIGMCPServer();
   server.run().catch((error) => {
-    console.error('💥 Failed to start Apple HIG MCP Server:', error);
+    console.error('💥 Failed to start Apple Ecosystem MCP Server:', error);
     process.exit(1);
   });
 }
