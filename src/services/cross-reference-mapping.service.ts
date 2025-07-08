@@ -293,7 +293,6 @@ export class CrossReferenceMappingService {
    * Find related components for cross-referencing
    */
   findRelatedComponents(componentName: string): string[] {
-    const related: string[] = [];
     const normalizedName = this.normalizeComponentName(componentName);
     
     // Define component relationships
