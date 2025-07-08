@@ -1,14 +1,14 @@
-# 🍎 Apple HIG MCP Server
+# 🍎 Apple Dev MCP Server
 
-[![Health Check](https://github.com/tmaasen/apple-hig-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/tmaasen/apple-hig-mcp/actions/workflows/ci.yml)
-[![npm version](https://img.shields.io/npm/v/apple-hig-mcp.svg)](https://www.npmjs.com/package/apple-hig-mcp)
+[![Health Check](https://github.com/tmaasen/apple-dev-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/tmaasen/apple-dev-mcp/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/apple-dev-mcp.svg)](https://www.npmjs.com/package/apple-dev-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
 
-A high-performance [Model Context Protocol](https://modelcontextprotocol.io/) server that provides instant access to Apple's Human Interface Guidelines with comprehensive design system coverage.
+A comprehensive [Model Context Protocol](https://modelcontextprotocol.io/) server that provides complete Apple development guidance, combining Human Interface Guidelines (design principles) with Technical Documentation (API reference) for all Apple platforms.
 
-Perfect for developers using AI-assisted development who want fast, reliable access to Apple's design guidelines while building iOS, macOS, watchOS, tvOS, and visionOS applications.
+Perfect for developers using AI-assisted development who want unified access to both Apple's design guidelines and technical documentation while building iOS, macOS, watchOS, tvOS, and visionOS applications.
 
 ## 📖 Table of Contents
 
@@ -35,22 +35,48 @@ Perfect for developers using AI-assisted development who want fast, reliable acc
 
 ## ✨ Features
 
-- ⚡ **Ultra-Fast**: Instant responses via pre-generated static content (no scraping delays)
-- 🔍 **Smart Search**: Advanced search with pre-built indices for sub-second results
-- 📱 **Multi-Platform**: Comprehensive coverage of all Apple platforms (iOS, macOS, watchOS, tvOS, visionOS)
-- 🎨 **Current Design System**: Always up-to-date with Apple's latest design language
-- 🔄 **Auto-Updated**: Content refreshed every 4 months via GitHub Actions
-- 🛡️ **Highly Reliable**: 99.9% uptime with intelligent fallback to live scraping
-- 🤖 **AI-Optimized**: Clean markdown format optimized for AI consumption
-- 📊 **Scalable**: Handles unlimited concurrent users with consistent performance
-- 🙏 **Respectful**: Follows fair use principles with proper Apple attribution
+### 🎨 Complete Apple Ecosystem Coverage
+- **Design Guidelines**: Human Interface Guidelines for all Apple platforms
+- **Technical Documentation**: Apple API documentation and technical references
+- **Content Fusion**: Intelligent combination of design principles with technical implementation
+- **Cross-Platform Support**: iOS, macOS, watchOS, tvOS, and visionOS
+
+### ⚡ Performance & Reliability
+- **Ultra-Fast**: Instant responses via pre-generated static content (no scraping delays)
+- **Smart Search**: Advanced search with pre-built indices and wildcard pattern support
+- **Intelligent Fallback**: 99.9% uptime with graceful degradation to live scraping
+- **Scalable**: Handles unlimited concurrent users with consistent performance
+
+### 🔍 Advanced Search Capabilities
+- **Unified Search**: Search across both design and technical content simultaneously
+- **Wildcard Patterns**: Support for * and ? pattern matching
+- **Cross-References**: Intelligent mapping between design concepts and technical implementations
+- **Enhanced Keyword Search**: Synonym expansion and context-aware relevance scoring
+
+### 🚀 AI-Powered Development Tools
+- **Fused Guidance**: Comprehensive guides combining design principles with technical implementation
+- **Implementation Guides**: Step-by-step guides from design to deployment
+- **Code Examples**: Real SwiftUI, UIKit, and AppKit code samples
+- **Best Practices**: Platform-specific guidance and common pitfall avoidance
+
+### 🔄 Always Current
+- **Auto-Updated**: Content refreshed every 4 months via GitHub Actions
+- **Current Design System**: Always up-to-date with Apple's latest design language
+- **API Documentation**: Latest technical documentation and framework updates
+- **Quality Assurance**: Comprehensive validation and testing pipeline
+
+### 🤖 AI-Optimized
+- **Clean Markdown**: Optimized format for AI consumption
+- **Structured Data**: Consistent formatting across all content types
+- **MCP Integration**: Native Model Context Protocol support
+- **Respectful Usage**: Follows fair use principles with proper Apple attribution
 
 ## 🚀 Quick Start
 
 ### Installation
 
 ```bash
-npm install -g apple-hig-mcp
+npm install -g apple-dev-mcp
 ```
 
 ## 🔧 Platform-Specific Setup
@@ -63,9 +89,9 @@ Add to your Claude Desktop configuration file (`claude_desktop_config.json`):
 ```json
 {
   "mcpServers": {
-    "Apple HIG": {
+    "Apple Dev": {
       "command": "node",
-      "args": ["/usr/local/lib/node_modules/apple-hig-mcp/dist/server.js"]
+      "args": ["/usr/local/lib/node_modules/apple-dev-mcp/dist/server.js"]
     }
   }
 }
@@ -75,9 +101,9 @@ Add to your Claude Desktop configuration file (`claude_desktop_config.json`):
 ```json
 {
   "mcpServers": {
-    "Apple HIG": {
+    "Apple Dev": {
       "command": "node",
-      "args": ["C:\\Users\\YourUsername\\AppData\\Roaming\\npm\\node_modules\\apple-hig-mcp\\dist\\server.js"]
+      "args": ["C:\\Users\\YourUsername\\AppData\\Roaming\\npm\\node_modules\\apple-dev-mcp\\dist\\server.js"]
     }
   }
 }
@@ -88,10 +114,10 @@ Add to your Claude Desktop configuration file (`claude_desktop_config.json`):
 #### Method 1: Command Line (Recommended)
 ```bash
 # For local project scope
-claude mcp add "Apple HIG" node /usr/local/lib/node_modules/apple-hig-mcp/dist/server.js
+claude mcp add "Apple Dev" node /usr/local/lib/node_modules/apple-dev-mcp/dist/server.js
 
 # For user-wide scope (available in all projects)
-claude mcp add -s user "Apple HIG" node /usr/local/lib/node_modules/apple-hig-mcp/dist/server.js
+claude mcp add -s user "Apple Dev" node /usr/local/lib/node_modules/apple-dev-mcp/dist/server.js
 ```
 
 #### Method 2: Project Configuration File  
@@ -99,9 +125,9 @@ Create `.mcp.json` in your project root:
 ```json
 {
   "mcpServers": {
-    "Apple HIG": {
+    "Apple Dev": {
       "command": "node",
-      "args": ["/usr/local/lib/node_modules/apple-hig-mcp/dist/server.js"]
+      "args": ["/usr/local/lib/node_modules/apple-dev-mcp/dist/server.js"]
     }
   }
 }
@@ -109,7 +135,7 @@ Create `.mcp.json` in your project root:
 
 #### Method 3: NPX (Alternative)
 ```bash
-claude mcp add "Apple HIG" npx -- -y apple-hig-mcp
+claude mcp add "Apple Dev" npx -- -y apple-dev-mcp
 ```
 
 ### Cursor IDE
@@ -120,9 +146,9 @@ Create `.cursor/mcp.json` in your project root, or go to the Cursor settings whe
 ```json
 {
   "mcpServers": {
-    "Apple HIG": {
+    "Apple Dev": {
       "command": "node",
-      "args": ["/usr/local/lib/node_modules/apple-hig-mcp/dist/server.js"]
+      "args": ["/usr/local/lib/node_modules/apple-dev-mcp/dist/server.js"]
     }
   }
 }
@@ -132,9 +158,9 @@ Create `.cursor/mcp.json` in your project root, or go to the Cursor settings whe
 ```json
 {
   "mcpServers": {
-    "Apple HIG": {
+    "Apple Dev": {
       "command": "node",
-      "args": ["C:\\Users\\YourUsername\\AppData\\Roaming\\npm\\node_modules\\apple-hig-mcp\\dist\\server.js"]
+      "args": ["C:\\Users\\YourUsername\\AppData\\Roaming\\npm\\node_modules\\apple-dev-mcp\\dist\\server.js"]
     }
   }
 }
@@ -142,7 +168,7 @@ Create `.cursor/mcp.json` in your project root, or go to the Cursor settings whe
 
 Find your exact path with:
 ```bash
-npm list -g apple-hig-mcp
+npm list -g apple-dev-mcp
 ```
 
 ### Windsurf IDE
@@ -159,9 +185,9 @@ npm list -g apple-hig-mcp
 ```json
 {
   "mcpServers": {
-    "Apple HIG": {
+    "Apple Dev": {
       "command": "node",
-      "args": ["/usr/local/lib/node_modules/apple-hig-mcp/dist/server.js"]
+      "args": ["/usr/local/lib/node_modules/apple-dev-mcp/dist/server.js"]
     }
   }
 }
@@ -171,9 +197,9 @@ npm list -g apple-hig-mcp
 ```json
 {
   "mcpServers": {
-    "Apple HIG": {
+    "Apple Dev": {
       "command": "node",
-      "args": ["C:\\Users\\YourUsername\\AppData\\Roaming\\npm\\node_modules\\apple-hig-mcp\\dist\\server.js"]
+      "args": ["C:\\Users\\YourUsername\\AppData\\Roaming\\npm\\node_modules\\apple-dev-mcp\\dist\\server.js"]
     }
   }
 }
@@ -192,9 +218,9 @@ Create `.vscode/mcp.json` in your workspace:
 ```json
 {
   "mcpServers": {
-    "Apple HIG": {
+    "Apple Dev": {
       "command": "node",
-      "args": ["/usr/local/lib/node_modules/apple-hig-mcp/dist/server.js"]
+      "args": ["/usr/local/lib/node_modules/apple-dev-mcp/dist/server.js"]
     }
   }
 }
@@ -204,9 +230,9 @@ Create `.vscode/mcp.json` in your workspace:
 ```json
 {
   "mcpServers": {
-    "Apple HIG": {
+    "Apple Dev": {
       "command": "node",
-      "args": ["C:\\Users\\YourUsername\\AppData\\Roaming\\npm\\node_modules\\apple-hig-mcp\\dist\\server.js"]
+      "args": ["C:\\Users\\YourUsername\\AppData\\Roaming\\npm\\node_modules\\apple-dev-mcp\\dist\\server.js"]
     }
   }
 }
@@ -232,9 +258,9 @@ For development or debugging, add environment variables:
 ```json
 {
   "mcpServers": {
-    "Apple HIG": {
+    "Apple Dev": {
       "command": "node",
-      "args": ["/usr/local/lib/node_modules/apple-hig-mcp/dist/server.js"],
+      "args": ["/usr/local/lib/node_modules/apple-dev-mcp/dist/server.js"],
       "env": {
         "NODE_ENV": "development",
         "SEARCH_CONFIG": "keyword-optimized"
@@ -258,7 +284,7 @@ For development or debugging, add environment variables:
 Test the server interactively:
 
 ```bash
-npx @modelcontextprotocol/inspector apple-hig-mcp
+npx @modelcontextprotocol/inspector apple-dev-mcp
 ```
 
 ## 🔧 Development Setup
@@ -305,9 +331,13 @@ hig://ios/navigation - iOS navigation patterns
 hig://updates/latest - Latest HIG updates and changes
 ```
 
-### MCP Tools
+### MCP Tools (13 Available)
 
-#### Search Guidelines
+The Apple Dev MCP server provides 13 tools available across four categories:
+
+#### 🎨 Design Guidelines Tools
+
+**Search Guidelines**
 ```json
 {
   "name": "search_guidelines",
@@ -320,7 +350,7 @@ hig://updates/latest - Latest HIG updates and changes
 }
 ```
 
-#### Get Component Specifications
+**Get Component Specifications**
 ```json
 {
   "name": "get_component_spec",
@@ -331,25 +361,151 @@ hig://updates/latest - Latest HIG updates and changes
 }
 ```
 
-#### Compare Across Platforms
+**Get Design Tokens**
 ```json
 {
-  "name": "compare_platforms",
+  "name": "get_design_tokens",
   "arguments": {
-    "componentName": "Button",
-    "platforms": ["iOS", "macOS", "watchOS"]
+    "component": "Button",
+    "platform": "iOS",
+    "tokenType": "all"
   }
 }
 ```
 
-#### Get Latest Updates
+**Get Accessibility Requirements**
 ```json
 {
-  "name": "get_latest_updates",
+  "name": "get_accessibility_requirements",
   "arguments": {
-    "since": "2025-06-01",
+    "component": "Button",
+    "platform": "iOS"
+  }
+}
+```
+
+#### 🔧 Technical Documentation Tools
+
+**Get Technical Documentation**
+```json
+{
+  "name": "get_technical_documentation",
+  "arguments": {
+    "path": "documentation/SwiftUI/Button",
+    "includeDesignGuidance": true,
+    "includeCodeExamples": true
+  }
+}
+```
+
+**List Technologies**
+```json
+{
+  "name": "list_technologies",
+  "arguments": {
     "platform": "iOS",
-    "limit": 20
+    "category": "framework",
+    "includeDesignMapping": true
+  }
+}
+```
+
+**Search Technical Documentation**
+```json
+{
+  "name": "search_technical_documentation",
+  "arguments": {
+    "query": "Button*",
+    "framework": "SwiftUI",
+    "platform": "iOS",
+    "maxResults": 20
+  }
+}
+```
+
+#### 🔄 Unified & Advanced Search Tools
+
+**Unified Search**
+```json
+{
+  "name": "search_unified",
+  "arguments": {
+    "query": "navigation patterns",
+    "platform": "iOS",
+    "includeDesign": true,
+    "includeTechnical": true,
+    "maxResults": 20
+  }
+}
+```
+
+**Wildcard Search**
+```json
+{
+  "name": "search_wildcard",
+  "arguments": {
+    "pattern": "Button*Style",
+    "searchType": "both",
+    "platform": "iOS",
+    "maxResults": 25
+  }
+}
+```
+
+**Get Cross-References**
+```json
+{
+  "name": "get_cross_references",
+  "arguments": {
+    "query": "Button",
+    "type": "component",
+    "platform": "iOS",
+    "includeRelated": true
+  }
+}
+```
+
+**Check Updates**
+```json
+{
+  "name": "check_updates",
+  "arguments": {
+    "sources": ["git-repository", "hig-static", "api-documentation"],
+    "includeChangelog": true
+  }
+}
+```
+
+#### 🚀 AI-Powered Content Fusion Tools
+
+**Generate Fused Guidance**
+```json
+{
+  "name": "generate_fused_guidance",
+  "arguments": {
+    "component": "Button",
+    "platform": "iOS",
+    "framework": "SwiftUI",
+    "complexity": "intermediate",
+    "includeCodeExamples": true,
+    "includeAccessibility": true,
+    "includeStepByStep": true
+  }
+}
+```
+
+**Generate Implementation Guide**
+```json
+{
+  "name": "generate_implementation_guide",
+  "arguments": {
+    "component": "Navigation",
+    "platform": "macOS",
+    "framework": "AppKit",
+    "useCase": "document-based app",
+    "includeDesignPhase": true,
+    "includeImplementationPhase": true,
+    "includeValidationPhase": true
   }
 }
 ```
@@ -378,8 +534,8 @@ We welcome contributions! This project relies on community help for maintenance,
 
 ### Quick Start for Contributors
 
-1. Check [open issues](https://github.com/tannermaasen/apple-hig-mcp/issues) for scraper failures
-2. Use the [scraper issue template](https://github.com/tannermaasen/apple-hig-mcp/issues/new?template=scraper_issue.md) to report problems
+1. Check [open issues](https://github.com/tannermaasen/apple-dev-mcp/issues) for scraper failures
+2. Use the [scraper issue template](https://github.com/tannermaasen/apple-dev-mcp/issues/new?template=scraper_issue.md) to report problems
 3. See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines
 
 
@@ -436,14 +592,36 @@ npm run dev           # Start development server
 | `hig://<topic>` | Topic-specific guidelines (buttons, materials, etc.) |
 | `hig://updates/latest` | Latest HIG changes and additions |
 
-### Tools
+### Tools (13 Available)
 
+#### Design Guidelines Tools
 | Tool | Description | Key Arguments |
 |------|-------------|---------------|
 | `search_guidelines` | Search HIG content with enhanced keyword matching | `query`, `platform`, `category`, `limit` |
-| `get_component_spec` | Get component specifications | `componentName`, `platform` |
-| `get_design_tokens` | Get design system values | `component`, `platform`, `tokenType` |
-| `get_accessibility_requirements` | Get accessibility guidelines | `component`, `platform` |
+| `get_component_spec` | Get detailed component specifications | `componentName`, `platform` |
+| `get_design_tokens` | Get design system values (colors, spacing, typography) | `component`, `platform`, `tokenType` |
+| `get_accessibility_requirements` | Get accessibility guidelines for components | `component`, `platform` |
+
+#### Technical Documentation Tools
+| Tool | Description | Key Arguments |
+|------|-------------|---------------|
+| `get_technical_documentation` | Get Apple API documentation and symbols | `path`, `includeDesignGuidance`, `includeCodeExamples` |
+| `list_technologies` | List available Apple frameworks and technologies | `platform`, `category`, `includeDesignMapping` |
+| `search_technical_documentation` | Search technical docs with wildcard support | `query`, `framework`, `platform`, `maxResults` |
+
+#### Unified & Advanced Search Tools
+| Tool | Description | Key Arguments |
+|------|-------------|---------------|
+| `search_unified` | Search across both design and technical content | `query`, `platform`, `includeDesign`, `includeTechnical` |
+| `search_wildcard` | Advanced pattern search with * and ? wildcards | `pattern`, `searchType`, `platform`, `maxResults` |
+| `get_cross_references` | Get mappings between design and technical content | `query`, `type`, `platform`, `includeRelated` |
+| `check_updates` | Check for content and repository updates | `sources`, `includeChangelog` |
+
+#### AI-Powered Content Fusion Tools
+| Tool | Description | Key Arguments |
+|------|-------------|---------------|
+| `generate_fused_guidance` | Generate comprehensive design + technical guidance | `component`, `platform`, `framework`, `complexity` |
+| `generate_implementation_guide` | Generate step-by-step implementation guides | `component`, `platform`, `framework`, `useCase` |
 
 ## 🐛 Troubleshooting
 
@@ -452,12 +630,12 @@ npm run dev           # Start development server
 **Scraper not working?**
 - Check if Apple's website is accessible
 - Look for recent website structure changes
-- Check [existing issues](https://github.com/tannermaasen/apple-hig-mcp/issues)
+- Check [existing issues](https://github.com/tannermaasen/apple-dev-mcp/issues)
 
 **Empty or incomplete content?**
 - Clear cache and retry
 - Check network connectivity
-- Report as a [scraper issue](https://github.com/tannermaasen/apple-hig-mcp/issues/new?template=scraper_issue.md)
+- Report as a [scraper issue](https://github.com/tannermaasen/apple-dev-mcp/issues/new?template=scraper_issue.md)
 
 **Performance issues?**
 - Check cache configuration
@@ -467,6 +645,7 @@ npm run dev           # Start development server
 
 ## 🙏 Acknowledgments
 
+- [MightyDillah](https://github.com/MightyDillah/apple-doc-mcp) for another great Apple Development MCP that I gained inspiration from. Thank you!
 - Apple Inc. for creating comprehensive design guidelines
 - [Model Context Protocol](https://modelcontextprotocol.io/) team for the excellent framework
 - Open source community for contributions and maintenance
