@@ -10,6 +10,7 @@ import { AppleDevAPIClient } from './services/apple-dev-api-client.service.js';
 import { UpdateCheckerService } from './services/update-checker.service.js';
 import { WildcardSearchService } from './services/wildcard-search.service.js';
 import { CrossReferenceMappingService } from './services/cross-reference-mapping.service.js';
+import { ContentFusionService } from './services/content-fusion.service.js';
 import type { 
   SearchGuidelinesArgs, 
   GetComponentSpecArgs, 
@@ -35,6 +36,7 @@ export class HIGToolProvider {
   private updateCheckerService: UpdateCheckerService;
   private wildcardSearchService: WildcardSearchService;
   private crossReferenceMappingService: CrossReferenceMappingService;
+  private contentFusionService: ContentFusionService;
 
   constructor(crawleeService: CrawleeHIGService, cache: HIGCache, resourceProvider: HIGResourceProvider, staticContentProvider?: HIGStaticContentProvider, appleDevAPIClient?: AppleDevAPIClient) {
     this.crawleeService = crawleeService;
@@ -45,6 +47,7 @@ export class HIGToolProvider {
     this.updateCheckerService = new UpdateCheckerService(cache, staticContentProvider);
     this.wildcardSearchService = new WildcardSearchService();
     this.crossReferenceMappingService = new CrossReferenceMappingService();
+    this.contentFusionService = new ContentFusionService();
   }
 
   /**
@@ -2146,6 +2149,388 @@ export class HIGToolProvider {
 
     } catch (error) {
       throw new Error(`Cross-reference lookup failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * Generate fused guidance combining design principles with technical implementation
+   * Phase 3: Comprehensive content fusion for end-to-end developer guidance
+   */
+  async generateFusedGuidance(args: {
+    component: string;
+    platform?: ApplePlatform;
+    framework?: string;
+    useCase?: string;
+    complexity?: 'beginner' | 'intermediate' | 'advanced';
+    includeCodeExamples?: boolean;
+    includeAccessibility?: boolean;
+    includeTestingGuidance?: boolean;
+    includeStepByStep?: boolean;
+  }): Promise<{
+    fusedContent?: {
+      id: string;
+      title: string;
+      description: string;
+      designGuidance: {
+        principles: string[];
+        bestPractices: string[];
+        doAndDonts: {
+          dos: string[];
+          donts: string[];
+        };
+        accessibility: string[];
+        visualExamples: string[];
+      };
+      technicalImplementation: {
+        frameworks: string[];
+        codeExamples: Array<{
+          framework: string;
+          language: string;
+          code: string;
+          description: string;
+        }>;
+        apiReferences: Array<{
+          symbol: string;
+          framework: string;
+          url: string;
+          description: string;
+        }>;
+        architecturalNotes: string[];
+      };
+      implementationGuide: {
+        steps: Array<{
+          stepNumber: number;
+          title: string;
+          description: string;
+          designConsiderations: string[];
+          codeSnippet?: string;
+          resources: string[];
+        }>;
+        prerequisites: string[];
+        commonPitfalls: string[];
+        testingGuidance: string[];
+      };
+      platformSpecific: {
+        [platform: string]: {
+          designAdaptations: string[];
+          implementationDifferences: string[];
+          platformBestPractices: string[];
+          codeExamples: Array<{
+            framework: string;
+            code: string;
+            description: string;
+          }>;
+        };
+      };
+      crossReferences: {
+        relatedComponents: string[];
+        designPatterns: string[];
+        technicalConcepts: string[];
+      };
+      metadata: {
+        confidence: number;
+        lastUpdated: Date;
+        sources: string[];
+        complexity: 'beginner' | 'intermediate' | 'advanced';
+        estimatedImplementationTime: string;
+      };
+    };
+    implementationGuide?: {
+      title: string;
+      overview: string;
+      designPhase: {
+        guidelines: string[];
+        decisions: Array<{
+          decision: string;
+          rationale: string;
+          alternatives: string[];
+        }>;
+        designTokens: Array<{
+          property: string;
+          value: string;
+          platform: string;
+        }>;
+      };
+      implementationPhase: {
+        setup: Array<{
+          step: string;
+          code?: string;
+          notes: string[];
+        }>;
+        coreImplementation: Array<{
+          feature: string;
+          implementation: string;
+          codeExample: string;
+          designAlignment: string[];
+        }>;
+        refinement: Array<{
+          aspect: string;
+          guidance: string;
+          codeSnippet?: string;
+        }>;
+      };
+      validationPhase: {
+        designValidation: string[];
+        functionalTesting: string[];
+        accessibilityTesting: string[];
+        performanceTesting: string[];
+      };
+    };
+    success: boolean;
+    error?: string;
+  }> {
+    const {
+      component,
+      platform = 'iOS',
+      framework,
+      useCase,
+      complexity = 'intermediate',
+      includeCodeExamples = true,
+      includeAccessibility = true,
+      includeTestingGuidance = true,
+      includeStepByStep = true
+    } = args;
+
+    // Input validation
+    if (!component || typeof component !== 'string' || component.trim().length === 0) {
+      throw new Error('Invalid component: must be a non-empty string');
+    }
+
+    if (component.length > 50) {
+      throw new Error('Component name too long: maximum 50 characters allowed');
+    }
+
+    try {
+      // First, search for design guidelines and technical documentation
+      let designResults: SearchResult[] = [];
+      let technicalResults: TechnicalSearchResult[] = [];
+
+      // Search design guidelines
+      if (this.staticContentProvider) {
+        try {
+          const designSearch = await this.searchGuidelines({
+            query: component,
+            platform,
+            limit: 5
+          });
+          designResults = designSearch.results;
+        } catch (error) {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('[HIGTools] Design search for fusion failed:', error);
+          }
+        }
+      }
+
+      // Search technical documentation
+      try {
+        const technicalSearch = await this.searchTechnicalDocumentation({
+          query: component,
+          platform,
+          framework,
+          maxResults: 5
+        });
+        technicalResults = technicalSearch.results;
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[HIGTools] Technical search for fusion failed:', error);
+        }
+      }
+
+      // If we found relevant content, generate fused guidance
+      let fusedContent;
+      let implementationGuide;
+
+      if (designResults.length > 0 || technicalResults.length > 0) {
+        // Find the best cross-reference match
+        const bestDesignResult = designResults[0];
+        const bestTechnicalResult = technicalResults[0];
+
+        if (bestDesignResult && bestTechnicalResult) {
+          // Generate cross-reference for fusion
+          const crossRefs = this.crossReferenceMappingService.findCrossReferences(
+            bestDesignResult.title,
+            bestTechnicalResult.title,
+            platform,
+            bestTechnicalResult.platforms ? [bestTechnicalResult.platforms] : undefined
+          );
+
+          const bestCrossRef = crossRefs[0] || {
+            designSection: bestDesignResult.title,
+            designUrl: bestDesignResult.url,
+            technicalSymbol: bestTechnicalResult.title,
+            technicalUrl: bestTechnicalResult.url,
+            confidence: 0.5,
+            mappingType: 'related' as const,
+            explanation: 'Inferred mapping based on search results',
+            platforms: [platform],
+            frameworks: [bestTechnicalResult.framework]
+          };
+
+          // Generate fused content
+          fusedContent = await this.contentFusionService.generateFusedContent(
+            bestDesignResult,
+            bestTechnicalResult,
+            bestCrossRef,
+            {
+              component,
+              platform,
+              framework,
+              useCase,
+              complexity,
+              includeCodeExamples,
+              includeAccessibility,
+              includeTestingGuidance
+            }
+          );
+        }
+
+        // Generate step-by-step implementation guide if requested
+        if (includeStepByStep) {
+          implementationGuide = await this.contentFusionService.generateImplementationGuide(
+            component,
+            platform,
+            framework,
+            useCase
+          );
+        }
+      }
+
+      // If no specific content found, generate generic guidance
+      if (!fusedContent && !implementationGuide) {
+        implementationGuide = await this.contentFusionService.generateImplementationGuide(
+          component,
+          platform,
+          framework,
+          useCase
+        );
+      }
+
+      return {
+        fusedContent,
+        implementationGuide,
+        success: true
+      };
+
+    } catch (error) {
+      return {
+        success: false,
+        error: `Fused guidance generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      };
+    }
+  }
+
+  /**
+   * Generate comprehensive implementation guide for a specific component
+   * Phase 3: Detailed step-by-step implementation guidance
+   */
+  async generateImplementationGuide(args: {
+    component: string;
+    platform: ApplePlatform;
+    framework?: string;
+    useCase?: string;
+    includeDesignPhase?: boolean;
+    includeImplementationPhase?: boolean;
+    includeValidationPhase?: boolean;
+  }): Promise<{
+    guide: {
+      title: string;
+      overview: string;
+      designPhase: {
+        guidelines: string[];
+        decisions: Array<{
+          decision: string;
+          rationale: string;
+          alternatives: string[];
+        }>;
+        designTokens: Array<{
+          property: string;
+          value: string;
+          platform: string;
+        }>;
+      };
+      implementationPhase: {
+        setup: Array<{
+          step: string;
+          code?: string;
+          notes: string[];
+        }>;
+        coreImplementation: Array<{
+          feature: string;
+          implementation: string;
+          codeExample: string;
+          designAlignment: string[];
+        }>;
+        refinement: Array<{
+          aspect: string;
+          guidance: string;
+          codeSnippet?: string;
+        }>;
+      };
+      validationPhase: {
+        designValidation: string[];
+        functionalTesting: string[];
+        accessibilityTesting: string[];
+        performanceTesting: string[];
+      };
+    };
+    success: boolean;
+    error?: string;
+  }> {
+    const {
+      component,
+      platform,
+      framework,
+      useCase,
+      includeDesignPhase = true,
+      includeImplementationPhase = true,
+      includeValidationPhase = true
+    } = args;
+
+    // Input validation
+    if (!component || typeof component !== 'string' || component.trim().length === 0) {
+      throw new Error('Invalid component: must be a non-empty string');
+    }
+
+    if (!platform || typeof platform !== 'string') {
+      throw new Error('Invalid platform: must be specified');
+    }
+
+    try {
+      const guide = await this.contentFusionService.generateImplementationGuide(
+        component,
+        platform,
+        framework,
+        useCase
+      );
+
+      // Filter phases based on request
+      if (!includeDesignPhase) {
+        guide.designPhase = { guidelines: [], decisions: [], designTokens: [] };
+      }
+      if (!includeImplementationPhase) {
+        guide.implementationPhase = { setup: [], coreImplementation: [], refinement: [] };
+      }
+      if (!includeValidationPhase) {
+        guide.validationPhase = { designValidation: [], functionalTesting: [], accessibilityTesting: [], performanceTesting: [] };
+      }
+
+      return {
+        guide,
+        success: true
+      };
+
+    } catch (error) {
+      return {
+        guide: {
+          title: `Failed to generate guide for ${component}`,
+          overview: 'An error occurred during guide generation',
+          designPhase: { guidelines: [], decisions: [], designTokens: [] },
+          implementationPhase: { setup: [], coreImplementation: [], refinement: [] },
+          validationPhase: { designValidation: [], functionalTesting: [], accessibilityTesting: [], performanceTesting: [] }
+        },
+        success: false,
+        error: `Implementation guide generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      };
     }
   }
 }

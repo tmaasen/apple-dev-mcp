@@ -614,6 +614,102 @@ class AppleHIGMCPServer {
               required: ['query'],
             },
           },
+          {
+            name: 'generate_fused_guidance',
+            description: 'Generate comprehensive fused guidance combining design principles with technical implementation details',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                component: {
+                  type: 'string',
+                  description: 'Component name (e.g., "Button", "Navigation Bar", "Text Field")',
+                },
+                platform: {
+                  type: 'string',
+                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
+                  description: 'Target platform for the component',
+                  default: 'iOS',
+                },
+                framework: {
+                  type: 'string',
+                  description: 'Framework to use (e.g., "SwiftUI", "UIKit", "AppKit")',
+                },
+                useCase: {
+                  type: 'string',
+                  description: 'Specific use case or context for the component',
+                },
+                complexity: {
+                  type: 'string',
+                  enum: ['beginner', 'intermediate', 'advanced'],
+                  description: 'Complexity level for the guidance',
+                  default: 'intermediate',
+                },
+                includeCodeExamples: {
+                  type: 'boolean',
+                  description: 'Include code examples in the guidance',
+                  default: true,
+                },
+                includeAccessibility: {
+                  type: 'boolean',
+                  description: 'Include accessibility guidance',
+                  default: true,
+                },
+                includeTestingGuidance: {
+                  type: 'boolean',
+                  description: 'Include testing recommendations',
+                  default: true,
+                },
+                includeStepByStep: {
+                  type: 'boolean',
+                  description: 'Include step-by-step implementation guide',
+                  default: true,
+                },
+              },
+              required: ['component'],
+            },
+          },
+          {
+            name: 'generate_implementation_guide',
+            description: 'Generate detailed step-by-step implementation guide for a specific component',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                component: {
+                  type: 'string',
+                  description: 'Component name (e.g., "Button", "Navigation Bar", "Text Field")',
+                },
+                platform: {
+                  type: 'string',
+                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
+                  description: 'Target platform for the component',
+                },
+                framework: {
+                  type: 'string',
+                  description: 'Framework to use (e.g., "SwiftUI", "UIKit", "AppKit")',
+                },
+                useCase: {
+                  type: 'string',
+                  description: 'Specific use case or context for the component',
+                },
+                includeDesignPhase: {
+                  type: 'boolean',
+                  description: 'Include design planning phase',
+                  default: true,
+                },
+                includeImplementationPhase: {
+                  type: 'boolean',
+                  description: 'Include implementation phase',
+                  default: true,
+                },
+                includeValidationPhase: {
+                  type: 'boolean',
+                  description: 'Include testing and validation phase',
+                  default: true,
+                },
+              },
+              required: ['component', 'platform'],
+            },
+          },
         ],
       };
     });
@@ -691,6 +787,16 @@ class AppleHIGMCPServer {
             break;
           }
 
+          case 'generate_fused_guidance': {
+            result = await this.toolProvider.generateFusedGuidance(args as any);
+            break;
+          }
+
+          case 'generate_implementation_guide': {
+            result = await this.toolProvider.generateImplementationGuide(args as any);
+            break;
+          }
+
           default:
             throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
         }
@@ -758,7 +864,7 @@ class AppleHIGMCPServer {
         console.log(`🚀 Apple Ecosystem MCP Server is ready!`);
         console.log(`   • Design Guidelines: ${this.useStaticContent ? 'Static Content' : 'Live Scraping'}`);
         console.log(`   • Technical Documentation: Apple API (cached)`);
-        console.log(`   • Tools: ${this.toolProvider ? '11 tools available' : 'Initializing...'}`);
+        console.log(`   • Tools: ${this.toolProvider ? '13 tools available' : 'Initializing...'}`);
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
