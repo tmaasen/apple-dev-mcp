@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an Apple Human Interface Guidelines MCP (Model Context Protocol) server that provides AI-powered access to Apple's design guidelines. It scrapes content from Apple's HIG website and serves it through MCP resources and tools for AI assistants like Claude.
+This is an Apple Dev MCP (Model Context Protocol) server that provides complete Apple development guidance, combining Human Interface Guidelines (design principles) with Technical Documentation (API reference) for all Apple platforms. It serves comprehensive content through MCP resources and tools for AI assistants like Claude.
 
 ## Development Commands
 

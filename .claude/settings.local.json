@@ -55,7 +55,8 @@
       "Bash(NODE_ENV=test npm test -- --testNamePattern=\"should filter by category\")",
       "Bash(NODE_ENV=test npm test)",
       "mcp__Apple_HIG__search_guidelines",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(sed:*)"
     ],
     "deny": []
   }

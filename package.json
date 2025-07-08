@@ -1,11 +1,11 @@
 {
-  "name": "apple-ecosystem-mcp",
+  "name": "apple-dev-mcp",
   "version": "2.0.0",
   "description": "Complete Apple development guidance: Human Interface Guidelines (design) + Technical Documentation (API) for iOS, macOS, watchOS, tvOS, and visionOS",
   "main": "dist/server.js",
   "type": "module",
   "bin": {
-    "apple-ecosystem-mcp": "dist/server.js"
+    "apple-dev-mcp": "dist/server.js"
   },
   "scripts": {
     "build": "tsc",
@@ -38,19 +38,27 @@
     "design",
     "hig",
     "human-interface-guidelines",
+    "technical-documentation",
+    "api-documentation",
+    "content-fusion",
+    "swiftui",
+    "uikit",
+    "appkit",
     "ai",
-    "developer-tools"
+    "developer-tools",
+    "unified-search",
+    "implementation-guide"
   ],
   "author": "Tanner Maasen",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tmaasen/apple-hig-mcp.git"
+    "url": "https://github.com/tmaasen/apple-dev-mcp.git"
   },
   "bugs": {
-    "url": "https://github.com/tmaasen/apple-hig-mcp/issues"
+    "url": "https://github.com/tmaasen/apple-dev-mcp/issues"
   },
-  "homepage": "https://github.com/tmaasen/apple-hig-mcp#readme",
+  "homepage": "https://github.com/tmaasen/apple-dev-mcp#readme",
   "dependencies": {
     "@crawlee/playwright": "^3.13.8",
     "@crawlee/utils": "^3.13.8",

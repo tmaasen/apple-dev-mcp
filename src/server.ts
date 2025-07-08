@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * Apple Human Interface Guidelines MCP Server
+ * Apple Dev MCP Server
  * 
- * A Model Context Protocol server that provides up-to-date access to Apple's
- * Human Interface Guidelines with comprehensive design system coverage.
+ * A Model Context Protocol server that provides complete Apple development guidance,
+ * combining Human Interface Guidelines (design) with Technical Documentation (API).
  * 
- * @version 1.0.0
+ * @version 2.0.0
  * @author Tanner Maasen
  * @license MIT
  */
@@ -44,7 +44,7 @@ class AppleHIGMCPServer {
   constructor() {
     this.server = new Server(
       {
-        name: 'Apple Ecosystem MCP',
+        name: 'Apple Dev MCP',
         version: '2.0.0',
         description: 'Complete Apple development guidance: Human Interface Guidelines (design) + Technical Documentation (API) for iOS, macOS, watchOS, tvOS, and visionOS',
       },
@@ -839,7 +839,7 @@ class AppleHIGMCPServer {
     try {
       // Development-only startup logging
       if (process.env.NODE_ENV === 'development') {
-        console.log('🍎 Apple Ecosystem MCP Server starting...');
+        console.log('🍎 Apple Dev MCP Server starting...');
         console.log('📖 Providing complete Apple development guidance:');
         console.log('   • Human Interface Guidelines (design principles)');
         console.log('   • Technical Documentation (API reference)');
@@ -861,7 +861,7 @@ class AppleHIGMCPServer {
       await this.server.connect(transport);
       
       if (process.env.NODE_ENV === 'development') {
-        console.log(`🚀 Apple Ecosystem MCP Server is ready!`);
+        console.log(`🚀 Apple Dev MCP Server is ready!`);
         console.log(`   • Design Guidelines: ${this.useStaticContent ? 'Static Content' : 'Live Scraping'}`);
         console.log(`   • Technical Documentation: Apple API (cached)`);
         console.log(`   • Tools: ${this.toolProvider ? '13 tools available' : 'Initializing...'}`);
@@ -870,7 +870,7 @@ class AppleHIGMCPServer {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       
       // Always log startup errors
-      console.error('💥 Failed to start Apple Ecosystem MCP Server:', errorMessage);
+      console.error('💥 Failed to start Apple Dev MCP Server:', errorMessage);
       
       if (process.env.NODE_ENV === 'development') {
         console.error('Full error details:', error);
@@ -883,12 +883,12 @@ class AppleHIGMCPServer {
 
 // Handle graceful shutdown
 process.on('SIGINT', async () => {
-  // console.log('\n🛑 Shutting down Apple Ecosystem MCP Server...');
+  // console.log('\n🛑 Shutting down Apple Dev MCP Server...');
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-  // console.log('\n🛑 Shutting down Apple Ecosystem MCP Server...');
+  // console.log('\n🛑 Shutting down Apple Dev MCP Server...');
   process.exit(0);
 });
 
@@ -897,7 +897,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   // Always start the server regardless of arguments
   const server = new AppleHIGMCPServer();
   server.run().catch((error) => {
-    console.error('💥 Failed to start Apple Ecosystem MCP Server:', error);
+    console.error('💥 Failed to start Apple Dev MCP Server:', error);
     process.exit(1);
   });
 }
