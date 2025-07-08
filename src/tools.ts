@@ -8,17 +8,21 @@ import type { HIGResourceProvider } from './resources.js';
 import type { HIGStaticContentProvider } from './static-content.js';
 import { AppleDevAPIClient } from './services/apple-dev-api-client.service.js';
 import { UpdateCheckerService } from './services/update-checker.service.js';
+import { WildcardSearchService } from './services/wildcard-search.service.js';
+import { CrossReferenceMappingService } from './services/cross-reference-mapping.service.js';
 import type { 
   SearchGuidelinesArgs, 
   GetComponentSpecArgs, 
   SearchResult,
   HIGComponent,
   ApplePlatform,
+  HIGCategory,
   GetTechnicalDocumentationArgs,
   ListTechnologiesArgs,
   TechnicalDocumentation,
   FrameworkInfo,
   TechnicalSearchResult,
+  UnifiedSearchResult,
   CheckUpdatesArgs
 } from './types.js';
 
@@ -29,6 +33,8 @@ export class HIGToolProvider {
   private staticContentProvider?: HIGStaticContentProvider;
   private appleDevAPIClient: AppleDevAPIClient;
   private updateCheckerService: UpdateCheckerService;
+  private wildcardSearchService: WildcardSearchService;
+  private crossReferenceMappingService: CrossReferenceMappingService;
 
   constructor(crawleeService: CrawleeHIGService, cache: HIGCache, resourceProvider: HIGResourceProvider, staticContentProvider?: HIGStaticContentProvider, appleDevAPIClient?: AppleDevAPIClient) {
     this.crawleeService = crawleeService;
@@ -37,6 +43,8 @@ export class HIGToolProvider {
     this.staticContentProvider = staticContentProvider;
     this.appleDevAPIClient = appleDevAPIClient || new AppleDevAPIClient(cache);
     this.updateCheckerService = new UpdateCheckerService(cache, staticContentProvider);
+    this.wildcardSearchService = new WildcardSearchService();
+    this.crossReferenceMappingService = new CrossReferenceMappingService();
   }
 
   /**
@@ -1294,6 +1302,850 @@ export class HIGToolProvider {
             'Ensure content is accessible in all interface modes'
           ]
         };
+    }
+  }
+
+  /**
+   * Unified search across both HIG design guidelines and technical documentation
+   * Phase 2: Enhanced search that combines design and implementation guidance
+   */
+  async searchUnified(args: {
+    query: string;
+    platform?: ApplePlatform;
+    category?: string;
+    includeDesign?: boolean;
+    includeTechnical?: boolean;
+    maxResults?: number;
+    maxDesignResults?: number;
+    maxTechnicalResults?: number;
+  }): Promise<{
+    results: UnifiedSearchResult[];
+    designResults: SearchResult[];
+    technicalResults: TechnicalSearchResult[];
+    total: number;
+    query: string;
+    sources: string[];
+    crossReferences: Array<{
+      designSection: string;
+      technicalSymbol: string;
+      relevance: number;
+    }>;
+  }> {
+    const {
+      query,
+      platform,
+      category,
+      includeDesign = true,
+      includeTechnical = true,
+      maxResults = 20,
+      maxDesignResults = 10,
+      maxTechnicalResults = 10
+    } = args;
+
+    // Input validation
+    if (!query || typeof query !== 'string' || query.trim().length === 0) {
+      throw new Error('Invalid query: must be a non-empty string');
+    }
+
+    if (query.length > 100) {
+      throw new Error('Query too long: maximum 100 characters allowed');
+    }
+
+    const sources: string[] = [];
+    let designResults: SearchResult[] = [];
+    let technicalResults: TechnicalSearchResult[] = [];
+
+    try {
+      // Search design guidelines if requested
+      if (includeDesign) {
+        sources.push('design-guidelines');
+        try {
+          const designSearch = await this.searchGuidelines({
+            query,
+            platform,
+            category: category as HIGCategory,
+            limit: maxDesignResults
+          });
+          designResults = designSearch.results;
+        } catch (error) {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('[HIGTools] Design search failed:', error);
+          }
+        }
+      }
+
+      // Search technical documentation if requested
+      if (includeTechnical) {
+        sources.push('technical-documentation');
+        try {
+          const technicalSearch = await this.searchTechnicalDocumentation({
+            query,
+            platform,
+            maxResults: maxTechnicalResults
+          });
+          technicalResults = technicalSearch.results;
+        } catch (error) {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('[HIGTools] Technical search failed:', error);
+          }
+        }
+      }
+
+      // Generate cross-references between design and technical content
+      const crossReferences = this.generateCrossReferences(designResults, technicalResults, query);
+
+      // Combine and rank results using unified scoring
+      const unifiedResults = this.combineAndRankResults(
+        designResults,
+        technicalResults,
+        crossReferences,
+        maxResults
+      );
+
+      return {
+        results: unifiedResults,
+        designResults,
+        technicalResults,
+        total: unifiedResults.length,
+        query: query.trim(),
+        sources,
+        crossReferences
+      };
+
+    } catch (error) {
+      throw new Error(`Unified search failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * Generate cross-references between design guidelines and technical documentation
+   */
+  private generateCrossReferences(
+    designResults: SearchResult[],
+    technicalResults: TechnicalSearchResult[],
+    query: string
+  ): Array<{
+    designSection: string;
+    technicalSymbol: string;
+    relevance: number;
+  }> {
+    const crossReferences: Array<{
+      designSection: string;
+      technicalSymbol: string;
+      relevance: number;
+    }> = [];
+
+    // Common UI component mappings
+    const componentMappings = new Map([
+      // Buttons
+      ['button', ['Button', 'UIButton', 'NSButton', 'SwiftUI.Button']],
+      ['buttons', ['Button', 'UIButton', 'NSButton', 'SwiftUI.Button']],
+      
+      // Navigation
+      ['navigation', ['NavigationView', 'UINavigationController', 'NSNavigationController', 'NavigationStack']],
+      ['navigation bar', ['NavigationView', 'UINavigationBar', 'NSNavigationItem']],
+      
+      // Lists
+      ['list', ['List', 'UITableView', 'NSTableView', 'UICollectionView']],
+      ['table', ['UITableView', 'NSTableView', 'TableView']],
+      
+      // Text
+      ['text', ['Text', 'UILabel', 'NSTextField', 'TextField']],
+      ['label', ['Text', 'UILabel', 'NSTextField']],
+      
+      // Images
+      ['image', ['Image', 'UIImageView', 'NSImageView']],
+      ['icon', ['Image', 'UIImageView', 'NSImageView', 'SF Symbols']],
+      
+      // Controls
+      ['picker', ['Picker', 'UIPickerView', 'NSPopUpButton']],
+      ['slider', ['Slider', 'UISlider', 'NSSlider']],
+      ['switch', ['Toggle', 'UISwitch', 'NSSwitch']],
+      ['toggle', ['Toggle', 'UISwitch', 'NSSwitch']],
+      
+      // Layout
+      ['stack', ['VStack', 'HStack', 'ZStack', 'UIStackView', 'NSStackView']],
+      ['scroll', ['ScrollView', 'UIScrollView', 'NSScrollView']],
+      
+      // Sheets and Popups
+      ['sheet', ['Sheet', 'UIModalPresentationStyle', 'NSModalSession']],
+      ['alert', ['Alert', 'UIAlertController', 'NSAlert']],
+      ['popup', ['Popover', 'UIPopoverController', 'NSPopover']]
+    ]);
+
+    // Extract key terms from query for mapping
+    const queryTerms = query.toLowerCase().split(/\s+/).filter(term => term.length > 2);
+    
+    for (const designResult of designResults) {
+      for (const technicalResult of technicalResults) {
+        let relevance = 0;
+
+        // Direct title matching
+        const designTitle = designResult.title.toLowerCase();
+        const technicalTitle = technicalResult.title.toLowerCase();
+        
+        // Check if design title contains technical symbol name or vice versa
+        if (designTitle.includes(technicalTitle) || technicalTitle.includes(designTitle)) {
+          relevance += 0.8;
+        }
+
+        // Component mapping-based relevance
+        for (const [designTerm, technicalSymbols] of componentMappings) {
+          if (designTitle.includes(designTerm)) {
+            for (const symbol of technicalSymbols) {
+              if (technicalTitle.includes(symbol.toLowerCase())) {
+                relevance += 0.6;
+                break;
+              }
+            }
+          }
+        }
+
+        // Query term overlap between design and technical content
+        for (const term of queryTerms) {
+          if (designTitle.includes(term) && technicalTitle.includes(term)) {
+            relevance += 0.3;
+          }
+        }
+
+        // Platform consistency boost
+        if (designResult.platform && technicalResult.platforms) {
+          const designPlatform = designResult.platform.toLowerCase();
+          const technicalPlatforms = technicalResult.platforms.toLowerCase();
+          if (technicalPlatforms.includes(designPlatform)) {
+            relevance += 0.2;
+          }
+        }
+
+        // Only include cross-references with meaningful relevance
+        if (relevance >= 0.4) {
+          crossReferences.push({
+            designSection: designResult.title,
+            technicalSymbol: technicalResult.title,
+            relevance: Math.round(relevance * 100) / 100
+          });
+        }
+      }
+    }
+
+    // Sort by relevance and limit to top cross-references
+    return crossReferences
+      .sort((a, b) => b.relevance - a.relevance)
+      .slice(0, 10);
+  }
+
+  /**
+   * Combine and rank design and technical results into unified search results
+   */
+  private combineAndRankResults(
+    designResults: SearchResult[],
+    technicalResults: TechnicalSearchResult[],
+    crossReferences: Array<{
+      designSection: string;
+      technicalSymbol: string;
+      relevance: number;
+    }>,
+    maxResults: number
+  ): UnifiedSearchResult[] {
+    const unifiedResults: UnifiedSearchResult[] = [];
+
+    // Convert design results to unified format
+    for (const result of designResults) {
+      const hasCrossRef = crossReferences.some(ref => ref.designSection === result.title);
+      const crossRefBoost = hasCrossRef ? 0.2 : 0;
+      
+      unifiedResults.push({
+        id: `design-${result.url}`,
+        title: result.title,
+        type: 'design',
+        url: result.url,
+        relevanceScore: result.relevanceScore + crossRefBoost,
+        snippet: result.snippet || '',
+        designContent: {
+          platform: result.platform,
+          category: result.category
+        }
+      });
+    }
+
+    // Convert technical results to unified format
+    for (const result of technicalResults) {
+      const hasCrossRef = crossReferences.some(ref => ref.technicalSymbol === result.title);
+      const crossRefBoost = hasCrossRef ? 0.2 : 0;
+      
+      unifiedResults.push({
+        id: `technical-${result.path}`,
+        title: result.title,
+        type: 'technical',
+        url: result.url,
+        relevanceScore: result.relevanceScore + crossRefBoost,
+        snippet: result.description,
+        technicalContent: {
+          framework: result.framework,
+          symbolKind: result.symbolKind || '',
+          platforms: result.platforms ? [result.platforms] : [],
+          abstract: result.description,
+          codeExamples: []
+        }
+      });
+    }
+
+    // Create combined results for high-confidence cross-references
+    for (const crossRef of crossReferences.slice(0, 3)) { // Top 3 cross-references
+      if (crossRef.relevance >= 0.7) {
+        const designResult = designResults.find(r => r.title === crossRef.designSection);
+        const technicalResult = technicalResults.find(r => r.title === crossRef.technicalSymbol);
+        
+        if (designResult && technicalResult) {
+          unifiedResults.push({
+            id: `combined-${designResult.url}-${technicalResult.path}`,
+            title: `${designResult.title} + ${technicalResult.title}`,
+            type: 'combined',
+            url: designResult.url,
+            relevanceScore: (designResult.relevanceScore + technicalResult.relevanceScore) / 2 + 0.3,
+            snippet: `Design: ${designResult.snippet || ''} | Implementation: ${technicalResult.description}`,
+            designContent: {
+              platform: designResult.platform,
+              category: designResult.category
+            },
+            technicalContent: {
+              framework: technicalResult.framework,
+              symbolKind: technicalResult.symbolKind || '',
+              platforms: technicalResult.platforms ? [technicalResult.platforms] : [],
+              abstract: technicalResult.description,
+              codeExamples: []
+            },
+            combinedGuidance: {
+              designPrinciples: [designResult.snippet || ''],
+              implementationSteps: [technicalResult.description],
+              crossPlatformConsiderations: technicalResult.platforms ? [technicalResult.platforms] : [],
+              accessibilityNotes: [`Ensure ${designResult.title} follows accessibility guidelines`]
+            }
+          });
+        }
+      }
+    }
+
+    // Sort by relevance score and return top results
+    return unifiedResults
+      .sort((a, b) => b.relevanceScore - a.relevanceScore)
+      .slice(0, maxResults);
+  }
+
+  /**
+   * Wildcard search with pattern matching support
+   * Phase 2: Enhanced search with * and ? wildcards
+   */
+  async searchWithWildcards(args: {
+    pattern: string;
+    searchType?: 'design' | 'technical' | 'both';
+    platform?: ApplePlatform;
+    category?: string;
+    framework?: string;
+    maxResults?: number;
+    caseSensitive?: boolean;
+    wholeWordMatch?: boolean;
+  }): Promise<{
+    results: Array<SearchResult | TechnicalSearchResult>;
+    pattern: string;
+    isWildcard: boolean;
+    total: number;
+    examples: string[];
+    suggestions?: string[];
+  }> {
+    const {
+      pattern,
+      searchType = 'both',
+      platform,
+      category,
+      framework,
+      maxResults = 25,
+      caseSensitive = false,
+      wholeWordMatch = false
+    } = args;
+
+    // Input validation
+    if (!pattern || typeof pattern !== 'string' || pattern.trim().length === 0) {
+      throw new Error('Invalid pattern: must be a non-empty string');
+    }
+
+    if (pattern.length > 100) {
+      throw new Error('Pattern too long: maximum 100 characters allowed');
+    }
+
+    // Validate the wildcard pattern
+    const validation = this.wildcardSearchService.validatePattern(pattern);
+    if (!validation.isValid) {
+      throw new Error(`Invalid wildcard pattern: ${validation.error}`);
+    }
+
+    const results: Array<SearchResult | TechnicalSearchResult> = [];
+    const examples: string[] = [];
+
+    try {
+      // Search design guidelines if requested
+      if (searchType === 'design' || searchType === 'both') {
+        if (this.staticContentProvider) {
+          try {
+            const designResults = await this.searchDesignWithWildcards(
+              pattern,
+              platform,
+              category,
+              maxResults,
+              caseSensitive,
+              wholeWordMatch
+            );
+            results.push(...designResults.results);
+            examples.push(...designResults.examples);
+          } catch (error) {
+            if (process.env.NODE_ENV === 'development') {
+              console.warn('[HIGTools] Wildcard design search failed:', error);
+            }
+          }
+        }
+      }
+
+      // Search technical documentation if requested  
+      if (searchType === 'technical' || searchType === 'both') {
+        try {
+          const technicalResults = await this.searchTechnicalWithWildcards(
+            pattern,
+            platform,
+            framework,
+            maxResults,
+            caseSensitive,
+            wholeWordMatch
+          );
+          results.push(...technicalResults.results);
+          examples.push(...technicalResults.examples);
+        } catch (error) {
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('[HIGTools] Wildcard technical search failed:', error);
+          }
+        }
+      }
+
+      // Sort combined results by relevance
+      const sortedResults = results
+        .sort((a, b) => (b.relevanceScore || 0) - (a.relevanceScore || 0))
+        .slice(0, maxResults);
+
+      // Generate suggestions for improvement
+      const suggestions = this.generateWildcardSuggestions(pattern, results.length);
+
+      return {
+        results: sortedResults,
+        pattern: pattern.trim(),
+        isWildcard: pattern.includes('*') || pattern.includes('?'),
+        total: sortedResults.length,
+        examples: [...new Set(examples)].slice(0, 10), // Unique examples, max 10
+        suggestions: suggestions.length > 0 ? suggestions : undefined
+      };
+
+    } catch (error) {
+      throw new Error(`Wildcard search failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * Search design guidelines using wildcard patterns
+   */
+  private async searchDesignWithWildcards(
+    pattern: string,
+    platform?: ApplePlatform,
+    category?: string,
+    maxResults: number = 15,
+    caseSensitive: boolean = false,
+    wholeWordMatch: boolean = false
+  ): Promise<{ results: SearchResult[]; examples: string[] }> {
+    if (!this.staticContentProvider) {
+      return { results: [], examples: [] };
+    }
+
+    // Get all sections for wildcard searching by using a broad search
+    const allSections = await this.staticContentProvider.searchContent(
+      '*',  // Get all content
+      platform,
+      category as HIGCategory,
+      1000  // Large limit to get most content
+    );
+    
+    // Use wildcard search service
+    const searchResults = this.wildcardSearchService.searchWithWildcards(
+      allSections,
+      pattern,
+      ['title', 'snippet'],
+      {
+        caseSensitive,
+        wholeWordMatch,
+        maxResults,
+        minScore: 0.1
+      }
+    );
+
+    const results: SearchResult[] = [];
+    const examples: string[] = [];
+
+    for (const result of searchResults) {
+      // Apply platform and category filters
+      if (platform && platform !== 'universal' && 
+          result.platform !== platform && result.platform !== 'universal') {
+        continue;
+      }
+
+      if (category && result.category !== category) {
+        continue;
+      }
+
+      // Convert to SearchResult format
+      const searchResult: SearchResult = {
+        id: result.id,
+        title: result.title,
+        platform: result.platform,
+        category: result.category,
+        url: result.url,
+        snippet: this.wildcardSearchService.highlightMatches(
+          result.snippet || '',
+          this.wildcardSearchService.parseWildcardPattern(pattern)
+        ),
+        relevanceScore: result.wildcardMatch.score,
+        type: 'section'
+      };
+
+      results.push(searchResult);
+      
+      // Collect examples of matched text
+      if (result.wildcardMatch.matchedSegments.length > 0) {
+        examples.push(...result.wildcardMatch.matchedSegments);
+      }
+    }
+
+    return { results, examples };
+  }
+
+  /**
+   * Search technical documentation using wildcard patterns
+   */
+  private async searchTechnicalWithWildcards(
+    pattern: string,
+    platform?: string,
+    framework?: string,
+    maxResults: number = 15,
+    caseSensitive: boolean = false,
+    wholeWordMatch: boolean = false
+  ): Promise<{ results: TechnicalSearchResult[]; examples: string[] }> {
+    try {
+      // Get frameworks to search
+      const frameworks = framework 
+        ? [{ name: framework, title: framework }]
+        : (await this.appleDevAPIClient.getFrameworkList()).slice(0, 10); // Limit to prevent overload
+
+      const allTechnicalItems: Array<{
+        title: string;
+        description: string;
+        path: string;
+        framework: string;
+        symbolKind?: string;
+        platforms?: string;
+        url: string;
+      }> = [];
+
+      // Collect technical documentation items
+      for (const fw of frameworks) {
+        try {
+          const frameworkResults = await this.appleDevAPIClient.searchFramework(
+            (fw as any).name || (fw as any).title,
+            '*', // Get all symbols for wildcard filtering
+            {
+              platform,
+              maxResults: 100,
+              includeRelevanceScore: false
+            }
+          );
+          
+          allTechnicalItems.push(...frameworkResults.map(result => ({
+            title: result.title,
+            description: result.description,
+            path: result.path,
+            framework: result.framework,
+            symbolKind: result.symbolKind,
+            platforms: result.platforms,
+            url: result.url
+          })));
+        } catch {
+          // Continue with other frameworks if one fails
+        }
+      }
+
+      // Apply wildcard search
+      const searchResults = this.wildcardSearchService.searchWithWildcards(
+        allTechnicalItems,
+        pattern,
+        ['title', 'description'],
+        {
+          caseSensitive,
+          wholeWordMatch,
+          maxResults,
+          minScore: 0.1
+        }
+      );
+
+      const results: TechnicalSearchResult[] = [];
+      const examples: string[] = [];
+
+      for (const result of searchResults) {
+        const technicalResult: TechnicalSearchResult = {
+          title: result.title,
+          description: this.wildcardSearchService.highlightMatches(
+            result.description,
+            this.wildcardSearchService.parseWildcardPattern(pattern)
+          ),
+          path: result.path,
+          framework: result.framework,
+          symbolKind: result.symbolKind,
+          platforms: result.platforms,
+          url: result.url,
+          relevanceScore: result.wildcardMatch.score,
+          type: 'technical'
+        };
+
+        results.push(technicalResult);
+        
+        // Collect examples of matched text
+        if (result.wildcardMatch.matchedSegments.length > 0) {
+          examples.push(...result.wildcardMatch.matchedSegments);
+        }
+      }
+
+      return { results, examples };
+
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('[HIGTools] Technical wildcard search error:', error);
+      }
+      return { results: [], examples: [] };
+    }
+  }
+
+  /**
+   * Generate suggestions for improving wildcard patterns
+   */
+  private generateWildcardSuggestions(pattern: string, resultCount: number): string[] {
+    const suggestions: string[] = [];
+
+    // Too few results
+    if (resultCount === 0) {
+      suggestions.push('Try using wildcards like * or ? to broaden your search');
+      suggestions.push('Check spelling of your search pattern');
+      if (!pattern.includes('*') && !pattern.includes('?')) {
+        suggestions.push(`Try "${pattern}*" to find items starting with "${pattern}"`);
+        suggestions.push(`Try "*${pattern}*" to find items containing "${pattern}"`);
+      }
+    } else if (resultCount < 3 && !pattern.includes('*')) {
+      suggestions.push(`Try "*${pattern}*" for broader results`);
+    }
+
+    // Too many results
+    if (resultCount > 50) {
+      suggestions.push('Try making your pattern more specific');
+      if (pattern === '*') {
+        suggestions.push('Use a more specific pattern instead of just "*"');
+      }
+      if ((pattern.match(/\*/g) || []).length > 2) {
+        suggestions.push('Try using fewer wildcards for more specific results');
+      }
+    }
+
+    // Pattern optimization suggestions
+    if (pattern.includes('**')) {
+      suggestions.push('Use single "*" instead of "**" - they have the same effect');
+    }
+
+    if (pattern.startsWith('*') && pattern.endsWith('*') && pattern.length < 5) {
+      suggestions.push('Very short patterns with wildcards on both ends may return too many results');
+    }
+
+    return suggestions;
+  }
+
+  /**
+   * Get cross-reference mappings between design guidelines and technical implementations
+   * Phase 2: Comprehensive cross-reference mapping system
+   */
+  async getCrossReferences(args: {
+    query: string;
+    type?: 'component' | 'concept' | 'implementation';
+    platform?: ApplePlatform;
+    framework?: string;
+    includeRelated?: boolean;
+    maxResults?: number;
+  }): Promise<{
+    query: string;
+    mappings: Array<{
+      designSection: string;
+      designUrl: string;
+      technicalSymbol: string;
+      technicalUrl: string;
+      confidence: number;
+      mappingType: string;
+      explanation: string;
+      platforms: string[];
+      frameworks: string[];
+    }>;
+    componentMapping?: {
+      componentName: string;
+      designGuidelines: Array<{
+        title: string;
+        url: string;
+        platform: string;
+        relevance: number;
+      }>;
+      technicalSymbols: Array<{
+        symbol: string;
+        framework: string;
+        platform: string;
+        symbolKind: string;
+        relevance: number;
+      }>;
+    };
+    relatedComponents?: string[];
+    suggestions: string[];
+    total: number;
+  }> {
+    const {
+      query,
+      type = 'component',
+      platform,
+      framework,
+      includeRelated = true,
+      maxResults = 20
+    } = args;
+
+    // Input validation
+    if (!query || typeof query !== 'string' || query.trim().length === 0) {
+      throw new Error('Invalid query: must be a non-empty string');
+    }
+
+    if (query.length > 100) {
+      throw new Error('Query too long: maximum 100 characters allowed');
+    }
+
+    try {
+      const mappings: Array<{
+        designSection: string;
+        designUrl: string;
+        technicalSymbol: string;
+        technicalUrl: string;
+        confidence: number;
+        mappingType: string;
+        explanation: string;
+        platforms: string[];
+        frameworks: string[];
+      }> = [];
+
+      let componentMapping;
+      let relatedComponents: string[] = [];
+
+      // Get component mapping if type is 'component'
+      if (type === 'component') {
+        componentMapping = this.crossReferenceMappingService.getComponentMapping(query);
+        
+        if (componentMapping && includeRelated) {
+          relatedComponents = this.crossReferenceMappingService.findRelatedComponents(query);
+        }
+      }
+
+      // Search for design guidelines and technical documentation to create cross-references
+      let designResults: SearchResult[] = [];
+      let technicalResults: TechnicalSearchResult[] = [];
+
+      try {
+        // Search design guidelines
+        if (this.staticContentProvider) {
+          const designSearch = await this.searchGuidelines({
+            query,
+            platform,
+            limit: maxResults
+          });
+          designResults = designSearch.results;
+        }
+
+        // Search technical documentation
+        const technicalSearch = await this.searchTechnicalDocumentation({
+          query,
+          platform,
+          framework,
+          maxResults
+        });
+        technicalResults = technicalSearch.results;
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[HIGTools] Cross-reference search failed:', error);
+        }
+      }
+
+      // Generate cross-references between found results
+      for (const designResult of designResults) {
+        for (const technicalResult of technicalResults) {
+          const crossRefs = this.crossReferenceMappingService.findCrossReferences(
+            designResult.title,
+            technicalResult.title,
+            designResult.platform,
+            technicalResult.platforms ? [technicalResult.platforms] : undefined
+          );
+
+          // Filter and enhance cross-references
+          for (const crossRef of crossRefs) {
+            const validation = this.crossReferenceMappingService.validateCrossReference(crossRef);
+            
+            if (validation.isValid && validation.score >= 0.3) {
+              mappings.push({
+                designSection: designResult.title,
+                designUrl: designResult.url,
+                technicalSymbol: technicalResult.title,
+                technicalUrl: technicalResult.url,
+                confidence: validation.score,
+                mappingType: crossRef.mappingType,
+                explanation: crossRef.explanation,
+                platforms: crossRef.platforms,
+                frameworks: crossRef.frameworks
+              });
+            }
+          }
+        }
+      }
+
+      // Sort mappings by confidence
+      mappings.sort((a, b) => b.confidence - a.confidence);
+
+      // Generate suggestions
+      const suggestions = this.crossReferenceMappingService.generateCrossReferenceSuggestions(
+        designResults,
+        technicalResults
+      );
+
+      // Add component-specific suggestions
+      if (type === 'component' && !componentMapping) {
+        suggestions.push(`No direct mapping found for "${query}". Try searching for related UI components.`);
+        suggestions.push('Consider breaking down complex components into simpler parts.');
+      }
+
+      if (mappings.length === 0) {
+        suggestions.push('Try using more general terms like "button", "navigation", or "list"');
+        suggestions.push('Search for both design concepts and technical implementations separately');
+      }
+
+      return {
+        query: query.trim(),
+        mappings: mappings.slice(0, maxResults),
+        componentMapping,
+        relatedComponents: includeRelated ? relatedComponents : undefined,
+        suggestions,
+        total: mappings.length
+      };
+
+    } catch (error) {
+      throw new Error(`Cross-reference lookup failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 }

@@ -457,6 +457,163 @@ class AppleHIGMCPServer {
               required: [],
             },
           },
+          {
+            name: 'search_unified',
+            description: 'Unified search across both HIG design guidelines and technical documentation with cross-references',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                query: {
+                  type: 'string',
+                  description: 'Search query (keywords, component names, design concepts)',
+                },
+                platform: {
+                  type: 'string',
+                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS', 'universal'],
+                  description: 'Filter by Apple platform',
+                },
+                category: {
+                  type: 'string',
+                  enum: [
+                    'foundations', 'layout', 'navigation', 'presentation',
+                    'selection-and-input', 'status', 'system-capabilities',
+                    'visual-design', 'icons-and-images', 'color-and-materials',
+                    'typography', 'motion', 'technologies'
+                  ],
+                  description: 'Filter by HIG category',
+                },
+                includeDesign: {
+                  type: 'boolean',
+                  description: 'Include design guidelines in search',
+                  default: true,
+                },
+                includeTechnical: {
+                  type: 'boolean',
+                  description: 'Include technical documentation in search',
+                  default: true,
+                },
+                maxResults: {
+                  type: 'number',
+                  minimum: 1,
+                  maximum: 50,
+                  default: 20,
+                  description: 'Maximum number of unified results to return',
+                },
+                maxDesignResults: {
+                  type: 'number',
+                  minimum: 1,
+                  maximum: 25,
+                  default: 10,
+                  description: 'Maximum number of design results to fetch',
+                },
+                maxTechnicalResults: {
+                  type: 'number',
+                  minimum: 1,
+                  maximum: 25,
+                  default: 10,
+                  description: 'Maximum number of technical results to fetch',
+                },
+              },
+              required: ['query'],
+            },
+          },
+          {
+            name: 'search_wildcard',
+            description: 'Advanced wildcard pattern search with * and ? support across design and technical documentation',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                pattern: {
+                  type: 'string',
+                  description: 'Wildcard pattern (* matches any sequence, ? matches single character)',
+                },
+                searchType: {
+                  type: 'string',
+                  enum: ['design', 'technical', 'both'],
+                  description: 'Type of content to search',
+                  default: 'both',
+                },
+                platform: {
+                  type: 'string',
+                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS', 'universal'],
+                  description: 'Filter by Apple platform',
+                },
+                category: {
+                  type: 'string',
+                  enum: [
+                    'foundations', 'layout', 'navigation', 'presentation',
+                    'selection-and-input', 'status', 'system-capabilities',
+                    'visual-design', 'icons-and-images', 'color-and-materials',
+                    'typography', 'motion', 'technologies'
+                  ],
+                  description: 'Filter by HIG category (design search only)',
+                },
+                framework: {
+                  type: 'string',
+                  description: 'Filter by framework name (technical search only)',
+                },
+                maxResults: {
+                  type: 'number',
+                  minimum: 1,
+                  maximum: 100,
+                  default: 25,
+                  description: 'Maximum number of results to return',
+                },
+                caseSensitive: {
+                  type: 'boolean',
+                  description: 'Enable case-sensitive pattern matching',
+                  default: false,
+                },
+                wholeWordMatch: {
+                  type: 'boolean',
+                  description: 'Match whole words only',
+                  default: false,
+                },
+              },
+              required: ['pattern'],
+            },
+          },
+          {
+            name: 'get_cross_references',
+            description: 'Get cross-reference mappings between design guidelines and technical implementations',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                query: {
+                  type: 'string',
+                  description: 'Component name or concept to find cross-references for',
+                },
+                type: {
+                  type: 'string',
+                  enum: ['component', 'concept', 'implementation'],
+                  description: 'Type of cross-reference lookup',
+                  default: 'component',
+                },
+                platform: {
+                  type: 'string',
+                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS', 'universal'],
+                  description: 'Filter by Apple platform',
+                },
+                framework: {
+                  type: 'string',
+                  description: 'Filter by framework name',
+                },
+                includeRelated: {
+                  type: 'boolean',
+                  description: 'Include related components and concepts',
+                  default: true,
+                },
+                maxResults: {
+                  type: 'number',
+                  minimum: 1,
+                  maximum: 50,
+                  default: 20,
+                  description: 'Maximum number of cross-references to return',
+                },
+              },
+              required: ['query'],
+            },
+          },
         ],
       };
     });
@@ -516,6 +673,21 @@ class AppleHIGMCPServer {
 
           case 'check_updates': {
             result = await this.toolProvider.checkUpdates(args as any);
+            break;
+          }
+
+          case 'search_unified': {
+            result = await this.toolProvider.searchUnified(args as any);
+            break;
+          }
+
+          case 'search_wildcard': {
+            result = await this.toolProvider.searchWithWildcards(args as any);
+            break;
+          }
+
+          case 'get_cross_references': {
+            result = await this.toolProvider.getCrossReferences(args as any);
             break;
           }
 
@@ -586,7 +758,7 @@ class AppleHIGMCPServer {
         console.log(`🚀 Apple Ecosystem MCP Server is ready!`);
         console.log(`   • Design Guidelines: ${this.useStaticContent ? 'Static Content' : 'Live Scraping'}`);
         console.log(`   • Technical Documentation: Apple API (cached)`);
-        console.log(`   • Tools: ${this.toolProvider ? '7 tools available' : 'Initializing...'}`);
+        console.log(`   • Tools: ${this.toolProvider ? '11 tools available' : 'Initializing...'}`);
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
