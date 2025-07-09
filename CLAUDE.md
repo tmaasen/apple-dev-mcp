@@ -312,7 +312,7 @@ npm run build:extension
 
 ### Extension Structure
 - **manifest.json** - DXT specification compliant metadata
-- **icon.svg** - Abstract design (trademark-safe)
+- **icon.png** - Abstract design (trademark-safe)
 - **dist/server.js** - Compiled MCP server
 - **content/** - Static Apple content
 - **package.json** - Dependencies and metadata

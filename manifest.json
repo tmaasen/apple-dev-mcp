@@ -12,11 +12,12 @@
   "icon": "icon.png",
   "license": "MIT",
   "keywords": ["apple", "design", "hig", "ios", "macos", "watchos", "tvos", "visionos", "development", "guidelines"],
-  "mcp_server": {
+  "server": {
     "type": "node",
     "entry_point": "dist/server.js",
     "mcp_config": {
-      "args": [],
+      "command": "node",
+      "args": ["${__dirname}/dist/server.js"],
       "env": {
         "NODE_ENV": "production"
       }
@@ -78,20 +79,15 @@
   ],
   "user_config": {
     "content_source": {
-      "display_name": "Content Source Preference",
+      "type": "string",
+      "title": "Content Source Preference",
       "description": "Choose whether to use static content (faster) or live scraping (more current)",
-      "type": "select",
-      "options": [
-        {"value": "static", "label": "Static Content (Recommended)"},
-        {"value": "live", "label": "Live Scraping"},
-        {"value": "hybrid", "label": "Hybrid (Static with Live Fallback)"}
-      ],
       "default": "hybrid"
     },
     "enable_experimental_features": {
-      "display_name": "Enable Experimental Features",
+      "type": "boolean",
+      "title": "Enable Experimental Features",
       "description": "Enable experimental content fusion and advanced search features",
-      "type": "boolean", 
       "default": false
     }
   },

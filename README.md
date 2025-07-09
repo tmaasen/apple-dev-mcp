@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="icon.svg" width="128" height="128" alt="Apple Dev MCP Icon">
+  <img src="icon.png" width="128" height="128" alt="Apple Dev MCP Icon">
   
   # 🍎 Apple Dev MCP Server
 

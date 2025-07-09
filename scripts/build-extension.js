@@ -50,6 +50,15 @@ async function buildExtension() {
       path.join(projectRoot, 'content'),
       path.join(buildDir, 'content')
     );
+    
+    // Create a marker file to ensure content directory is created during extraction
+    await fs.writeFile(
+      path.join(buildDir, 'content', '.dxt-marker'),
+      JSON.stringify({
+        created: new Date().toISOString(),
+        purpose: 'Ensures content directory is created during DXT extraction'
+      }, null, 2)
+    );
 
     // Copy essential package files (not full node_modules)
     console.log('📄 Copying package.json...');
@@ -97,7 +106,7 @@ async function buildExtension() {
 
     // Copy icon if it exists
     console.log('🎨 Looking for icon...');
-    const iconFiles = ['icon.png', 'icon.svg', 'icon.ico'];
+    const iconFiles = ['icon.png', 'icon.ico'];
     let iconCopied = false;
     
     for (const iconFile of iconFiles) {
@@ -191,7 +200,11 @@ function filterProductionDependencies(dependencies) {
 async function createArchive(sourceDir, outputFile) {
   return new Promise((resolve, reject) => {
     const output = createWriteStream(outputFile);
-    const archive = archiver('zip', { zlib: { level: 9 } });
+    const archive = archiver('zip', { 
+      zlib: { level: 9 },
+      forceLocalTime: true,
+      forceZip64: false
+    });
 
     output.on('close', () => {
       console.log(`✅ Archive created: ${archive.pointer()} total bytes`);
@@ -200,7 +213,15 @@ async function createArchive(sourceDir, outputFile) {
 
     archive.on('error', reject);
     archive.pipe(output);
-    archive.directory(sourceDir, false);
+    
+    // Add all files and directories, explicitly including empty directories
+    archive.glob('**/*', {
+      cwd: sourceDir,
+      dot: true,
+      follow: false,
+      ignore: ['node_modules/**']
+    });
+    
     archive.finalize();
   });
 }
@@ -227,8 +248,8 @@ async function validateExtension(buildDir) {
     throw new Error('Manifest missing dxt_version');
   }
   
-  if (!manifest.mcp_server || !manifest.mcp_server.entry_point) {
-    throw new Error('Manifest missing mcp_server.entry_point');
+  if (!manifest.server || !manifest.server.type || !manifest.server.entry_point) {
+    throw new Error('Manifest missing server.type or server.entry_point');
   }
 
   console.log('✅ Extension validation passed');
@@ -242,7 +263,7 @@ async function createPlaceholderIcon(iconPath) {
   </svg>`;
   
   // For now, just create a text file indicating an icon is needed
-  await fs.writeFile(iconPath + '.svg', svgIcon);
+  await fs.writeFile(iconPath + '.png', svgIcon);
   await fs.writeFile(iconPath, 'PNG placeholder - real icon needed');
 }
 

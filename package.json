@@ -96,7 +96,7 @@
     "dist/**/*",
     "content/**/*",
     "manifest.json",
-    "icon.svg",
+    "icon.png",
     "apple-dev-mcp.dxt",
     "README.md",
     "LICENSE",

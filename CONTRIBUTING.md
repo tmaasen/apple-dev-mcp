@@ -351,7 +351,7 @@ npm run build:extension
 ### Extension Structure
 
 - **Manifest**: `manifest.json` - DXT specification compliant
-- **Icon**: `icon.svg` - Abstract design (trademark-safe)
+- **Icon**: `icon.png` - Abstract design (trademark-safe)
 - **Server**: `dist/server.js` - MCP server entry point
 - **Content**: `content/` - Static Apple content
 - **Build Script**: `scripts/build-extension.js` - Extension packaging

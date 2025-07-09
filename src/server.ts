@@ -64,13 +64,36 @@ class AppleHIGMCPServer {
     // Validate environment
     await this.validateEnvironment();
     
-    // Initialize static content if available
-    await this.initializeStaticContent();
+    // Initialize static content provider (but don't fail if content isn't available yet)
+    this.staticContentProvider = new HIGStaticContentProvider();
+    
+    // Try to initialize static content, but don't block startup if it fails
+    try {
+      const isAvailable = await this.staticContentProvider.isAvailable();
+      if (isAvailable) {
+        await this.staticContentProvider.initialize();
+        this.useStaticContent = true;
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.log('✅ Static HIG content initialized');
+        }
+      } else {
+        this.useStaticContent = false;
+        if (process.env.NODE_ENV === 'development') {
+          console.log('ℹ️  Static content not available. Using live scraping fallback.');
+        }
+      }
+    } catch (error) {
+      this.useStaticContent = false;
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('⚠️  Failed to initialize static content:', error);
+        console.log('ℹ️  Falling back to live scraping.');
+      }
+    }
 
     // Initialize components
     this.cache = new HIGCache(3600); // 1 hour default TTL
     this.crawleeService = new CrawleeHIGService(this.cache);
-    this.staticContentProvider = new HIGStaticContentProvider();
     this.appleDevAPIClient = new AppleDevAPIClient(this.cache);
     this.updateCheckerService = new UpdateCheckerService(this.cache, this.staticContentProvider);
     this.resourceProvider = new HIGResourceProvider(this.crawleeService, this.cache, this.staticContentProvider);
@@ -118,42 +141,6 @@ class AppleHIGMCPServer {
     return 0;
   }
   
-  /**
-   * Initialize static content provider if available
-   */
-  private async initializeStaticContent(): Promise<void> {
-    try {
-      const isAvailable = await this.staticContentProvider.isAvailable();
-      
-      if (isAvailable) {
-        await this.staticContentProvider.initialize();
-        this.useStaticContent = true;
-        
-        // Check if content is stale
-        const isStale = this.staticContentProvider.isContentStale();
-        const metadata = this.staticContentProvider.getMetadata();
-        
-        if (process.env.NODE_ENV === 'development') {
-          console.log('✅ Static HIG content initialized');
-          console.log(`📊 Content: ${metadata?.totalSections || 0} sections`);
-          console.log(`📅 Last updated: ${metadata?.lastUpdated ? new Date(metadata.lastUpdated).toLocaleDateString() : 'unknown'}`);
-          
-          if (isStale) {
-            console.log('⚠️  Content is stale (>6 months old). Consider running content generation.');
-          }
-        }
-      } else {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('ℹ️  Static content not available. Using live scraping fallback.');
-        }
-      }
-    } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('⚠️  Failed to initialize static content:', error);
-        console.log('ℹ️  Falling back to live scraping.');
-      }
-    }
-  }
 
   /**
    * Set up MCP request handlers with comprehensive error handling

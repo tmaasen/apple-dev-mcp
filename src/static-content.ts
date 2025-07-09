@@ -61,16 +61,8 @@ export class HIGStaticContentProvider {
     if (contentDir) {
       this.contentDir = contentDir;
     } else {
-      // For global npm installs, look relative to the compiled file's location
-      // Detect Jest environment and avoid import.meta.url
-      if (process.env.JEST_WORKER_ID !== undefined || process.env.NODE_ENV === 'test') {
-        // Jest testing environment - use process.cwd()
-        this.contentDir = path.join(process.cwd(), 'content');
-      } else {
-        // For production/runtime environments, try ES module approach
-        // Avoid import.meta.url syntax issues in test environments
-        this.contentDir = this.getProductionContentDir();
-      }
+      // Defer content directory resolution until first access
+      this.contentDir = '';
     }
     
     // Initialize enhanced search service
@@ -84,6 +76,8 @@ export class HIGStaticContentProvider {
    * Get content directory for production environments
    */
   private getProductionContentDir(): string {
+    let contentDir: string;
+    
     try {
       // This will work in actual Node.js runtime but not in Jest
       // Using eval to avoid Jest parsing the import.meta.url syntax
@@ -91,11 +85,40 @@ export class HIGStaticContentProvider {
       const currentFileUrl = new URL(importMetaUrl);
       const currentDir = path.dirname(currentFileUrl.pathname);
       const packageRoot = path.dirname(currentDir);
-      return path.join(packageRoot, 'content');
-    } catch {
+      
+      // For DXT installations, content is at the same level as dist/
+      // So if currentDir is /path/to/extension/dist, content is at /path/to/extension/content
+      contentDir = path.join(packageRoot, 'content');
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[StaticContent] Using import.meta.url approach: ${contentDir}`);
+      }
+    } catch (error) {
       // Fallback for CommonJS or other environments
-      return path.join(process.cwd(), 'content');
+      const cwd = process.cwd();
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[StaticContent] import.meta.url failed, using fallback. CWD: ${cwd}`);
+      }
+      
+      // Try multiple potential locations
+      const possiblePaths = [
+        path.join(cwd, 'content'),
+        path.join(path.dirname(cwd), 'content'),
+        path.join(__dirname, '..', 'content'),
+        path.join(__dirname, '..', '..', 'content')
+      ];
+      
+      // Don't check directory existence during construction - defer to isAvailable()
+      // Use the first path as default (will be validated later when needed)
+      contentDir = possiblePaths[0];
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[StaticContent] Content directory set to: ${contentDir}`);
+      }
     }
+    
+    return contentDir;
   }
 
   /**
@@ -103,15 +126,27 @@ export class HIGStaticContentProvider {
    */
   async initialize(): Promise<boolean> {
     try {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[StaticContent] Initializing with content directory: ${this.contentDir}`);
+      }
+      
+      // Check if content directory exists
+      try {
+        await fs.access(this.contentDir);
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.error(`[StaticContent] Content directory not found: ${this.contentDir}`);
+        }
+        return false;
+      }
+      
       await this.loadMetadata();
       await this.loadSearchIndex();
       await this.loadCrossReferences();
       
       if (process.env.NODE_ENV === 'development') {
-        if (process.env.NODE_ENV === 'development') {
-          console.log(`[StaticContent] Initialized with ${this.metadata?.totalSections || 0} sections`);
-          console.log(`[StaticContent] Content last updated: ${this.metadata?.lastUpdated || 'unknown'}`);
-        }
+        console.log(`[StaticContent] Initialized with ${this.metadata?.totalSections || 0} sections`);
+        console.log(`[StaticContent] Content last updated: ${this.metadata?.lastUpdated || 'unknown'}`);
       }
       
       return true;
@@ -129,17 +164,38 @@ export class HIGStaticContentProvider {
    * Check if static content is available (cached for performance)
    */
   async isAvailable(): Promise<boolean> {
+    // Always check fresh during development for DXT installation
+    if (process.env.NODE_ENV === 'development') {
+      this.availabilityCache = null;
+    }
+    
     // Return cached result if available
     if (this.availabilityCache !== null) {
       return this.availabilityCache;
     }
 
     try {
+      // Resolve content directory on first access
+      if (!this.contentDir) {
+        this.contentDir = this.getProductionContentDir();
+      }
+      
+      // First check if content directory exists
+      const contentStat = await fs.stat(this.contentDir);
+      if (!contentStat.isDirectory()) {
+        throw new Error(`Content path is not a directory: ${this.contentDir}`);
+      }
+      
+      // Then check for metadata file
       const metadataPath = path.join(this.contentDir, 'metadata', 'generation-info.json');
       await fs.access(metadataPath);
+      
       this.availabilityCache = true;
       return true;
-    } catch {
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[StaticContent] Content not available: ${error.message}`);
+      }
       this.availabilityCache = false;
       return false;
     }
