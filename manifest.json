@@ -12,7 +12,7 @@
   "icon": "icon.png",
   "license": "MIT",
   "keywords": ["apple", "design", "hig", "ios", "macos", "watchos", "tvos", "visionos", "development", "guidelines"],
-  "server": {
+  "mcp_server": {
     "type": "node",
     "entry_point": "dist/server.js",
     "mcp_config": {
@@ -76,9 +76,8 @@
       "description": "Generate detailed step-by-step implementation guide for a specific component"
     }
   ],
-  "user_config": [
-    {
-      "name": "content_source",
+  "user_config": {
+    "content_source": {
       "display_name": "Content Source Preference",
       "description": "Choose whether to use static content (faster) or live scraping (more current)",
       "type": "select",
@@ -89,14 +88,13 @@
       ],
       "default": "hybrid"
     },
-    {
-      "name": "enable_experimental_features",
+    "enable_experimental_features": {
       "display_name": "Enable Experimental Features",
       "description": "Enable experimental content fusion and advanced search features",
       "type": "boolean", 
       "default": false
     }
-  ],
+  },
   "compatibility": {
     "runtime": {
       "node": ">=18.0.0"
