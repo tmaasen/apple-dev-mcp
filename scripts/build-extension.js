@@ -227,8 +227,8 @@ async function validateExtension(buildDir) {
     throw new Error('Manifest missing dxt_version');
   }
   
-  if (!manifest.server || !manifest.server.entry_point) {
-    throw new Error('Manifest missing server.entry_point');
+  if (!manifest.mcp_server || !manifest.mcp_server.entry_point) {
+    throw new Error('Manifest missing mcp_server.entry_point');
   }
 
   console.log('✅ Extension validation passed');
