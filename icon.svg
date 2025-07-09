@@ -1,0 +1,43 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="128" height="128" fill="#A8CCE3" rx="16"/>
+  
+  <!-- Abstract design elements representing development -->
+  <!-- Code brackets - made bigger -->
+  <g transform="translate(16, 24)">
+    <!-- Left bracket -->
+    <path d="M12 20 L4 32 L12 44" stroke="#2D3748" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Right bracket -->
+    <path d="M84 20 L92 32 L84 44" stroke="#2D3748" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <!-- Central design/documentation symbol - made bigger -->
+  <g transform="translate(24, 40)">
+    <!-- Document/guidelines representation -->
+    <rect x="16" y="0" width="48" height="48" fill="#F7F3E9" stroke="#E67E22" stroke-width="3" rx="6"/>
+    <!-- Lines representing content -->
+    <line x1="24" y1="12" x2="56" y2="12" stroke="#2D3748" stroke-width="2.5" opacity="0.7"/>
+    <line x1="24" y1="20" x2="52" y2="20" stroke="#2D3748" stroke-width="2.5" opacity="0.5"/>
+    <line x1="24" y1="28" x2="54" y2="28" stroke="#2D3748" stroke-width="2.5" opacity="0.5"/>
+    <line x1="24" y1="36" x2="48" y2="36" stroke="#2D3748" stroke-width="2.5" opacity="0.3"/>
+  </g>
+  
+  <!-- Abstract geometric elements - made bigger -->
+  <g transform="translate(8, 100)">
+    <!-- Small connecting dots -->
+    <circle cx="12" cy="12" r="4" fill="#E67E22"/>
+    <circle cx="32" cy="12" r="4" fill="#2D3748" opacity="0.6"/>
+    <circle cx="52" cy="12" r="4" fill="#E67E22"/>
+    <circle cx="72" cy="12" r="4" fill="#2D3748" opacity="0.6"/>
+    <circle cx="92" cy="12" r="4" fill="#E67E22"/>
+    <circle cx="112" cy="12" r="4" fill="#2D3748" opacity="0.6"/>
+  </g>
+  
+  <!-- Abstract connection lines - made thicker -->
+  <g opacity="0.4">
+    <line x1="28" y1="112" x2="48" y2="112" stroke="#2D3748" stroke-width="3"/>
+    <line x1="56" y1="112" x2="68" y2="112" stroke="#2D3748" stroke-width="3"/>
+    <line x1="76" y1="112" x2="88" y2="112" stroke="#2D3748" stroke-width="3"/>
+    <line x1="96" y1="112" x2="108" y2="112" stroke="#2D3748" stroke-width="3"/>
+  </g>
+</svg>

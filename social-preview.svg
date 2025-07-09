@@ -1,0 +1,91 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1280" height="640" fill="#A8CCE3"/>
+  
+  <!-- Main title -->
+  <text x="640" y="180" text-anchor="middle" font-family="SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif" font-size="72" font-weight="700" fill="#2D3748">
+    Apple Dev MCP
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="640" y="240" text-anchor="middle" font-family="SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif" font-size="32" font-weight="400" fill="#2D3748" opacity="0.8">
+    Complete Apple Development Guidance
+  </text>
+  
+  <!-- Feature text -->
+  <text x="640" y="320" text-anchor="middle" font-family="SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif" font-size="24" font-weight="500" fill="#2D3748" opacity="0.7">
+    Human Interface Guidelines + Technical Documentation
+  </text>
+  
+  <!-- Platform badges -->
+  <g transform="translate(390, 380)">
+    <!-- iOS -->
+    <rect x="0" y="0" width="80" height="40" fill="#F7F3E9" stroke="#E67E22" stroke-width="2" rx="20"/>
+    <text x="40" y="26" text-anchor="middle" font-family="SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#2D3748">iOS</text>
+    
+    <!-- macOS -->
+    <rect x="100" y="0" width="100" height="40" fill="#F7F3E9" stroke="#E67E22" stroke-width="2" rx="20"/>
+    <text x="150" y="26" text-anchor="middle" font-family="SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#2D3748">macOS</text>
+    
+    <!-- watchOS -->
+    <rect x="220" y="0" width="120" height="40" fill="#F7F3E9" stroke="#E67E22" stroke-width="2" rx="20"/>
+    <text x="280" y="26" text-anchor="middle" font-family="SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#2D3748">watchOS</text>
+    
+    <!-- tvOS -->
+    <rect x="360" y="0" width="80" height="40" fill="#F7F3E9" stroke="#E67E22" stroke-width="2" rx="20"/>
+    <text x="400" y="26" text-anchor="middle" font-family="SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#2D3748">tvOS</text>
+    
+    <!-- visionOS -->
+    <rect x="460" y="0" width="120" height="40" fill="#F7F3E9" stroke="#E67E22" stroke-width="2" rx="20"/>
+    <text x="520" y="26" text-anchor="middle" font-family="SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#2D3748">visionOS</text>
+  </g>
+  
+  <!-- Abstract design elements -->
+  <g transform="translate(200, 480)">
+    <!-- Code brackets -->
+    <path d="M40 20 L20 40 L40 60" stroke="#2D3748" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+    <path d="M840 20 L860 40 L840 60" stroke="#2D3748" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+    
+    <!-- Documentation symbols -->
+    <g transform="translate(300, 20)">
+      <rect x="0" y="0" width="60" height="60" fill="#F7F3E9" stroke="#E67E22" stroke-width="3" rx="8"/>
+      <line x1="12" y1="18" x2="48" y2="18" stroke="#2D3748" stroke-width="2" opacity="0.7"/>
+      <line x1="12" y1="28" x2="42" y2="28" stroke="#2D3748" stroke-width="2" opacity="0.5"/>
+      <line x1="12" y1="38" x2="45" y2="38" stroke="#2D3748" stroke-width="2" opacity="0.5"/>
+      <line x1="12" y1="48" x2="36" y2="48" stroke="#2D3748" stroke-width="2" opacity="0.3"/>
+    </g>
+    
+    <g transform="translate(420, 20)">
+      <rect x="0" y="0" width="60" height="60" fill="#F7F3E9" stroke="#E67E22" stroke-width="3" rx="8"/>
+      <line x1="12" y1="18" x2="48" y2="18" stroke="#2D3748" stroke-width="2" opacity="0.7"/>
+      <line x1="12" y1="28" x2="42" y2="28" stroke="#2D3748" stroke-width="2" opacity="0.5"/>
+      <line x1="12" y1="38" x2="45" y2="38" stroke="#2D3748" stroke-width="2" opacity="0.5"/>
+      <line x1="12" y1="48" x2="36" y2="48" stroke="#2D3748" stroke-width="2" opacity="0.3"/>
+    </g>
+    
+    <g transform="translate(540, 20)">
+      <rect x="0" y="0" width="60" height="60" fill="#F7F3E9" stroke="#E67E22" stroke-width="3" rx="8"/>
+      <line x1="12" y1="18" x2="48" y2="18" stroke="#2D3748" stroke-width="2" opacity="0.7"/>
+      <line x1="12" y1="28" x2="42" y2="28" stroke="#2D3748" stroke-width="2" opacity="0.5"/>
+      <line x1="12" y1="38" x2="45" y2="38" stroke="#2D3748" stroke-width="2" opacity="0.5"/>
+      <line x1="12" y1="48" x2="36" y2="48" stroke="#2D3748" stroke-width="2" opacity="0.3"/>
+    </g>
+  </g>
+  
+  <!-- Connecting dots -->
+  <g transform="translate(0, 580)">
+    <circle cx="160" cy="30" r="6" fill="#E67E22"/>
+    <circle cx="320" cy="30" r="6" fill="#2D3748" opacity="0.6"/>
+    <circle cx="480" cy="30" r="6" fill="#E67E22"/>
+    <circle cx="640" cy="30" r="6" fill="#2D3748" opacity="0.6"/>
+    <circle cx="800" cy="30" r="6" fill="#E67E22"/>
+    <circle cx="960" cy="30" r="6" fill="#2D3748" opacity="0.6"/>
+    <circle cx="1120" cy="30" r="6" fill="#E67E22"/>
+    
+    <!-- Connection lines -->
+    <line x1="180" y1="30" x2="300" y2="30" stroke="#2D3748" stroke-width="2" opacity="0.4"/>
+    <line x1="500" y1="30" x2="620" y2="30" stroke="#2D3748" stroke-width="2" opacity="0.4"/>
+    <line x1="820" y1="30" x2="940" y2="30" stroke="#2D3748" stroke-width="2" opacity="0.4"/>
+    <line x1="980" y1="30" x2="1100" y2="30" stroke="#2D3748" stroke-width="2" opacity="0.4"/>
+  </g>
+</svg>

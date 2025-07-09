@@ -1,0 +1,106 @@
+{
+  "dxt_version": "0.1",
+  "name": "apple-dev-mcp",
+  "version": "2.0.0",
+  "display_name": "Apple Dev MCP",
+  "description": "Complete Apple development guidance: Human Interface Guidelines (design) + Technical Documentation (API) for iOS, macOS, watchOS, tvOS, and visionOS",
+  "author": {
+    "name": "Tanner Maasen",
+    "url": "https://github.com/tannermaasen"
+  },
+  "homepage": "https://github.com/tannermaasen/apple-dev-mcp",
+  "icon": "icon.png",
+  "license": "MIT",
+  "keywords": ["apple", "design", "hig", "ios", "macos", "watchos", "tvos", "visionos", "development", "guidelines"],
+  "server": {
+    "type": "node",
+    "entry_point": "dist/server.js",
+    "mcp_config": {
+      "args": [],
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "search_guidelines",
+      "description": "Search Apple Human Interface Guidelines by keywords, with optional platform and category filters"
+    },
+    {
+      "name": "get_component_spec", 
+      "description": "Get detailed specifications and guidelines for a specific UI component"
+    },
+    {
+      "name": "get_design_tokens",
+      "description": "Get design system values (colors, spacing, typography) for specific components"
+    },
+    {
+      "name": "get_accessibility_requirements",
+      "description": "Get accessibility requirements and guidelines for specific components"
+    },
+    {
+      "name": "get_technical_documentation",
+      "description": "Get Apple API documentation for frameworks and symbols with optional design guidance"
+    },
+    {
+      "name": "list_technologies",
+      "description": "List available Apple technologies, frameworks, and symbols"
+    },
+    {
+      "name": "search_technical_documentation",
+      "description": "Search Apple technical documentation with wildcard support"
+    },
+    {
+      "name": "check_updates",
+      "description": "Check for available updates for git repository, static content, and API documentation"
+    },
+    {
+      "name": "search_unified",
+      "description": "Unified search across both HIG design guidelines and technical documentation with cross-references"
+    },
+    {
+      "name": "search_wildcard",
+      "description": "Advanced wildcard pattern search with * and ? support across design and technical documentation"
+    },
+    {
+      "name": "get_cross_references",
+      "description": "Get cross-reference mappings between design guidelines and technical implementations"
+    },
+    {
+      "name": "generate_fused_guidance",
+      "description": "Generate comprehensive fused guidance combining design principles with technical implementation details"
+    },
+    {
+      "name": "generate_implementation_guide",
+      "description": "Generate detailed step-by-step implementation guide for a specific component"
+    }
+  ],
+  "user_config": [
+    {
+      "name": "content_source",
+      "display_name": "Content Source Preference",
+      "description": "Choose whether to use static content (faster) or live scraping (more current)",
+      "type": "select",
+      "options": [
+        {"value": "static", "label": "Static Content (Recommended)"},
+        {"value": "live", "label": "Live Scraping"},
+        {"value": "hybrid", "label": "Hybrid (Static with Live Fallback)"}
+      ],
+      "default": "hybrid"
+    },
+    {
+      "name": "enable_experimental_features",
+      "display_name": "Enable Experimental Features",
+      "description": "Enable experimental content fusion and advanced search features",
+      "type": "boolean", 
+      "default": false
+    }
+  ],
+  "compatibility": {
+    "runtime": {
+      "node": ">=18.0.0"
+    },
+    "platforms": ["darwin", "win32", "linux"]
+  }
+}

@@ -30,7 +30,11 @@
     "type-check": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
-    "ci": "npm run lint && npm run type-check && npm run test && npm run build"
+    "ci": "npm run lint && npm run type-check && npm run test && npm run build",
+    "build:extension": "npm run build && node scripts/build-extension.js",
+    "package:extension": "npm run build:extension",
+    "extension:dev": "npm run dev && npm run build:extension",
+    "release:full": "npm run ci && npm run build:extension"
   },
   "keywords": [
     "mcp",
@@ -77,6 +81,7 @@
     "@types/turndown": "^5.0.5",
     "@typescript-eslint/eslint-plugin": "^8.35.0",
     "@typescript-eslint/parser": "^8.35.0",
+    "archiver": "^7.0.1",
     "eslint": "^9.29.0",
     "jest": "^30.0.3",
     "prettier": "^3.4.0",
@@ -90,6 +95,9 @@
   "files": [
     "dist/**/*",
     "content/**/*",
+    "manifest.json",
+    "icon.svg",
+    "apple-dev-mcp.dxt",
     "README.md",
     "LICENSE",
     "CLAUDE.md"
