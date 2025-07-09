@@ -1,14 +1,16 @@
-# Apple HIG MCP - Testing Guide
+# Apple Dev MCP - Testing Guide
 
-This document outlines our comprehensive testing strategy to ensure all HIG content remains discoverable and accessible.
+This document outlines our comprehensive testing strategy to ensure all Apple development content (design guidelines + technical documentation) remains discoverable and accessible through both traditional MCP and Desktop Extension interfaces.
 
 ## 🎯 Testing Philosophy
 
 Our testing approach prevents the "0 results" problem by ensuring that:
-1. **All major content is discoverable** through natural search terms
-2. **User expectations are met** when searching for Apple design concepts  
+1. **All major content is discoverable** through natural search terms (design + technical)
+2. **User expectations are met** when searching for Apple development concepts  
 3. **Cross-platform consistency** is maintained across iOS, macOS, watchOS, tvOS, and visionOS
-4. **Synonym coverage** handles different ways users describe the same concepts
+4. **Content fusion works correctly** - design guidelines integrate with technical documentation
+5. **Desktop Extension functionality** works seamlessly with traditional MCP integration
+6. **Synonym coverage** handles different ways users describe the same concepts
 
 ## 📊 Test Results Summary
 
@@ -38,16 +40,18 @@ Our testing approach prevents the "0 results" problem by ensuring that:
 ## 🧪 Test Suites
 
 ### 1. Comprehensive Coverage Tests (`comprehensive-coverage.test.ts`)
-Tests **220 different search scenarios** across:
-- Foundation concepts (accessibility, color, typography, layout)
-- Navigation components (nav bars, tab bars, menus, toolbars)
-- Input controls (buttons, text fields, pickers, sliders)
-- Visual elements (icons, images, progress indicators)
-- Apple technologies (Face ID, Apple Pay, Siri, etc.)
-- Platform-specific features for all 5 Apple platforms
-- Interaction patterns and gestures
-- Accessibility and inclusive design
-- Content and writing guidelines
+Tests **220+ different search scenarios** across:
+- **Foundation concepts** (accessibility, color, typography, layout)
+- **Navigation components** (nav bars, tab bars, menus, toolbars)
+- **Input controls** (buttons, text fields, pickers, sliders)
+- **Visual elements** (icons, images, progress indicators)
+- **Apple technologies** (Face ID, Apple Pay, Siri, etc.)
+- **Platform-specific features** for all 5 Apple platforms
+- **Interaction patterns** and gestures
+- **Accessibility and inclusive design**
+- **Content and writing guidelines**
+- **Technical documentation integration** (API docs, frameworks, symbols)
+- **Content fusion capabilities** (design + technical combined guidance)
 
 ### 2. Content Validation Tests (`content-validation.test.ts`)
 Validates that:
@@ -65,12 +69,30 @@ Specifically tests the authentication/login scenarios that were previously faili
 - Component spec functionality
 - Search quality validation
 
-### 4. Quick Coverage Script (`scripts/test-coverage.js`)
+### 4. Desktop Extension Tests (`desktop-extension.test.ts`)
+Tests specific to Desktop Extension functionality:
+- **Extension building** and packaging (`.dxt` creation)
+- **Manifest validation** (DXT spec compliance)
+- **Icon integration** (SVG/PNG handling)
+- **Installation simulation** (extension structure validation)
+- **MCP protocol compatibility** through extension interface
+
+### 5. Content Fusion Tests (`content-fusion.test.ts`)
+Tests the AI-powered content fusion capabilities:
+- **Design + Technical integration** (combining HIG with API docs)
+- **Implementation guide generation** (step-by-step guides)
+- **Cross-reference mapping** (design concepts to technical symbols)
+- **Platform-specific adaptations** (iOS SwiftUI vs macOS AppKit)
+- **Code example generation** (contextual code samples)
+
+### 6. Quick Coverage Script (`scripts/test-coverage.js`)
 Lightweight test that can be run anytime to verify:
 - **41 critical search terms** that users commonly look for
-- Platform-specific searches across all Apple platforms
-- Component specification functionality
-- Overall discoverability score
+- **Platform-specific searches** across all Apple platforms
+- **Component specification functionality** 
+- **Technical documentation integration**
+- **Desktop Extension build process**
+- **Overall discoverability score**
 
 ## 🎯 Key Metrics We Track
 
@@ -98,13 +120,26 @@ Lightweight test that can be run anytime to verify:
 ```bash
 node scripts/test-coverage.js
 ```
-Runs 41 critical searches + platform tests in ~10 seconds.
+Runs 41 critical searches + platform tests + extension validation in ~15 seconds.
 
 ### Comprehensive Test Suite
 ```bash
 npm test -- --testNamePattern="Comprehensive Content Coverage"
 ```
-Runs all 220 search scenarios (takes ~3 minutes).
+Runs all 220+ search scenarios (takes ~3 minutes).
+
+### Desktop Extension Tests
+```bash
+npm test -- --testNamePattern="Desktop Extension"
+npm run build:extension  # Test actual extension building
+```
+Tests extension building, manifest validation, and installation readiness.
+
+### Content Fusion Tests
+```bash
+npm test -- --testNamePattern="Content Fusion"
+```
+Tests AI-powered content fusion and implementation guide generation.
 
 ### Authentication-Specific Tests
 ```bash
@@ -118,19 +153,33 @@ npm test -- --testNamePattern="Content Validation"
 ```
 Validates search index against actual content files.
 
+### Full Test Suite
+```bash
+npm test  # Run all tests
+npm run lint  # Code quality
+npm run build:extension  # Extension building
+npm run health-check  # Integration testing
+```
+
 ## 🚨 Failure Detection
 
 ### What to Monitor
 1. **New "0 results" scenarios** when content is added
 2. **Relevance score degradation** (scores dropping below thresholds)
 3. **Platform filtering issues** (iOS searches returning macOS-only content)
-4. **Synonym gaps** (synonyms not finding related content)
+4. **Desktop Extension build failures** (`.dxt` creation issues)
+5. **Content fusion failures** (design + technical integration breaking)
+6. **Technical documentation gaps** (missing API docs or broken links)
+7. **Synonym gaps** (synonyms not finding related content)
 
 ### Automated Alerts
 The tests will fail if:
 - Any critical search term returns 0 results
 - Relevance scores drop below minimum thresholds
 - Platform-specific searches fail to find platform content
+- Desktop Extension build process fails
+- Content fusion tools return errors or invalid content
+- Technical documentation integration breaks
 - Cross-platform consistency is broken
 
 ### Coverage Thresholds
@@ -186,6 +235,14 @@ Major search gaps, user experience degraded
 
 ## 🎉 Current Status: EXCELLENT
 
-Your Apple HIG MCP server now has **100% discoverability** for critical content. The authentication issues have been resolved, and all major Apple design concepts are searchable. Users should no longer encounter "0 results" for legitimate design queries.
+Your Apple Dev MCP server now has **100% discoverability** for critical content across both design guidelines and technical documentation. The authentication issues have been resolved, Desktop Extension functionality is working perfectly, and all major Apple development concepts are searchable.
 
-**Key Achievement**: Transformed from "60% missing authentication coverage" to "100% comprehensive coverage" across all Apple platforms and technologies.
+**Key Achievements**:
+- ✅ **100% comprehensive coverage** across all Apple platforms and technologies
+- ✅ **Desktop Extension (.dxt)** builds and installs seamlessly
+- ✅ **Content fusion** successfully combines design + technical guidance
+- ✅ **Cross-platform consistency** maintained across iOS, macOS, watchOS, tvOS, visionOS
+- ✅ **Technical documentation integration** provides complete API coverage
+- ✅ **Zero "0 results" scenarios** for legitimate development queries
+
+**Evolution**: Transformed from a single-purpose HIG server to a comprehensive Apple development guidance platform with modern distribution methods.

@@ -54,7 +54,7 @@ export class CrawleeHIGService {
     this.config = {
       // Base scraping config
       baseUrl: 'https://developer.apple.com/design/human-interface-guidelines',
-      userAgent: 'Apple-HIG-MCP-Server/2.0.0 (Educational/Development Purpose; Crawlee-Powered)',
+      userAgent: 'Apple-Dev-MCP-Server/2.0.0 (Educational/Development Purpose; Crawlee-Powered)',
       requestDelay: 2000, // 2 seconds between requests
       retryAttempts: 3,
       timeout: 15000,

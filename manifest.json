@@ -6,9 +6,9 @@
   "description": "Complete Apple development guidance: Human Interface Guidelines (design) + Technical Documentation (API) for iOS, macOS, watchOS, tvOS, and visionOS",
   "author": {
     "name": "Tanner Maasen",
-    "url": "https://github.com/tannermaasen"
+    "url": "https://github.com/tmaasen"
   },
-  "homepage": "https://github.com/tannermaasen/apple-dev-mcp",
+  "homepage": "https://github.com/tmaasen/apple-dev-mcp",
   "icon": "icon.png",
   "license": "MIT",
   "keywords": ["apple", "design", "hig", "ios", "macos", "watchos", "tvos", "visionos", "development", "guidelines"],

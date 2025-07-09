@@ -32,6 +32,9 @@ jobs:
     - name: Run health check
       run: npm run health-check
       
+    - name: Build Desktop Extension
+      run: npm run build:extension
+      
     - name: Publish to NPM
       if: startsWith(github.ref, 'refs/tags/v')
       run: npm publish
@@ -45,20 +48,25 @@ jobs:
       run: |
         TAG=${GITHUB_REF#refs/tags/}
         gh release create "$TAG" \
-          --title "Apple HIG MCP Server $TAG" \
+          --title "Apple Dev MCP Server $TAG" \
+          apple-dev-mcp.dxt \
           --notes "## Release $TAG
 
         Apple Human Interface Guidelines MCP Server release.
 
         ### Installation
         \`\`\`bash
-        npm install -g apple-hig-mcp@$TAG
+        # Desktop Extension (Recommended)
+        # Download apple-dev-mcp.dxt from GitHub releases
+        
+        # Traditional NPM
+        npm install -g apple-dev-mcp@$TAG
         \`\`\`
 
         ### Usage
         \`\`\`bash
         # Test the server
-        npx @modelcontextprotocol/inspector apple-hig-mcp
+        npx @modelcontextprotocol/inspector apple-dev-mcp
         \`\`\`
 
         ### Features
@@ -74,5 +82,5 @@ jobs:
       run: |
         TAG=${GITHUB_REF#refs/tags/}
         echo "🎉 Successfully released Apple HIG MCP Server $TAG"
-        echo "📦 NPM: https://www.npmjs.com/package/apple-hig-mcp"
+        echo "📦 NPM: https://www.npmjs.com/package/apple-dev-mcp"
         echo "🏷️ GitHub: https://github.com/${{ github.repository }}/releases/tag/$TAG"

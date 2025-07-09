@@ -52,7 +52,7 @@ describe('Server Component Integration', () => {
   test('should handle server startup configuration', () => {
     // Test configuration values that would be used by the server
     const serverConfig = {
-      name: 'apple-hig-mcp',
+      name: 'apple-dev-mcp',
       version: '1.0.0',
       description: 'Model Context Protocol server for Apple Human Interface Guidelines',
     };
@@ -62,7 +62,7 @@ describe('Server Component Integration', () => {
       tools: {},
     };
     
-    expect(serverConfig.name).toBe('apple-hig-mcp');
+    expect(serverConfig.name).toBe('apple-dev-mcp');
     expect(serverConfig.version).toBe('1.0.0');
     expect(serverConfig.description).toContain('Apple Human Interface Guidelines');
     expect(capabilities).toHaveProperty('resources');

@@ -228,12 +228,16 @@ jobs:
 
           ### Installation
           \`\`\`bash
-          npm install -g apple-hig-mcp@$TAG
+          # Desktop Extension (Recommended)
+          # Download apple-dev-mcp.dxt from GitHub releases
+          
+          # Traditional NPM
+          npm install -g apple-dev-mcp@$TAG
           \`\`\`
 
           ### Usage with Claude Code
           \`\`\`bash
-          claude mcp add apple-hig apple-hig-mcp
+          claude mcp add apple-dev apple-dev-mcp
           \`\`\`
 
           ### Features
@@ -250,6 +254,6 @@ jobs:
         run: |
           VERSION=$(node -p "require('./package.json').version")
           echo "🎉 Successfully published Apple HIG MCP Server v${VERSION}"
-          echo "📦 NPM: https://www.npmjs.com/package/apple-hig-mcp"
+          echo "📦 NPM: https://www.npmjs.com/package/apple-dev-mcp"
           echo "🏷️ GitHub: https://github.com/${{ github.repository }}/releases/tag/v${VERSION}"
       

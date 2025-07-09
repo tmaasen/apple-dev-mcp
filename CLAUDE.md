@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an Apple Dev MCP (Model Context Protocol) server that provides complete Apple development guidance, combining Human Interface Guidelines (design principles) with Technical Documentation (API reference) for all Apple platforms. It serves comprehensive content through MCP resources and tools for AI assistants like Claude.
+This is an Apple Dev MCP (Model Context Protocol) server that provides complete Apple development guidance, combining Human Interface Guidelines (design principles) with Technical Documentation (API reference) for all Apple platforms. It serves comprehensive content through both traditional MCP integration and modern Desktop Extensions (.dxt) for AI assistants like Claude.
 
 ## Development Commands
 
@@ -23,6 +23,11 @@ This is an Apple Dev MCP (Model Context Protocol) server that provides complete 
 - `npm run generate-content` - Generate static HIG content files (full discovery + enhanced keyword search)
 - `npm run generate-content:offline` - Fast offline generation (14 core sections, keyword search only)
 - `npm run validate-content` - Validate generated content
+
+### Desktop Extension
+- `npm run build:extension` - Build Desktop Extension (.dxt file)
+- `npm run package:extension` - Alias for build:extension
+- `npm run extension:dev` - Development build with extension packaging
 
 ### Testing with MCP Inspector
 ```bash
@@ -67,7 +72,7 @@ The project uses a hybrid static/dynamic architecture with static content genera
 
 6. **HIGToolsService** (`src/services/tools.service.ts`) - MCP Tools implementation with enhanced keyword search
    - Interactive search with advanced keyword matching and intent recognition
-   - Four main tools: `search_guidelines`, `get_component_spec`, `get_design_tokens`, `get_accessibility_requirements`
+   - 13 comprehensive tools including design guidelines, technical documentation, and content fusion
    - Multi-factor relevance scoring (keyword + structure + context + synonym expansion)
    - Enhanced keyword search with synonym expansion and intelligent matching
    - Optimized for fast response times without external model dependencies
@@ -83,6 +88,22 @@ The project uses a hybrid static/dynamic architecture with static content genera
    - Structured content extraction (overview, guidelines, examples, specifications)
    - Quality validation with comprehensive scoring and SLA monitoring
    - Apple-specific content pattern recognition and enhancement
+
+9. **ContentFusionService** (`src/services/content-fusion.service.ts`) - AI-powered content fusion
+   - Intelligently combines design guidelines with technical implementation details
+   - Generates comprehensive implementation guides and fused guidance
+   - Live content pattern matching without hard-coded knowledge bases
+   - Apple Code Review compliant with respectful content usage
+
+10. **AppleDevAPIClient** (`src/services/apple-dev-api-client.service.ts`) - Technical documentation integration
+    - Provides access to Apple's API documentation and technical references
+    - Integrates with design guidelines for comprehensive development guidance
+    - Caches technical content for performance optimization
+
+11. **Desktop Extension Support** (`scripts/build-extension.js`, `manifest.json`) - Modern distribution
+    - Builds DXT-compliant Desktop Extensions for one-click installation
+    - Packages server, content, and dependencies in portable .dxt format
+    - Includes proper manifest, icon, and validation for Claude Desktop integration
 
 ### Data Flow
 
@@ -149,6 +170,9 @@ The server supports all Apple platforms with specific categories:
 - `__tests__/resources.test.ts` - MCP resource generation
 - `__tests__/tools.test.ts` - MCP tool functionality
 - `__tests__/server.test.ts` - Integration testing
+- `__tests__/content-fusion.test.ts` - Content fusion capabilities
+- `__tests__/desktop-extension.test.ts` - Desktop Extension building and validation
+- `__tests__/comprehensive-coverage.test.ts` - 220+ search scenario coverage
 
 ### Mocking
 - `__mocks__/node-fetch.ts` - HTTP request mocking for tests
@@ -272,3 +296,40 @@ When issues occur:
 2. Regenerate content with `npm run generate-content`
 3. For scraper issues: update selectors in `cleanContent()` method
 4. Test with `npm run health-check`
+
+## Desktop Extension Distribution
+
+### Extension Building
+The project supports modern Desktop Extension (.dxt) distribution alongside traditional npm packages:
+
+```bash
+# Build extension
+npm run build:extension
+
+# Creates: apple-dev-mcp.dxt (0.78 MB)
+# Contains: server, content, dependencies, manifest, icon
+```
+
+### Extension Structure
+- **manifest.json** - DXT specification compliant metadata
+- **icon.svg** - Abstract design (trademark-safe)
+- **dist/server.js** - Compiled MCP server
+- **content/** - Static Apple content
+- **package.json** - Dependencies and metadata
+
+### Distribution Methods
+1. **Desktop Extension (Recommended)**: One-click installation via .dxt file
+2. **Traditional NPM**: Standard MCP server installation
+3. **Dual Distribution**: Both methods supported simultaneously
+
+### Installation Process
+1. User downloads apple-dev-mcp.dxt from GitHub releases
+2. Double-click installs extension in Claude Desktop
+3. Restart Claude Desktop
+4. Full Apple development guidance available instantly
+
+### Key Benefits
+- **Zero Configuration**: No JSON editing required
+- **Instant Access**: Pre-bundled content and dependencies
+- **Automatic Updates**: Through GitHub releases
+- **Professional Distribution**: Modern extension ecosystem integration

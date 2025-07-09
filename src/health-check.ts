@@ -40,7 +40,7 @@ class HealthChecker {
       const response = await fetch('https://developer.apple.com/design/human-interface-guidelines/', {
         method: 'HEAD',
         headers: {
-          'User-Agent': 'Apple-HIG-MCP-HealthCheck/1.0.0'
+          'User-Agent': 'Apple-Dev-MCP-HealthCheck/1.0.0'
         }
       });
 

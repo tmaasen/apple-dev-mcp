@@ -24,7 +24,7 @@
 ## 🚀 Quick Start
 
 ### Option 1: Claude Desktop Extension (Recommended)
-1. Download `apple-dev-mcp.dxt` from [releases](https://github.com/tannermaasen/apple-dev-mcp/releases)
+1. Download `apple-dev-mcp.dxt` from [releases](https://github.com/tmaasen/apple-dev-mcp/releases)
 2. Double-click to install in Claude Desktop
 3. Restart Claude Desktop
 4. Start using Apple development guidance!

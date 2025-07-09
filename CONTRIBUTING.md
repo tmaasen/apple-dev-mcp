@@ -1,6 +1,6 @@
-# Contributing to Apple HIG MCP Server
+# Contributing to Apple Dev MCP Server
 
-Thank you for your interest in contributing to the Apple Human Interface Guidelines MCP Server! This project helps developers access Apple's latest design guidelines directly within their AI-assisted development workflow using a hybrid static/dynamic content system.
+Thank you for your interest in contributing to the Apple Dev MCP Server! This project provides complete Apple development guidance, combining Human Interface Guidelines (design) with Technical Documentation (API) for all Apple platforms, delivered through both Desktop Extensions and traditional MCP integration.
 
 ## Table of Contents
 
@@ -31,8 +31,8 @@ This project adheres to a code of conduct. By participating, you are expected to
 1. Fork the repository
 2. Clone your fork:
    ```bash
-   git clone https://github.com/your-username/apple-hig-mcp.git
-   cd apple-hig-mcp
+   git clone https://github.com/your-username/apple-dev-mcp.git
+   cd apple-dev-mcp
    ```
 
 3. Install dependencies:
@@ -50,7 +50,12 @@ This project adheres to a code of conduct. By participating, you are expected to
    npx @modelcontextprotocol/inspector dist/server.js
    ```
 
-6. Generate static content (optional):
+6. Build Desktop Extension (optional):
+   ```bash
+   npm run build:extension
+   ```
+
+7. Generate static content (optional):
    ```bash
    npm run generate-content
    ```
@@ -61,7 +66,8 @@ This project adheres to a code of conduct. By participating, you are expected to
 
 Use descriptive branch names:
 - `fix/scraper-ios-button-extraction` - Bug fixes
-- `feature/add-vision-pro-support` - New features
+- `feature/add-visionos-support` - New features
+- `feature/desktop-extension-improvements` - Desktop Extension features
 - `docs/update-installation-guide` - Documentation updates
 - `scraper/update-selectors-for-new-layout` - Scraper maintenance
 - `content/regenerate-static-content` - Static content updates
@@ -127,12 +133,13 @@ Scrapers now serve as fallback when static content is unavailable. Still importa
 ### 🆕 New Features
 
 Ideas for new features:
-- Enhanced static content generation
-- Better search index optimization
-- Additional Apple platforms support
-- Content freshness monitoring
-- Historical HIG comparisons
-- GitHub Action improvements
+- **Desktop Extension improvements**: Better UX, configuration options
+- **Content Fusion enhancements**: Improved design + technical integration
+- **Enhanced static content generation**: Better performance and coverage
+- **Advanced search capabilities**: Cross-reference improvements, wildcard patterns
+- **Additional Apple platforms support**: New platforms and frameworks
+- **Content freshness monitoring**: Update notifications and version tracking
+- **GitHub Action improvements**: Better automation and error handling
 
 ### 📚 Documentation
 
@@ -187,14 +194,16 @@ scraper.discoverSections().then(console.log);
 
 ### Manual Testing Checklist
 
-- [ ] Static content loads correctly (primary mode)
-- [ ] Scraper fallback works when static content unavailable
-- [ ] All MCP resources load correctly
-- [ ] Search tool returns relevant results from static indices
-- [ ] Component specs include proper Apple attribution
-- [ ] Platform comparison works across different platforms
-- [ ] Latest updates include current design system information
-- [ ] Content generation script completes successfully
+- [ ] **Desktop Extension**: `.dxt` builds and installs correctly in Claude Desktop
+- [ ] **Static content** loads correctly (primary mode)
+- [ ] **Scraper fallback** works when static content unavailable  
+- [ ] **MCP resources** load correctly (`hig://ios`, `hig://buttons`, etc.)
+- [ ] **Search tools** return relevant results from static indices
+- [ ] **Content Fusion tools** (`generate_fused_guidance`, `generate_implementation_guide`) work
+- [ ] **Technical Documentation tools** integrate properly with API docs
+- [ ] **Component specs** include proper Apple attribution
+- [ ] **Cross-platform features** work across iOS, macOS, watchOS, tvOS, visionOS
+- [ ] **Content generation** script completes successfully
 
 ## Submitting Changes
 
@@ -202,15 +211,18 @@ scraper.discoverSections().then(console.log);
 
 1. **Create a descriptive PR title:**
    - `Fix scraper selectors for iOS navigation guidelines`
-   - `Add support for watchOS Liquid Glass components`
+   - `Add support for watchOS design tokens extraction`
+   - `Improve Desktop Extension manifest and build process`
+   - `Enhance content fusion for SwiftUI components`
 
 2. **Fill out the PR template completely**
 
 3. **Ensure all checks pass:**
-   - [ ] Tests pass
-   - [ ] Linting passes
-   - [ ] Build succeeds
-   - [ ] Health check passes
+   - [ ] Tests pass (`npm test`)
+   - [ ] Linting passes (`npm run lint`)
+   - [ ] Build succeeds (`npm run build`)
+   - [ ] Desktop Extension builds (`npm run build:extension`)
+   - [ ] Health check passes (`npm run health-check`)
 
 4. **Wait for review** - Maintainers will review PRs within a few days
 
@@ -318,4 +330,35 @@ Contributors are recognized in:
 
 ---
 
-Thank you for helping make Apple's design guidelines more accessible to developers! 🍎✨
+Thank you for helping make Apple's complete development guidance more accessible to developers! 🍎✨
+
+## Desktop Extension Development
+
+### Building Extensions
+
+The project supports modern Desktop Extension (`.dxt`) distribution:
+
+```bash
+# Build the extension
+npm run build:extension
+
+# Test extension locally
+# 1. Install the generated apple-dev-mcp.dxt in Claude Desktop
+# 2. Restart Claude Desktop
+# 3. Test the tools and resources
+```
+
+### Extension Structure
+
+- **Manifest**: `manifest.json` - DXT specification compliant
+- **Icon**: `icon.svg` - Abstract design (trademark-safe)
+- **Server**: `dist/server.js` - MCP server entry point
+- **Content**: `content/` - Static Apple content
+- **Build Script**: `scripts/build-extension.js` - Extension packaging
+
+### Contributing to Extensions
+
+- **Manifest improvements**: Better user configuration options
+- **Icon design**: Updates to the abstract icon design
+- **Build process**: Enhanced packaging and validation
+- **Documentation**: Installation and usage guides
