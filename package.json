@@ -31,6 +31,12 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
     "ci": "npm run lint && npm run type-check && npm run test && npm run build",
+    "test:mcp": "jest src/__tests__/mcp-tools-integration.test.ts --verbose",
+    "test:mcp-watch": "jest src/__tests__/mcp-tools-integration.test.ts --watch --verbose",
+    "test:mcp-fast": "jest src/__tests__/mcp-tools-integration.test.ts --silent --maxWorkers=1",
+    "test:all-tools": "npm run test:mcp && npm run health-check",
+    "test:automation": "node scripts/test-mcp-tools.js",
+    "test:quick": "npm run build && npm run test:mcp-fast",
     "build:extension": "npx @anthropic-ai/dxt pack",
     "package:extension": "npx @anthropic-ai/dxt pack",
     "release:full": "npm run ci && npm run build:extension"
@@ -64,10 +70,8 @@
   "homepage": "https://github.com/tmaasen/apple-dev-mcp#readme",
   "dependencies": {
     "@crawlee/playwright": "^3.13.8",
-    "@crawlee/utils": "^3.13.8",
     "@modelcontextprotocol/sdk": "^1.0.0",
     "axios": "^1.6.0",
-    "compromise": "^14.14.4",
     "markdown-it": "^14.1.0",
     "node-cache": "^5.1.2",
     "playwright": "^1.53.1",
