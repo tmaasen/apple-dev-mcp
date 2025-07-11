@@ -110,12 +110,12 @@ export class HIGToolProvider {
           ]);
           
           if (process.env.NODE_ENV === 'development') {
-            console.log(`[HIGTools] Using static content search for: "${query}"`);
+            // console.log(`[HIGTools] Using static content search for: "${query}"`);
           }
         }
-      } catch (staticError) {
+      } catch {
         if (process.env.NODE_ENV === 'development') {
-          console.warn('[HIGTools] Static search failed or timed out, falling back to keyword search:', staticError);
+          // console.warn('[HIGTools] Static search failed or timed out, falling back to keyword search:', staticError);
         }
         // Continue to keyword search fallback
       }
@@ -128,12 +128,12 @@ export class HIGToolProvider {
             results = await this.staticContentProvider.keywordSearchContent(query.trim(), platform, category, limit);
             
             if (process.env.NODE_ENV === 'development') {
-              console.log(`[HIGTools] Using static keyword search for: "${query}"`);
+              // console.log(`[HIGTools] Using static keyword search for: "${query}"`);
             }
           }
-        } catch (keywordError) {
+        } catch {
           if (process.env.NODE_ENV === 'development') {
-            console.warn('[HIGTools] Static keyword search failed, using minimal fallback:', keywordError);
+            // console.warn('[HIGTools] Static keyword search failed, using minimal fallback:', keywordError);
           }
         }
         
@@ -142,7 +142,7 @@ export class HIGToolProvider {
           results = this.getMinimalFallbackResults(query.trim(), platform, category, limit);
           
           if (process.env.NODE_ENV === 'development') {
-            console.log(`[HIGTools] Using minimal fallback search for: "${query}"`);
+            // console.log(`[HIGTools] Using minimal fallback search for: "${query}"`);
           }
         }
       }
@@ -160,7 +160,7 @@ export class HIGToolProvider {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       
       if (process.env.NODE_ENV === 'development') {
-        console.error('[HIGTools] Search failed:', error);
+        // console.error('[HIGTools] Search failed:', error);
       }
       
       throw new Error(`Search failed: ${errorMessage}`);
@@ -286,7 +286,7 @@ export class HIGToolProvider {
       const trimmedComponentName = componentName.trim();
       
       if (process.env.NODE_ENV === 'development') {
-        console.log(`[HIGTools] Getting component spec for: ${trimmedComponentName} (platform: ${platform || 'any'})`);
+        // console.log(`[HIGTools] Getting component spec for: ${trimmedComponentName} (platform: ${platform || 'any'})`);
       }
       
       // Try to get component from static content first
@@ -295,8 +295,8 @@ export class HIGToolProvider {
       if (this.staticContentProvider) {
         try {
           component = await this.getComponentFromStaticContent(trimmedComponentName, platform);
-        } catch (error) {
-          console.warn(`Failed to get component from static content: ${error}`);
+        } catch {
+          // console.warn(`Failed to get component from static content: ${error}`);
         }
       }
       
@@ -325,7 +325,7 @@ export class HIGToolProvider {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       
       if (process.env.NODE_ENV === 'development') {
-        console.error('[HIGTools] Get component spec failed:', error);
+        // console.error('[HIGTools] Get component spec failed:', error);
       }
       
       throw new Error(`Failed to get component specification: ${errorMessage}`);
@@ -568,7 +568,7 @@ export class HIGToolProvider {
     const { component, platform, tokenType = 'all' } = args;
     
     if (process.env.NODE_ENV === 'development') {
-      console.log(`[HIGTools] Getting design tokens for ${component} on ${platform}`);
+      // console.log(`[HIGTools] Getting design tokens for ${component} on ${platform}`);
     }
 
     const componentLower = component.toLowerCase();
@@ -614,7 +614,7 @@ export class HIGToolProvider {
     const { component, platform } = args;
     
     if (process.env.NODE_ENV === 'development') {
-      console.log(`[HIGTools] Getting accessibility requirements for ${component} on ${platform}`);
+      // console.log(`[HIGTools] Getting accessibility requirements for ${component} on ${platform}`);
     }
 
     const componentLower = component.toLowerCase();
@@ -654,7 +654,7 @@ export class HIGToolProvider {
     
     try {
       if (process.env.NODE_ENV === 'development') {
-        console.log(`[HIGTools] Getting technical documentation for: ${path}`);
+        // console.log(`[HIGTools] Getting technical documentation for: ${path}`);
       }
       
       const documentation = await this.appleDevAPIClient.getTechnicalDocumentation(path.trim());
@@ -665,9 +665,9 @@ export class HIGToolProvider {
         try {
           const designQuery = this.extractDesignRelevantTerms(documentation.symbol);
           designGuidance = await this.staticContentProvider.searchContent(designQuery, undefined, undefined, 3);
-        } catch (error) {
+        } catch {
           if (process.env.NODE_ENV === 'development') {
-            console.warn('[HIGTools] Failed to get design guidance:', error);
+            // console.warn('[HIGTools] Failed to get design guidance:', error);
           }
         }
       }
@@ -681,7 +681,7 @@ export class HIGToolProvider {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       
       if (process.env.NODE_ENV === 'development') {
-        console.error(`[HIGTools] Technical documentation failed for ${path}:`, error);
+        // console.error(`[HIGTools] Technical documentation failed for ${path}:`, error);
       }
       
       return {
@@ -740,7 +740,7 @@ export class HIGToolProvider {
     
     try {
       if (process.env.NODE_ENV === 'development') {
-        console.log(`[HIGTools] Searching technical documentation for: "${query}"`);
+        // console.log(`[HIGTools] Searching technical documentation for: "${query}"`);
       }
       
       let results: TechnicalSearchResult[];
@@ -779,7 +779,7 @@ export class HIGToolProvider {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       
       if (process.env.NODE_ENV === 'development') {
-        console.error(`[HIGTools] Technical search failed for "${query}":`, error);
+        // console.error(`[HIGTools] Technical search failed for "${query}":`, error);
       }
       
       return {
@@ -1220,9 +1220,9 @@ export class HIGToolProvider {
             limit: maxDesignResults
           });
           designResults = designSearch.results;
-        } catch (error) {
+        } catch {
           if (process.env.NODE_ENV === 'development') {
-            console.warn('[HIGTools] Design search failed:', error);
+            // console.warn('[HIGTools] Design search failed:', error);
           }
         }
       }
@@ -1237,9 +1237,9 @@ export class HIGToolProvider {
             maxResults: maxTechnicalResults
           });
           technicalResults = technicalSearch.results;
-        } catch (error) {
+        } catch {
           if (process.env.NODE_ENV === 'development') {
-            console.warn('[HIGTools] Technical search failed:', error);
+            // console.warn('[HIGTools] Technical search failed:', error);
           }
         }
       }
@@ -1649,9 +1649,9 @@ export class HIGToolProvider {
             limit: 5
           });
           designResults = designSearch.results;
-        } catch (error) {
+        } catch {
           if (process.env.NODE_ENV === 'development') {
-            console.warn('[HIGTools] Design search for fusion failed:', error);
+            // console.warn('[HIGTools] Design search for fusion failed:', error);
           }
         }
       }
@@ -1665,9 +1665,9 @@ export class HIGToolProvider {
           maxResults: 5
         });
         technicalResults = technicalSearch.results;
-      } catch (error) {
+      } catch {
         if (process.env.NODE_ENV === 'development') {
-          console.warn('[HIGTools] Technical search for fusion failed:', error);
+          // console.warn('[HIGTools] Technical search for fusion failed:', error);
         }
       }
 
@@ -1717,7 +1717,7 @@ export class HIGToolProvider {
             fusedContent = fusionResult.content;
           } else {
             if (process.env.NODE_ENV === 'development') {
-              console.warn('[HIGTools] Fusion failed:', fusionResult.error);
+              // console.warn('[HIGTools] Fusion failed:', fusionResult.error);
             }
           }
         }

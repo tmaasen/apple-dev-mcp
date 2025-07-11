@@ -26,9 +26,9 @@ export class HIGResourceProvider {
     if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
       try {
         return await this.staticContentProvider.listResources();
-      } catch (error) {
+      } catch {
         if (process.env.NODE_ENV === 'development') {
-          console.warn('[HIGResourceProvider] Static content failed, falling back to scraping:', error);
+          // console.warn('[HIGResourceProvider] Static content failed, falling back to scraping:', error);
         }
         // Fall through to scraper fallback
       }
@@ -149,9 +149,9 @@ export class HIGResourceProvider {
       this.cache.set(cacheKey, resources, 7200);
       
       return resources;
-    } catch (error) {
+    } catch {
       if (process.env.NODE_ENV === 'development') {
-        console.error('[HIGResourceProvider] Failed to list resources:', error);
+        // console.error('[HIGResourceProvider] Failed to list resources:', error);
       }
       return [];
     }
@@ -168,9 +168,9 @@ export class HIGResourceProvider {
         if (resource) {
           return resource;
         }
-      } catch (error) {
+      } catch {
         if (process.env.NODE_ENV === 'development') {
-          console.warn(`[HIGResourceProvider] Static content failed for ${uri}, falling back to scraping:`, error);
+          // console.warn(`[HIGResourceProvider] Static content failed for ${uri}, falling back to scraping:`, error);
         }
         // Fall through to scraper fallback
       }
@@ -236,9 +236,9 @@ export class HIGResourceProvider {
       this.cache.set(cacheKey, resource, 3600);
       
       return resource;
-    } catch (error) {
+    } catch {
       if (process.env.NODE_ENV === 'development') {
-        console.error(`[HIGResourceProvider] Failed to get resource ${uri}:`, error);
+        // console.error(`[HIGResourceProvider] Failed to get resource ${uri}:`, error);
       }
       return null;
     }
@@ -565,9 +565,9 @@ For the most up-to-date and official information, please refer to Apple's offici
             description: resource.description
           };
         }
-      } catch (error) {
+      } catch {
         if (process.env.NODE_ENV === 'development') {
-          console.warn(`[HIGResourceProvider] Static content failed for topic ${topic}, falling back to scraping:`, error);
+          // console.warn(`[HIGResourceProvider] Static content failed for topic ${topic}, falling back to scraping:`, error);
         }
       }
     }
@@ -627,9 +627,9 @@ For the most up-to-date and official information, please refer to Apple's offici
             description: resource.description
           };
         }
-      } catch (error) {
+      } catch {
         if (process.env.NODE_ENV === 'development') {
-          console.warn(`[HIGResourceProvider] Static content failed for topic ${topic}/${platform}, falling back to scraping:`, error);
+          // console.warn(`[HIGResourceProvider] Static content failed for topic ${topic}/${platform}, falling back to scraping:`, error);
         }
       }
     }
