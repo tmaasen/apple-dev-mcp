@@ -39,7 +39,8 @@
     "test:quick": "npm run build && npm run test:mcp-fast",
     "build:extension": "npx @anthropic-ai/dxt pack",
     "package:extension": "npx @anthropic-ai/dxt pack",
-    "release:full": "npm run ci && npm run build:extension"
+    "release:full": "npm run ci && npm run build:extension",
+    "validate-shipping": "node scripts/simple-validation.js"
   },
   "keywords": [
     "mcp",
