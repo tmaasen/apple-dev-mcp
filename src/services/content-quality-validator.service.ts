@@ -54,8 +54,6 @@ export class ContentQualityValidatorService implements IContentQualityValidator,
       minAppleTermsScore: 0.1,
       ...customThresholds
     };
-
-    console.log('[QualityValidator] Initialized with SLA target: ≥95% real content extraction');
   }
 
   /**

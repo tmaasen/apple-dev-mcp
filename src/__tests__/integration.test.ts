@@ -84,7 +84,7 @@ button.frame = CGRect(x: 0, y: 0, width: 120, height: 44)
       minStructureScore: 0.5,
       minAppleTermsScore: 0.3
     });
-    searchIndexer = new SearchIndexerService(contentProcessor);
+    searchIndexer = new SearchIndexerService();
   });
 
   describe('Phase 1: Content Processing Pipeline', () => {

@@ -90,32 +90,19 @@ export class HIGStaticContentProvider {
       // So if currentDir is /path/to/extension/dist, content is at /path/to/extension/content
       contentDir = path.join(packageRoot, 'content');
       
-      if (process.env.NODE_ENV === 'development') {
-        // console.log(`[StaticContent] Using import.meta.url approach: ${contentDir}`);
-      }
     } catch {
       // Fallback for CommonJS or other environments
       const cwd = process.cwd();
       
-      if (process.env.NODE_ENV === 'development') {
-        // console.log(`[StaticContent] import.meta.url failed, using fallback. CWD: ${cwd}`);
-      }
-      
       // Try multiple potential locations
       const possiblePaths = [
         path.join(cwd, 'content'),
-        path.join(path.dirname(cwd), 'content'),
-        path.join(__dirname, '..', 'content'),
-        path.join(__dirname, '..', '..', 'content')
+        path.join(path.dirname(cwd), 'content')
       ];
       
       // Don't check directory existence during construction - defer to isAvailable()
       // Use the first path as default (will be validated later when needed)
       contentDir = possiblePaths[0];
-      
-      if (process.env.NODE_ENV === 'development') {
-        // console.log(`[StaticContent] Content directory set to: ${contentDir}`);
-      }
     }
     
     return contentDir;
@@ -126,17 +113,10 @@ export class HIGStaticContentProvider {
    */
   async initialize(): Promise<boolean> {
     try {
-      if (process.env.NODE_ENV === 'development') {
-        // console.log(`[StaticContent] Initializing with content directory: ${this.contentDir}`);
-      }
-      
       // Check if content directory exists
       try {
         await fs.access(this.contentDir);
       } catch {
-        if (process.env.NODE_ENV === 'development') {
-          // console.error(`[StaticContent] Content directory not found: ${this.contentDir}`);
-        }
         return false;
       }
       
@@ -144,16 +124,8 @@ export class HIGStaticContentProvider {
       await this.loadSearchIndex();
       await this.loadCrossReferences();
       
-      if (process.env.NODE_ENV === 'development') {
-        // console.log(`[StaticContent] Initialized with ${this.metadata?.totalSections || 0} sections`);
-        // console.log(`[StaticContent] Content last updated: ${this.metadata?.lastUpdated || 'unknown'}`);
-      }
-      
       return true;
     } catch {
-      if (process.env.NODE_ENV === 'development') {
-        // console.warn('[StaticContent] Failed to initialize:', error);
-      }
       return false;
     }
   }
@@ -572,9 +544,7 @@ export class HIGStaticContentProvider {
 
       return section;
     } catch {
-      if (process.env.NODE_ENV === 'development') {
-        // console.warn(`[StaticContent] Failed to load section ${sectionId}:`, error);
-      }
+      // Fall through to scraper fallback
       return null;
     }
   }

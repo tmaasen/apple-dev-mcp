@@ -109,9 +109,6 @@ export class AppleDevAPIClient {
       
       return response.data;
     } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        // console.error(`[AppleDevAPIClient] Error fetching ${url}:`, error);
-      }
       throw new Error(`Failed to fetch technical documentation: ${error}`);
     }
   }
@@ -194,10 +191,7 @@ export class AppleDevAPIClient {
           });
           results.push(...frameworkResults);
         } catch {
-          // Continue on individual framework errors
-          if (process.env.NODE_ENV === 'development') {
-            // console.warn(`[AppleDevAPIClient] Failed to search ${framework.title}:`, error);
-          }
+          // Fall through to fallback
         }
       }
 

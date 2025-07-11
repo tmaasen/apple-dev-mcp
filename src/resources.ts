@@ -27,9 +27,6 @@ export class HIGResourceProvider {
       try {
         return await this.staticContentProvider.listResources();
       } catch {
-        if (process.env.NODE_ENV === 'development') {
-          // console.warn('[HIGResourceProvider] Static content failed, falling back to scraping:', error);
-        }
         // Fall through to scraper fallback
       }
     }
@@ -150,9 +147,6 @@ export class HIGResourceProvider {
       
       return resources;
     } catch {
-      if (process.env.NODE_ENV === 'development') {
-        // console.error('[HIGResourceProvider] Failed to list resources:', error);
-      }
       return [];
     }
   }
@@ -169,9 +163,6 @@ export class HIGResourceProvider {
           return resource;
         }
       } catch {
-        if (process.env.NODE_ENV === 'development') {
-          // console.warn(`[HIGResourceProvider] Static content failed for ${uri}, falling back to scraping:`, error);
-        }
         // Fall through to scraper fallback
       }
     }
@@ -237,9 +228,6 @@ export class HIGResourceProvider {
       
       return resource;
     } catch {
-      if (process.env.NODE_ENV === 'development') {
-        // console.error(`[HIGResourceProvider] Failed to get resource ${uri}:`, error);
-      }
       return null;
     }
   }
@@ -566,9 +554,7 @@ For the most up-to-date and official information, please refer to Apple's offici
           };
         }
       } catch {
-        if (process.env.NODE_ENV === 'development') {
-          // console.warn(`[HIGResourceProvider] Static content failed for topic ${topic}, falling back to scraping:`, error);
-        }
+        // Fall through to scraper fallback
       }
     }
 
@@ -628,9 +614,7 @@ For the most up-to-date and official information, please refer to Apple's offici
           };
         }
       } catch {
-        if (process.env.NODE_ENV === 'development') {
-          // console.warn(`[HIGResourceProvider] Static content failed for topic ${topic}/${platform}, falling back to scraping:`, error);
-        }
+        // Fall through to scraper fallback
       }
     }
 

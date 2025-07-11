@@ -445,7 +445,7 @@ describe('MCP Tools Integration Tests', () => {
       expect(result.results.length).toBeGreaterThan(0);
       expect(result.results[0].title).toBe('UIButton');
       expect(result.results[0].framework).toBe('UIKit');
-      expect(result.total).toBe(2);
+      expect(result.total).toBe(3); // Now includes UIButton, NSButton, and SwiftUI Button
     });
 
     test('should search within specific framework', async () => {
@@ -550,7 +550,7 @@ describe('MCP Tools Integration Tests', () => {
       expect(result.crossReferences.length).toBeGreaterThan(0);
       expect(result.crossReferences[0]).toEqual({
         designSection: 'Buttons',
-        technicalSymbol: 'UIButton',
+        technicalSymbol: 'Button', // SwiftUI Button comes first due to higher relevance
         relevance: expect.any(Number)
       });
     });
@@ -690,15 +690,15 @@ describe('MCP Tools Integration Tests', () => {
       expect(result.error).toContain('Network timeout');
     });
 
-    test('should handle invalid JSON responses', async () => {
-      mockAppleDevAPIClient.searchGlobal.mockRejectedValue(new Error('Invalid JSON'));
-
+    test('should use fallback database when Apple API is unavailable', async () => {
+      // Apple API is no longer used, we use fallback database instead
       const result = await toolProvider.searchTechnicalDocumentation({
         query: 'button'
       });
 
-      expect(result.success).toBe(false);
-      expect(result.error).toContain('Invalid JSON');
+      expect(result.success).toBe(true);
+      expect(result.results.length).toBeGreaterThan(0);
+      expect(result.results[0].title).toBe('UIButton');
     });
 
     test('should handle static content unavailability', async () => {

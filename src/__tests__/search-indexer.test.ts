@@ -3,19 +3,16 @@
  */
 
 import { SearchIndexerService } from '../services/search-indexer.service.js';
-import { ContentProcessorService } from '../services/content-processor.service.js';
 import type { HIGSection } from '../types.js';
 
 // TensorFlow and semantic search removed - using keyword search only
 
 describe('SearchIndexerService', () => {
   let indexer: SearchIndexerService;
-  let contentProcessor: ContentProcessorService;
   let testSections: HIGSection[];
 
   beforeEach(() => {
-    contentProcessor = new ContentProcessorService();
-    indexer = new SearchIndexerService(contentProcessor);
+    indexer = new SearchIndexerService();
 
     testSections = [
       {

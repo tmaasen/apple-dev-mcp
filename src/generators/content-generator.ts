@@ -1676,7 +1676,7 @@ export function createContentGenerator(config?: Partial<ContentGenerationConfig>
   // Create services with dependency injection
   const fileSystem = new FileSystemService();
   const contentProcessor = new ContentProcessorService();
-  const searchIndexer = new SearchIndexerService(contentProcessor);
+  const searchIndexer = new SearchIndexerService();
   const crossReferenceGenerator = new CrossReferenceGeneratorService();
 
   // Create Crawlee-based services
@@ -1684,10 +1684,10 @@ export function createContentGenerator(config?: Partial<ContentGenerationConfig>
   const crawleeService = new CrawleeHIGService(cache);
   const contentExtractor = new HIGContentExtractor();
 
-  console.log('🔧 Initialized Apple HIG Content Generator');
-  console.log('   • High-quality content extraction enabled');
-  console.log('   • Quality monitoring and validation active');
-  console.log('   • Content optimized for AI assistant use');
+  // console.log('🔧 Initialized Apple HIG Content Generator');
+  // console.log('   • High-quality content extraction enabled');
+  // console.log('   • Quality monitoring and validation active');
+  // console.log('   • Content optimized for AI assistant use');
 
   return new ContentGenerator(
     finalConfig,
@@ -1704,8 +1704,8 @@ export function createContentGenerator(config?: Partial<ContentGenerationConfig>
 // Run the generator if called directly
 if (import.meta.url === `file://${process.argv[1]}`) {
   const generator = createContentGenerator();
-  generator.generate().catch((error) => {
-    console.error('💥 Content generation failed:', error);
+  generator.generate().catch((_error) => {
+    // console.error('💥 Content generation failed:', _error);
     process.exit(1);
   });
 }

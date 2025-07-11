@@ -103,14 +103,7 @@ export class CrawleeHIGService {
     // Check cache first
     const cached = this.cache.get<HIGSection>(cacheKey);
     if (cached) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`[CrawleeHIG] Using cached content for: ${section.title}`);
-      }
       return cached;
-    }
-
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`[CrawleeHIG] Extracting content for: ${section.title}`);
     }
 
     try {
@@ -124,18 +117,10 @@ export class CrawleeHIGService {
 
       // Cache successful extractions for 2 hours
       this.cache.set(cacheKey, updatedSection, 7200);
-      
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`[CrawleeHIG] Successfully extracted content for: ${section.title} (quality: ${extractionResult.quality}, method: ${extractionResult.extractionMethod})`);
-      }
-      
+
       return updatedSection;
 
-    } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.error(`[CrawleeHIG] Failed to extract content for ${section.title}:`, error);
-      }
-      
+    } catch {
       // Return section with minimal fallback content
       return {
         ...section,
@@ -159,10 +144,6 @@ export class CrawleeHIGService {
     let page;
     
     try {
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`[CrawleeHIG] Processing: ${url}`);
-      }
-      
       // Launch browser with our configuration
       browser = await chromium.launch({
         headless: this.config.browserOptions.headless,
@@ -191,10 +172,6 @@ export class CrawleeHIGService {
       // Extract content from the page
       const contentResult = await this.extractPageContent(page);
 
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`[CrawleeHIG] Content extracted, length: ${contentResult.content.length}, quality: ${contentResult.quality}`);
-      }
-
       return {
         content: contentResult.content,
         quality: contentResult.quality,
@@ -202,11 +179,14 @@ export class CrawleeHIGService {
         timestamp: new Date()
       };
 
-    } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.error(`[CrawleeHIG] Page processing error: ${error}`);
-      }
-      throw error;
+    } catch {
+      // Return fallback content extraction result
+      return {
+        content: `# ${url}\n\nContent extraction failed. Please refer to the original URL for the latest information.`,
+        quality: 0.1,
+        extractionMethod: 'fallback',
+        timestamp: new Date()
+      };
     } finally {
       // Clean up resources
       if (page) {
@@ -241,10 +221,8 @@ export class CrawleeHIGService {
             bestContent = result.content;
             bestQuality = result.quality;
           }
-        } catch (error) {
-          if (process.env.NODE_ENV === 'development') {
-            console.warn(`[CrawleeHIG] Content extraction strategy failed: ${error}`);
-          }
+        } catch {
+          // Fall through to fallback
         }
       }
 
@@ -253,11 +231,12 @@ export class CrawleeHIGService {
         quality: bestQuality
       };
 
-    } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.error(`[CrawleeHIG] Content extraction failed: ${error}`);
-      }
-      throw error;
+    } catch {
+      // Return fallback content if all strategies fail
+      return {
+        content: 'Content extraction failed.',
+        quality: 0.1
+      };
     }
   }
 
@@ -612,9 +591,6 @@ export class CrawleeHIGService {
     
     if (timeSinceLastRequest < this.config.requestDelay) {
       const waitTime = this.config.requestDelay - timeSinceLastRequest;
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`[CrawleeHIG] Rate limiting: waiting ${waitTime}ms`);
-      }
       await new Promise(resolve => setTimeout(resolve, waitTime));
     }
     

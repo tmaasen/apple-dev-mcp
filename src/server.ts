@@ -59,7 +59,6 @@ class AppleHIGMCPServer {
    * Initialize the server asynchronously
    */
   async initialize(): Promise<void> {
-    try {
       // Only do minimal validation during startup to avoid DXT timeout
       // All heavy initialization is deferred until first request
       
@@ -79,10 +78,6 @@ class AppleHIGMCPServer {
       this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.resourceProvider, this.staticContentProvider, this.appleDevAPIClient);
 
       this.setupHandlers();
-    } catch (error) {
-      console.error('Failed to initialize Apple Dev MCP Server:', error);
-      throw error;
-    }
   }
 
   /**
@@ -104,25 +99,14 @@ class AppleHIGMCPServer {
         if (isAvailable) {
           await this.staticContentProvider.initialize();
           this.useStaticContent = true;
-          
-          if (process.env.NODE_ENV === 'development') {
-            // console.log('✅ Static HIG content initialized on demand');
-          }
         } else {
           this.useStaticContent = false;
-          if (process.env.NODE_ENV === 'development') {
-            // console.log('ℹ️  Static content not available. Using live scraping fallback.');
-          }
         }
       })();
 
       await Promise.race([initPromise, timeoutPromise]);
     } catch {
       this.useStaticContent = false;
-      if (process.env.NODE_ENV === 'development') {
-        // console.warn('⚠️  Failed to initialize static content:', error);
-        // console.log('ℹ️  Falling back to live scraping.');
-      }
     }
   }
 
@@ -160,11 +144,6 @@ class AppleHIGMCPServer {
         const resources = await this.resourceProvider.listResources();
         // const _duration = Date.now() - startTime;
         
-        // Log performance metrics (disabled in production to avoid console pollution)
-        if (process.env.NODE_ENV === 'development') {
-          // console.log(`[AppleHIGMCP] Listed ${resources.length} resources in ${duration}ms`);
-        }
-        
         return {
           resources: resources.map(resource => ({
             uri: resource.uri,
@@ -175,11 +154,7 @@ class AppleHIGMCPServer {
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        
-        if (process.env.NODE_ENV === 'development') {
-          // console.error('[AppleHIGMCP] Failed to list resources:', error);
-        }
-        
+
         throw new McpError(
           ErrorCode.InternalError,
           `Failed to list resources: ${errorMessage}`
@@ -211,10 +186,6 @@ class AppleHIGMCPServer {
           throw new McpError(ErrorCode.InvalidRequest, `Resource not found: ${uri}`);
         }
 
-        if (process.env.NODE_ENV === 'development') {
-          // console.log(`[AppleHIGMCP] Read resource ${uri} in ${duration}ms`);
-        }
-
         return {
           contents: [{
             uri: resource.uri,
@@ -224,11 +195,7 @@ class AppleHIGMCPServer {
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        
-        if (process.env.NODE_ENV === 'development') {
-          // console.error(`[AppleHIGMCP] Failed to read resource ${request.params.uri}:`, error);
-        }
-        
+
         if (error instanceof McpError) {
           throw error;
         }
@@ -600,13 +567,7 @@ class AppleHIGMCPServer {
           default:
             throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
         }
-        
-        // const _duration = Date.now() - startTime;
-        
-        if (process.env.NODE_ENV === 'development') {
-          // console.log(`[AppleHIGMCP] Tool '${name}' executed in ${duration}ms`);
-        }
-        
+
         return {
           content: [{
             type: 'text',
@@ -615,11 +576,7 @@ class AppleHIGMCPServer {
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        
-        if (process.env.NODE_ENV === 'development') {
-          // console.error(`[AppleHIGMCP] Tool call failed for ${request.params.name}:`, error);
-        }
-        
+
         if (error instanceof McpError) {
           throw error;
         }
@@ -638,9 +595,6 @@ class AppleHIGMCPServer {
   async run(): Promise<void> {
     try {
       // Minimal startup logging for fast DXT validation
-      if (process.env.NODE_ENV === 'development') {
-        // console.log('🍎 Apple Dev MCP Server starting (fast mode)...');
-      }
       
       // Initialize the server components (minimal, fast startup)
       await this.initialize();
@@ -649,30 +603,13 @@ class AppleHIGMCPServer {
       
       // Add error handling for transport
       transport.onclose = () => {
-        if (process.env.NODE_ENV === 'development') {
-          // console.log('🔌 MCP transport closed');
-        }
       };
 
       transport.onerror = (_error) => {
-        // console.error('🔥 MCP transport error:', error);
       };
 
       await this.server.connect(transport);
-      
-      if (process.env.NODE_ENV === 'development') {
-        // console.log(`🚀 Apple Dev MCP Server ready! Content will initialize on first request.`);
-      }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
-      // Always log startup errors to stderr for Claude Desktop debugging
-      console.error('💥 Failed to start Apple Dev MCP Server:', errorMessage);
-      
-      if (process.env.NODE_ENV === 'development') {
-        // console.error('Full error details:', error);
-      }
-      
+    } catch {
       process.exit(1);
     }
   }
@@ -680,12 +617,10 @@ class AppleHIGMCPServer {
 
 // Handle graceful shutdown
 process.on('SIGINT', async () => {
-  // console.log('\n🛑 Shutting down Apple Dev MCP Server...');
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-  // console.log('\n🛑 Shutting down Apple Dev MCP Server...');
   process.exit(0);
 });
 
@@ -693,8 +628,7 @@ process.on('SIGTERM', async () => {
 if (import.meta.url === `file://${process.argv[1]}`) {
   // Always start the server regardless of arguments
   const server = new AppleHIGMCPServer();
-  server.run().catch((error) => {
-    console.error('💥 Failed to start Apple Dev MCP Server:', error);
+  server.run().catch(() => {
     process.exit(1);
   });
 }

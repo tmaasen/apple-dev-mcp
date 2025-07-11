@@ -37,13 +37,6 @@ export class HIGDiscoveryService {
   constructor(cache: HIGCache) {
     this.cache = cache;
     
-    // Suppress Crawlee logging when not in development
-    if (process.env.NODE_ENV !== 'development') {
-      process.env.CRAWLEE_LOG_LEVEL = 'OFF';
-      process.env.CRAWLEE_VERBOSE_LOG = 'false';
-      process.env.APIFY_LOG_LEVEL = 'OFF';
-    }
-    
     this.config = {
       baseUrl: 'https://developer.apple.com/design/human-interface-guidelines',
       maxDepth: 3,
@@ -61,16 +54,9 @@ export class HIGDiscoveryService {
     // Check cache first
     const cached = this.cache.get<HIGSection[]>(this.config.cacheKey);
     if (cached && cached.length > 0) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`[HIGDiscovery] Using cached sections: ${cached.length} sections`);
-      }
       return cached;
     }
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[HIGDiscovery] Starting dynamic section discovery...');
-    }
-    
     try {
       // Reset state
       this.discoveredSections.clear();
@@ -110,11 +96,8 @@ export class HIGDiscoveryService {
         },
         
         // Error handling
-        failedRequestHandler: async ({ request, error }) => {
-          const errorMessage = error instanceof Error ? error.message : String(error);
-          if (process.env.NODE_ENV === 'development') {
-            console.warn(`[HIGDiscovery] Failed to process ${request.url}: ${errorMessage}`);
-          }
+        failedRequestHandler: async ({ _request, _error }) => {
+          // Fall through to fallback
         }
       });
 
@@ -127,18 +110,9 @@ export class HIGDiscoveryService {
       // Cache the results
       this.cache.set(this.config.cacheKey, sections, this.config.cacheTTL);
       
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`[HIGDiscovery] Discovery completed: ${sections.length} sections found`);
-      }
-      this.logDiscoveryStats(sections);
-      
       return sections;
 
-    } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.error('[HIGDiscovery] Discovery failed:', error);
-      }
-      
+    } catch {
       // Return fallback known sections if discovery fails
       return this.getFallbackSections();
     }
@@ -148,18 +122,8 @@ export class HIGDiscoveryService {
    * Handle each page during crawling
    */
   private async handlePageRequest(page: any, request: any, enqueueLinks: any, dataset: any): Promise<void> {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`[HIGDiscovery] Processing: ${request.url}`);
-    }
-    
     // Wait for the SPA to load
     await page.waitForLoadState('networkidle', { timeout: 15000 });
-    
-    // Extract the page title
-    const pageTitle = await page.title();
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`[HIGDiscovery] Page title: ${pageTitle}`);
-    }
 
     // Look for navigation elements and content links
     await this.extractNavigationLinks(page, request, enqueueLinks, dataset);
@@ -201,12 +165,6 @@ export class HIGDiscoveryService {
 
         for (const link of links) {
           await this.processDiscoveredLink(link, request, dataset);
-        }
-
-        if (links.length > 0) {
-          if (process.env.NODE_ENV === 'development') {
-            console.log(`[HIGDiscovery] Found ${links.length} links with selector: ${selector}`);
-          }
         }
       } catch {
         // Selector not found, continue with next one
@@ -286,9 +244,6 @@ export class HIGDiscoveryService {
       };
 
       await dataset.pushData(discoveredLink);
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`[HIGDiscovery] Discovered: ${title} (${platform}/${category})`);
-      }
     }
   }
 
@@ -318,14 +273,8 @@ export class HIGDiscoveryService {
       };
 
       this.discoveredSections.set(url, section);
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`[HIGDiscovery] Created section: ${title}`);
-      }
-
-    } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn(`[HIGDiscovery] Failed to create section from ${request.url}:`, error);
-      }
+    } catch {
+      // Fall through to fallback
     }
   }
 
@@ -467,34 +416,9 @@ export class HIGDiscoveryService {
   }
 
   /**
-   * Log discovery statistics
-   */
-  private logDiscoveryStats(sections: HIGSection[]): void {
-    const platformCounts = sections.reduce((acc, section) => {
-      acc[section.platform] = (acc[section.platform] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-
-    const categoryCounts = sections.reduce((acc, section) => {
-      acc[section.category] = (acc[section.category] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[HIGDiscovery] Discovery Statistics:');
-      console.log('  Platforms:', platformCounts);
-      console.log('  Categories:', categoryCounts);
-    }
-  }
-
-  /**
    * Fallback to known sections if discovery fails
    */
   private getFallbackSections(): HIGSection[] {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('[HIGDiscovery] Using fallback known sections');
-    }
-    
     // Return a minimal set of core sections as fallback
     const fallbackSections = [
       { title: 'iOS Overview', url: 'https://developer.apple.com/design/human-interface-guidelines/ios', platform: 'iOS' as ApplePlatform, category: 'foundations' as HIGCategory },

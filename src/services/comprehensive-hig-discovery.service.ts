@@ -25,25 +25,20 @@ export class ComprehensiveHIGDiscoveryService {
   /**
    * Discover all HIG sections using comprehensive approach
    */
-  async discoverSections(): Promise<HIGSection[]> {
-    console.log('[ComprehensiveDiscovery] Starting comprehensive HIG section discovery...');
-    
+  async discoverSections(): Promise<HIGSection[]> {    
     // Check cache first
     const cached = this.cache.get<HIGSection[]>(this.cacheKey);
     if (cached && cached.length > 50) { // Expect 50+ sections minimum
-      console.log(`[ComprehensiveDiscovery] Using cached sections: ${cached.length} sections`);
       return cached;
     }
 
     const discoveredSections: HIGSection[] = [];
 
     // Strategy 1: Use known comprehensive HIG structure
-    console.log('[ComprehensiveDiscovery] Building sections from known HIG structure...');
     const knownSections = this.buildComprehensiveKnownSections();
     discoveredSections.push(...knownSections);
 
     // Strategy 2: Try HTTP discovery for additional sections (with timeout protection)
-    console.log('[ComprehensiveDiscovery] Attempting HTTP-based discovery...');
     try {
       const httpSections = await Promise.race([
         this.tryHttpDiscovery(),
@@ -58,14 +53,12 @@ export class ComprehensiveHIGDiscoveryService {
           discoveredSections.push(httpSection);
         }
       }
-      console.log(`[ComprehensiveDiscovery] HTTP discovery added ${httpSections.length} additional sections`);
-    } catch (error) {
-      console.log(`[ComprehensiveDiscovery] HTTP discovery failed, using known sections only: ${error}`);
+    } catch {
+      // Fall through to known sections only
     }
 
     // Remove duplicates and validate
     const uniqueSections = this.removeDuplicates(discoveredSections);
-    console.log(`[ComprehensiveDiscovery] Discovery completed: ${uniqueSections.length} total sections`);
     
     // Cache the results
     this.cache.set(this.cacheKey, uniqueSections, this.cacheTTL);
@@ -224,8 +217,8 @@ export class ComprehensiveHIGDiscoveryService {
           const discoveredSections = this.parseLinksFromHTML(html, platformPage.platform as ApplePlatform);
           sections.push(...discoveredSections);
         }
-      } catch (error) {
-        console.warn(`[ComprehensiveDiscovery] Failed to fetch ${platformPage.platform}: ${error}`);
+      } catch {
+        // Fall through to fallback
       }
     }
 

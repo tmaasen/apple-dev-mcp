@@ -3,8 +3,8 @@
  * Single Responsibility: Generate and manage search indices with keyword-based search
  */
 
-import type { ISearchIndexer, IContentProcessor } from '../interfaces/content-interfaces.js';
-import type { HIGSection, ContentQualityMetrics, SearchConfig } from '../types.js';
+import type { ISearchIndexer } from '../interfaces/content-interfaces.js';
+import type { HIGSection, ContentQualityMetrics } from '../types.js';
 
 interface SearchIndexEntry {
   id: string;
@@ -25,13 +25,6 @@ interface SearchIndexEntry {
 
 export class SearchIndexerService implements ISearchIndexer {
   private searchIndex: Record<string, SearchIndexEntry> = {};
-
-  constructor(
-    private contentProcessor: IContentProcessor,
-    _keywordConfig?: Partial<SearchConfig>
-  ) {
-    console.log('[SearchIndexer] ⚡ Using keyword search only');
-  }
 
   /**
    * Add section to search index
