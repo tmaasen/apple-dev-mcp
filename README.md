@@ -17,7 +17,7 @@
 
 - **🎨 Complete Coverage**: HIG design guidelines + Apple API documentation for iOS, macOS, watchOS, tvOS, visionOS
 - **⚡ Ultra-Fast**: Instant responses via pre-generated static content (no scraping delays)
-- **🔍 Smart Search**: Unified search across design and technical content with wildcard support
+- **🔍 Smart Search**: Unified search across design and technical content
 - **🤖 AI-Powered Tools**: Fused guidance combining design principles with technical implementation
 - **🔄 Always Current**: Auto-updated content every 4 months via GitHub Actions
 
@@ -90,12 +90,11 @@ hig://accessibility    # Accessibility requirements
 hig://ios/foundations  # iOS-specific foundations
 ```
 
-### Key Tools (13 available)
+### Key Tools (8 available)
 
 **Search & Discovery**
 - `search_guidelines` - Search HIG with platform/category filters
 - `search_unified` - Search both design and technical content
-- `search_wildcard` - Pattern search with * and ? wildcards
 
 **Design Guidance**
 - `get_component_spec` - Detailed component specifications
@@ -108,7 +107,6 @@ hig://ios/foundations  # iOS-specific foundations
 
 **AI-Powered Fusion**
 - `generate_fused_guidance` - Comprehensive design + technical guides
-- `generate_implementation_guide` - Step-by-step implementation guides
 
 ### Example
 ```json

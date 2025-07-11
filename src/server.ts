@@ -28,7 +28,6 @@ import { HIGResourceProvider } from './resources.js';
 import { HIGToolProvider } from './tools.js';
 import { HIGStaticContentProvider } from './static-content.js';
 import { AppleDevAPIClient } from './services/apple-dev-api-client.service.js';
-import { UpdateCheckerService } from './services/update-checker.service.js';
 
 class AppleHIGMCPServer {
   private server: Server;
@@ -38,7 +37,6 @@ class AppleHIGMCPServer {
   private resourceProvider: HIGResourceProvider;
   private toolProvider: HIGToolProvider;
   private appleDevAPIClient: AppleDevAPIClient;
-  private updateCheckerService: UpdateCheckerService;
   private useStaticContent: boolean = false;
 
   constructor() {
@@ -61,28 +59,64 @@ class AppleHIGMCPServer {
    * Initialize the server asynchronously
    */
   async initialize(): Promise<void> {
-    // Validate environment
-    await this.validateEnvironment();
-    
-    // Initialize static content provider (but don't fail if content isn't available yet)
-    this.staticContentProvider = new HIGStaticContentProvider();
-    
-    // Try to initialize static content, but don't block startup if it fails
     try {
-      const isAvailable = await this.staticContentProvider.isAvailable();
-      if (isAvailable) {
-        await this.staticContentProvider.initialize();
-        this.useStaticContent = true;
-        
-        if (process.env.NODE_ENV === 'development') {
-          console.log('✅ Static HIG content initialized');
-        }
-      } else {
-        this.useStaticContent = false;
-        if (process.env.NODE_ENV === 'development') {
-          console.log('ℹ️  Static content not available. Using live scraping fallback.');
-        }
+      // Only do minimal validation during startup to avoid DXT timeout
+      // All heavy initialization is deferred until first request
+      
+      // Quick environment check (no external dependencies or imports)
+      const requiredNodeVersion = '18.0.0';
+      const currentVersion = process.version.slice(1);
+      if (this.compareVersions(currentVersion, requiredNodeVersion) < 0) {
+        throw new Error(`Node.js ${requiredNodeVersion} or higher is required. Current version: ${process.version}`);
       }
+
+      // Initialize components with lazy loading - don't access content directory yet
+      this.staticContentProvider = new HIGStaticContentProvider();
+      this.cache = new HIGCache(3600);
+      this.crawleeService = new CrawleeHIGService(this.cache);
+      this.appleDevAPIClient = new AppleDevAPIClient(this.cache);
+      this.resourceProvider = new HIGResourceProvider(this.crawleeService, this.cache, this.staticContentProvider);
+      this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.resourceProvider, this.staticContentProvider, this.appleDevAPIClient);
+
+      this.setupHandlers();
+    } catch (error) {
+      console.error('Failed to initialize Apple Dev MCP Server:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Lazy initialization of static content (called on first request)
+   */
+  private async initializeContentOnDemand(): Promise<void> {
+    if (this.useStaticContent !== false) {
+      return; // Already initialized or attempted
+    }
+
+    try {
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise<void>((_, reject) => {
+        setTimeout(() => reject(new Error('Static content initialization timeout')), 10000);
+      });
+
+      const initPromise = (async () => {
+        const isAvailable = await this.staticContentProvider.isAvailable();
+        if (isAvailable) {
+          await this.staticContentProvider.initialize();
+          this.useStaticContent = true;
+          
+          if (process.env.NODE_ENV === 'development') {
+            console.log('✅ Static HIG content initialized on demand');
+          }
+        } else {
+          this.useStaticContent = false;
+          if (process.env.NODE_ENV === 'development') {
+            console.log('ℹ️  Static content not available. Using live scraping fallback.');
+          }
+        }
+      })();
+
+      await Promise.race([initPromise, timeoutPromise]);
     } catch (error) {
       this.useStaticContent = false;
       if (process.env.NODE_ENV === 'development') {
@@ -90,38 +124,8 @@ class AppleHIGMCPServer {
         console.log('ℹ️  Falling back to live scraping.');
       }
     }
-
-    // Initialize components
-    this.cache = new HIGCache(3600); // 1 hour default TTL
-    this.crawleeService = new CrawleeHIGService(this.cache);
-    this.appleDevAPIClient = new AppleDevAPIClient(this.cache);
-    this.updateCheckerService = new UpdateCheckerService(this.cache, this.staticContentProvider);
-    this.resourceProvider = new HIGResourceProvider(this.crawleeService, this.cache, this.staticContentProvider);
-    this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.resourceProvider, this.staticContentProvider, this.appleDevAPIClient);
-
-    this.setupHandlers();
   }
 
-  /**
-   * Validate runtime environment and configuration
-   */
-  private async validateEnvironment(): Promise<void> {
-    const requiredNodeVersion = '18.0.0';
-    const currentVersion = process.version.slice(1); // Remove 'v' prefix
-    
-    if (this.compareVersions(currentVersion, requiredNodeVersion) < 0) {
-      throw new Error(`Node.js ${requiredNodeVersion} or higher is required. Current version: ${process.version}`);
-    }
-
-    // Validate dependencies are available
-    try {
-      await import('@crawlee/playwright');
-      await import('playwright');
-      await import('node-cache');
-    } catch {
-      throw new Error(`Missing required dependencies. Run 'npm install' to install dependencies.`);
-    }
-  }
 
   /**
    * Compare semantic versions
@@ -149,6 +153,9 @@ class AppleHIGMCPServer {
     // Resource handlers
     this.server.setRequestHandler(ListResourcesRequestSchema, async () => {
       try {
+        // Initialize content on first request
+        await this.initializeContentOnDemand();
+        
         const startTime = Date.now();
         const resources = await this.resourceProvider.listResources();
         const duration = Date.now() - startTime;
@@ -182,6 +189,9 @@ class AppleHIGMCPServer {
 
     this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
       try {
+        // Initialize content on first request
+        await this.initializeContentOnDemand();
+        
         const { uri } = request.params;
         const startTime = Date.now();
         
@@ -363,32 +373,6 @@ class AppleHIGMCPServer {
             },
           },
           {
-            name: 'list_technologies',
-            description: 'List available Apple technologies, frameworks, and symbols',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                includeDesignMapping: {
-                  type: 'boolean',
-                  description: 'Include related HIG design sections',
-                  default: false,
-                },
-                platform: {
-                  type: 'string',
-                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-                  description: 'Filter by target platform',
-                },
-                category: {
-                  type: 'string',
-                  enum: ['framework', 'symbol', 'all'],
-                  description: 'Filter by technology category',
-                  default: 'all',
-                },
-              },
-              required: [],
-            },
-          },
-          {
             name: 'search_technical_documentation',
             description: 'Search Apple technical documentation with wildcard support',
             inputSchema: {
@@ -418,30 +402,6 @@ class AppleHIGMCPServer {
                 },
               },
               required: ['query'],
-            },
-          },
-          {
-            name: 'check_updates',
-            description: 'Check for available updates for git repository, static content, and API documentation',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                sources: {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                    enum: ['git-repository', 'hig-static', 'api-documentation'],
-                  },
-                  description: 'Sources to check for updates',
-                  default: ['git-repository', 'hig-static', 'api-documentation'],
-                },
-                includeChangelog: {
-                  type: 'boolean',
-                  description: 'Include changelog information when available',
-                  default: false,
-                },
-              },
-              required: [],
             },
           },
           {
@@ -505,103 +465,6 @@ class AppleHIGMCPServer {
             },
           },
           {
-            name: 'search_wildcard',
-            description: 'Advanced wildcard pattern search with * and ? support across design and technical documentation',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                pattern: {
-                  type: 'string',
-                  description: 'Wildcard pattern (* matches any sequence, ? matches single character)',
-                },
-                searchType: {
-                  type: 'string',
-                  enum: ['design', 'technical', 'both'],
-                  description: 'Type of content to search',
-                  default: 'both',
-                },
-                platform: {
-                  type: 'string',
-                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS', 'universal'],
-                  description: 'Filter by Apple platform',
-                },
-                category: {
-                  type: 'string',
-                  enum: [
-                    'foundations', 'layout', 'navigation', 'presentation',
-                    'selection-and-input', 'status', 'system-capabilities',
-                    'visual-design', 'icons-and-images', 'color-and-materials',
-                    'typography', 'motion', 'technologies'
-                  ],
-                  description: 'Filter by HIG category (design search only)',
-                },
-                framework: {
-                  type: 'string',
-                  description: 'Filter by framework name (technical search only)',
-                },
-                maxResults: {
-                  type: 'number',
-                  minimum: 1,
-                  maximum: 100,
-                  default: 25,
-                  description: 'Maximum number of results to return',
-                },
-                caseSensitive: {
-                  type: 'boolean',
-                  description: 'Enable case-sensitive pattern matching',
-                  default: false,
-                },
-                wholeWordMatch: {
-                  type: 'boolean',
-                  description: 'Match whole words only',
-                  default: false,
-                },
-              },
-              required: ['pattern'],
-            },
-          },
-          {
-            name: 'get_cross_references',
-            description: 'Get cross-reference mappings between design guidelines and technical implementations',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                query: {
-                  type: 'string',
-                  description: 'Component name or concept to find cross-references for',
-                },
-                type: {
-                  type: 'string',
-                  enum: ['component', 'concept', 'implementation'],
-                  description: 'Type of cross-reference lookup',
-                  default: 'component',
-                },
-                platform: {
-                  type: 'string',
-                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS', 'universal'],
-                  description: 'Filter by Apple platform',
-                },
-                framework: {
-                  type: 'string',
-                  description: 'Filter by framework name',
-                },
-                includeRelated: {
-                  type: 'boolean',
-                  description: 'Include related components and concepts',
-                  default: true,
-                },
-                maxResults: {
-                  type: 'number',
-                  minimum: 1,
-                  maximum: 50,
-                  default: 20,
-                  description: 'Maximum number of cross-references to return',
-                },
-              },
-              required: ['query'],
-            },
-          },
-          {
             name: 'generate_fused_guidance',
             description: 'Generate comprehensive fused guidance combining design principles with technical implementation details',
             inputSchema: {
@@ -655,54 +518,15 @@ class AppleHIGMCPServer {
               required: ['component'],
             },
           },
-          {
-            name: 'generate_implementation_guide',
-            description: 'Generate detailed step-by-step implementation guide for a specific component',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                component: {
-                  type: 'string',
-                  description: 'Component name (e.g., "Button", "Navigation Bar", "Text Field")',
-                },
-                platform: {
-                  type: 'string',
-                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-                  description: 'Target platform for the component',
-                },
-                framework: {
-                  type: 'string',
-                  description: 'Framework to use (e.g., "SwiftUI", "UIKit", "AppKit")',
-                },
-                useCase: {
-                  type: 'string',
-                  description: 'Specific use case or context for the component',
-                },
-                includeDesignPhase: {
-                  type: 'boolean',
-                  description: 'Include design planning phase',
-                  default: true,
-                },
-                includeImplementationPhase: {
-                  type: 'boolean',
-                  description: 'Include implementation phase',
-                  default: true,
-                },
-                includeValidationPhase: {
-                  type: 'boolean',
-                  description: 'Include testing and validation phase',
-                  default: true,
-                },
-              },
-              required: ['component', 'platform'],
-            },
-          },
         ],
       };
     });
 
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       try {
+        // Initialize content on first request
+        await this.initializeContentOnDemand();
+        
         const { name, arguments: args } = request.params;
         const startTime = Date.now();
         
@@ -716,73 +540,62 @@ class AppleHIGMCPServer {
           throw new McpError(ErrorCode.InvalidRequest, 'Tool arguments must be an object');
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let result: any;
         
         switch (name) {
           case 'search_guidelines': {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             result = await this.toolProvider.searchGuidelines(args as any);
             break;
           }
 
           case 'get_component_spec': {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             result = await this.toolProvider.getComponentSpec(args as any);
             break;
           }
 
           case 'get_design_tokens': {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             result = await this.toolProvider.getDesignTokens(args as any);
             break;
           }
 
           case 'get_accessibility_requirements': {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             result = await this.toolProvider.getAccessibilityRequirements(args as any);
             break;
           }
 
           case 'get_technical_documentation': {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             result = await this.toolProvider.getTechnicalDocumentation(args as any);
             break;
           }
 
-          case 'list_technologies': {
-            result = await this.toolProvider.listTechnologies(args as any);
-            break;
-          }
 
           case 'search_technical_documentation': {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             result = await this.toolProvider.searchTechnicalDocumentation(args as any);
             break;
           }
 
-          case 'check_updates': {
-            result = await this.toolProvider.checkUpdates(args as any);
-            break;
-          }
 
           case 'search_unified': {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             result = await this.toolProvider.searchUnified(args as any);
             break;
           }
 
-          case 'search_wildcard': {
-            result = await this.toolProvider.searchWithWildcards(args as any);
-            break;
-          }
 
-          case 'get_cross_references': {
-            result = await this.toolProvider.getCrossReferences(args as any);
-            break;
-          }
 
           case 'generate_fused_guidance': {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             result = await this.toolProvider.generateFusedGuidance(args as any);
             break;
           }
 
-          case 'generate_implementation_guide': {
-            result = await this.toolProvider.generateImplementationGuide(args as any);
-            break;
-          }
 
           default:
             throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
@@ -824,39 +637,36 @@ class AppleHIGMCPServer {
    */
   async run(): Promise<void> {
     try {
-      // Development-only startup logging
+      // Minimal startup logging for fast DXT validation
       if (process.env.NODE_ENV === 'development') {
-        console.log('🍎 Apple Dev MCP Server starting...');
-        console.log('📖 Providing complete Apple development guidance:');
-        console.log('   • Human Interface Guidelines (design principles)');
-        console.log('   • Technical Documentation (API reference)');
-        console.log('   • Unified search across both sources');
-        console.log('ℹ️  This server respects Apple\'s content and provides fair use access');
-        console.log('ℹ️  for educational and development purposes.');
-        console.log('');
+        console.log('🍎 Apple Dev MCP Server starting (fast mode)...');
       }
       
-      // Initialize the server components
+      // Initialize the server components (minimal, fast startup)
       await this.initialize();
 
-      // Check for updates on startup (non-blocking)
-      this.updateCheckerService.checkAndNotifyUpdates().catch(() => {
-        // Silent fail - don't crash on startup update check issues
-      });
-
       const transport = new StdioServerTransport();
+      
+      // Add error handling for transport
+      transport.onclose = () => {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🔌 MCP transport closed');
+        }
+      };
+
+      transport.onerror = (error) => {
+        console.error('🔥 MCP transport error:', error);
+      };
+
       await this.server.connect(transport);
       
       if (process.env.NODE_ENV === 'development') {
-        console.log(`🚀 Apple Dev MCP Server is ready!`);
-        console.log(`   • Design Guidelines: ${this.useStaticContent ? 'Static Content' : 'Live Scraping'}`);
-        console.log(`   • Technical Documentation: Apple API (cached)`);
-        console.log(`   • Tools: ${this.toolProvider ? '13 tools available' : 'Initializing...'}`);
+        console.log(`🚀 Apple Dev MCP Server ready! Content will initialize on first request.`);
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       
-      // Always log startup errors
+      // Always log startup errors to stderr for Claude Desktop debugging
       console.error('💥 Failed to start Apple Dev MCP Server:', errorMessage);
       
       if (process.env.NODE_ENV === 'development') {

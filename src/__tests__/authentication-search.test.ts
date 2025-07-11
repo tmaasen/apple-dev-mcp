@@ -25,7 +25,7 @@ describe('Authentication Search Tests', () => {
     await staticProvider.initialize();
   });
 
-  describe('Critical Authentication Terms (Currently Failing)', () => {
+  describe('Critical Authentication Terms', () => {
     const criticalTerms = [
       'sign in sign up',
       'sign in with apple', 

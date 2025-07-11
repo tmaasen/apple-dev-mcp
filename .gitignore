@@ -1,6 +1,5 @@
 storage/
-.claude/*
-.claude/settings.local.json
+.claude/
 
 # macOS
 .DS_Store

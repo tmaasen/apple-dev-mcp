@@ -467,23 +467,8 @@ export interface SearchUnifiedArgs {
   limit?: number;
 }
 
-export interface ListTechnologiesArgs {
-  includeDesignMapping?: boolean;
-  platform?: ApplePlatform;
-  category?: 'framework' | 'symbol' | 'all';
-}
 
-export interface GetImplementationGuideArgs {
-  componentName: string;
-  platform?: ApplePlatform;
-  includeAccessibility?: boolean;
-  includeCodeExamples?: boolean;
-}
 
-export interface CheckUpdatesArgs {
-  sources?: ('hig-static' | 'api-documentation' | 'git-repository')[];
-  includeChangelog?: boolean;
-}
 
 // Content Fusion Types
 
@@ -520,11 +505,6 @@ export interface ContentFusionResult {
   confidenceScore: number;
 }
 
-export interface WildcardSearchPattern {
-  pattern: string;
-  type: 'prefix' | 'suffix' | 'contains' | 'exact';
-  caseSensitive: boolean;
-}
 
 export interface EnhancedCacheEntry<T> extends CacheEntry<T> {
   source: 'hig-static' | 'api-documentation' | 'scraped' | 'fused';
@@ -533,23 +513,3 @@ export interface EnhancedCacheEntry<T> extends CacheEntry<T> {
   invalidationRules: string[];
 }
 
-// Git Update Types (adapted from MightyDillah's approach)
-
-export interface GitUpdateStatus {
-  branch: string;
-  status: string;
-  behindCount: number;
-  aheadCount: number;
-  localCommit: string;
-  remoteCommit: string;
-  hasUpdates: boolean;
-  hasLocalChanges: boolean;
-  lastChecked: Date;
-}
-
-export interface UpdateNotification {
-  type: 'info' | 'warning' | 'error';
-  message: string;
-  actionRequired?: boolean;
-  instructions?: string[];
-}

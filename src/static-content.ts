@@ -93,7 +93,7 @@ export class HIGStaticContentProvider {
       if (process.env.NODE_ENV === 'development') {
         console.log(`[StaticContent] Using import.meta.url approach: ${contentDir}`);
       }
-    } catch (error) {
+    } catch {
       // Fallback for CommonJS or other environments
       const cwd = process.cwd();
       
@@ -133,7 +133,7 @@ export class HIGStaticContentProvider {
       // Check if content directory exists
       try {
         await fs.access(this.contentDir);
-      } catch (error) {
+      } catch {
         if (process.env.NODE_ENV === 'development') {
           console.error(`[StaticContent] Content directory not found: ${this.contentDir}`);
         }
@@ -152,9 +152,7 @@ export class HIGStaticContentProvider {
       return true;
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
-        if (process.env.NODE_ENV === 'development') {
-          console.warn('[StaticContent] Failed to initialize:', error);
-        }
+        console.warn('[StaticContent] Failed to initialize:', error);
       }
       return false;
     }
@@ -162,6 +160,7 @@ export class HIGStaticContentProvider {
 
   /**
    * Check if static content is available (cached for performance)
+   * Never throws - always returns false if content unavailable
    */
   async isAvailable(): Promise<boolean> {
     // Always check fresh during development for DXT installation
@@ -180,22 +179,33 @@ export class HIGStaticContentProvider {
         this.contentDir = this.getProductionContentDir();
       }
       
-      // First check if content directory exists
-      const contentStat = await fs.stat(this.contentDir);
-      if (!contentStat.isDirectory()) {
-        throw new Error(`Content path is not a directory: ${this.contentDir}`);
+      // Gracefully check if content directory exists - don't throw on missing
+      try {
+        const contentStat = await fs.stat(this.contentDir);
+        if (!contentStat.isDirectory()) {
+          this.availabilityCache = false;
+          return false;
+        }
+      } catch {
+        // Content directory doesn't exist - this is fine, use live scraping
+        this.availabilityCache = false;
+        return false;
       }
       
-      // Then check for metadata file
-      const metadataPath = path.join(this.contentDir, 'metadata', 'generation-info.json');
-      await fs.access(metadataPath);
+      // Then check for metadata file - don't throw on missing
+      try {
+        const metadataPath = path.join(this.contentDir, 'metadata', 'generation-info.json');
+        await fs.access(metadataPath);
+      } catch {
+        // Metadata doesn't exist - this is fine, use live scraping
+        this.availabilityCache = false;
+        return false;
+      }
       
       this.availabilityCache = true;
       return true;
-    } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`[StaticContent] Content not available: ${error.message}`);
-      }
+    } catch {
+      // Any other error - gracefully fall back to live scraping
       this.availabilityCache = false;
       return false;
     }
@@ -227,7 +237,8 @@ export class HIGStaticContentProvider {
    */
   async listResources(): Promise<HIGResource[]> {
     if (!await this.isAvailable()) {
-      throw new Error('Static content not available');
+      // Return empty array instead of throwing - let caller handle fallback
+      return [];
     }
 
     const resources: HIGResource[] = [];
@@ -294,7 +305,8 @@ export class HIGStaticContentProvider {
    */
   async getResource(uri: string): Promise<HIGResource | null> {
     if (!await this.isAvailable()) {
-      throw new Error('Static content not available');
+      // Return null instead of throwing - let caller handle fallback
+      return null;
     }
 
     const parsed = this.parseResourceURI(uri);
@@ -561,9 +573,7 @@ export class HIGStaticContentProvider {
       return section;
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
-        if (process.env.NODE_ENV === 'development') {
-          console.warn(`[StaticContent] Failed to load section ${sectionId}:`, error);
-        }
+        console.warn(`[StaticContent] Failed to load section ${sectionId}:`, error);
       }
       return null;
     }

@@ -72,7 +72,7 @@ The project uses a hybrid static/dynamic architecture with static content genera
 
 6. **HIGToolsService** (`src/services/tools.service.ts`) - MCP Tools implementation with enhanced keyword search
    - Interactive search with advanced keyword matching and intent recognition
-   - 13 comprehensive tools including design guidelines, technical documentation, and content fusion
+   - 8 focused tools including design guidelines, technical documentation, and content fusion
    - Multi-factor relevance scoring (keyword + structure + context + synonym expansion)
    - Enhanced keyword search with synonym expansion and intelligent matching
    - Optimized for fast response times without external model dependencies

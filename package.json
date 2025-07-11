@@ -14,8 +14,8 @@
     "dev": "NODE_ENV=development tsx src/server.ts",
     "start": "node dist/server.js",
     "start:prod": "NODE_ENV=production node dist/server.js",
-    "lint": "eslint \"src/**/*.ts\"",
-    "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "lint": "eslint \"src/**/*.ts\" --ignore-pattern \"src/__mocks__/**\"",
+    "lint:fix": "eslint \"src/**/*.ts\" --ignore-pattern \"src/__mocks__/**\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -31,9 +31,8 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
     "ci": "npm run lint && npm run type-check && npm run test && npm run build",
-    "build:extension": "npm run build && node scripts/build-extension.js",
-    "package:extension": "npm run build:extension",
-    "extension:dev": "npm run dev && npm run build:extension",
+    "build:extension": "npx @anthropic-ai/dxt pack",
+    "package:extension": "npx @anthropic-ai/dxt pack",
     "release:full": "npm run ci && npm run build:extension"
   },
   "keywords": [

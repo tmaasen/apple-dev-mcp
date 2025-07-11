@@ -8,7 +8,19 @@
  */
 
 import type { SearchResult, TechnicalSearchResult, ApplePlatform } from '../types.js';
-import type { CrossReference } from './cross-reference-mapping.service.js';
+
+// Local interface for cross-references (moved from cross-reference-mapping.service.ts)
+export interface CrossReference {
+  designSection: string;
+  designUrl: string;
+  technicalSymbol: string;
+  technicalUrl: string;
+  confidence: number;
+  mappingType: 'direct' | 'related' | 'conceptual' | 'platform-specific';
+  explanation: string;
+  platforms: string[];
+  frameworks: string[];
+}
 
 // Proper TypeScript interfaces (no 'any' types)
 export interface ComponentKnowledge {
