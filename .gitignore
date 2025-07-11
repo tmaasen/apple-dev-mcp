@@ -1,5 +1,6 @@
 storage/
 .claude/
+dist/
 
 # macOS
 .DS_Store

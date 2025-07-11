@@ -8,18 +8,27 @@
     "name": "Tanner Maasen",
     "url": "https://github.com/tmaasen"
   },
-  "homepage": "https://github.com/tmaasen/apple-dev-mcp",
+  "documentation": "https://github.com/tmaasen/apple-dev-mcp?tab=readme-ov-file#readme",
+  "support": "https://github.com/tmaasen/apple-dev-mcp/issues",
   "icon": "icon.png",
-  "license": "MIT",
-  "keywords": ["apple", "design", "hig", "ios", "macos", "watchos", "tvos", "visionos", "development", "guidelines"],
   "server": {
     "type": "node",
     "entry_point": "dist/server.js",
     "mcp_config": {
       "command": "node",
       "args": ["${__dirname}/dist/server.js"],
-      "env": {
-        "NODE_ENV": "production"
+      "platforms": {
+        "win32": {
+          "command": "node.exe",
+          "env": {
+            "TEMP_DIR": "${TEMP}"
+          }
+        },
+        "darwin": {
+          "env": {
+            "TEMP_DIR": "${TMPDIR}"
+          }
+        }
       }
     }
   },
@@ -45,56 +54,35 @@
       "description": "Get Apple API documentation for frameworks and symbols with optional design guidance"
     },
     {
-      "name": "list_technologies",
-      "description": "List available Apple technologies, frameworks, and symbols"
-    },
-    {
       "name": "search_technical_documentation",
       "description": "Search Apple technical documentation with wildcard support"
-    },
-    {
-      "name": "check_updates",
-      "description": "Check for available updates for git repository, static content, and API documentation"
     },
     {
       "name": "search_unified",
       "description": "Unified search across both HIG design guidelines and technical documentation with cross-references"
     },
     {
-      "name": "search_wildcard",
-      "description": "Advanced wildcard pattern search with * and ? support across design and technical documentation"
-    },
-    {
-      "name": "get_cross_references",
-      "description": "Get cross-reference mappings between design guidelines and technical implementations"
-    },
-    {
       "name": "generate_fused_guidance",
       "description": "Generate comprehensive fused guidance combining design principles with technical implementation details"
-    },
-    {
-      "name": "generate_implementation_guide",
-      "description": "Generate detailed step-by-step implementation guide for a specific component"
     }
   ],
-  "user_config": {
-    "content_source": {
-      "type": "string",
-      "title": "Content Source Preference",
-      "description": "Choose whether to use static content (faster) or live scraping (more current)",
-      "default": "hybrid"
-    },
-    "enable_experimental_features": {
-      "type": "boolean",
-      "title": "Enable Experimental Features",
-      "description": "Enable experimental content fusion and advanced search features",
-      "default": false
-    }
-  },
   "compatibility": {
     "runtime": {
       "node": ">=18.0.0"
-    },
-    "platforms": ["darwin", "win32", "linux"]
+    }
+  },
+  "keywords": [
+    "mcp",
+    "ios",
+    "dev",
+    "apple",
+    "watchOS",
+    "visionOS",
+    "tvOS"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tmaasen/apple-dev-mcp.git"
   }
 }

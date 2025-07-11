@@ -462,7 +462,7 @@ export class CrawleeHIGService {
     try {
       const content = await page.evaluate(() => {
         // eslint-disable-next-line no-undef
-        return document.body?.innerText || '';
+        return document.body?.textContent || '';
       });
 
       if (content && content.length > 100) {
