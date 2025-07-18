@@ -18,7 +18,7 @@
 - **🎨 Complete Coverage**: HIG design guidelines + Apple API documentation for iOS, macOS, watchOS, tvOS, visionOS
 - **⚡ Ultra-Fast**: Instant responses via pre-generated static content (no scraping delays)
 - **🔍 Smart Search**: Unified search across design and technical content
-- **🤖 AI-Powered Tools**: Fused guidance combining design principles with technical implementation
+- **🤖 Enhanced Search**: Advanced search combining design principles with technical implementation
 - **🔄 Always Current**: Auto-updated content every 4 months via GitHub Actions
 
 ## 🚀 Quick Start
@@ -90,33 +90,26 @@ hig://accessibility    # Accessibility requirements
 hig://ios/foundations  # iOS-specific foundations
 ```
 
-### Key Tools (8 available)
+### Key Tools (4 available)
 
 **Search & Discovery**
-- `search_guidelines` - Search HIG with platform/category filters
+- `search_human_interface_guidelines` - Search HIG with platform/category filters
 - `search_unified` - Search both design and technical content
 
 **Design Guidance**
-- `get_component_spec` - Detailed component specifications
-- `get_design_tokens` - Colors, spacing, typography values
 - `get_accessibility_requirements` - Accessibility guidelines
 
 **Technical Documentation**
-- `get_technical_documentation` - Apple API docs with code examples
-- `search_technical_documentation` - Search frameworks and symbols
-
-**AI-Powered Fusion**
-- `generate_fused_guidance` - Comprehensive design + technical guides
+- `search_technical_documentation` - Search frameworks and symbols, with optional path-based lookup
 
 ### Example
 ```json
 {
-  "name": "generate_fused_guidance",
+  "name": "search_technical_documentation",
   "arguments": {
-    "component": "Button",
-    "platform": "iOS", 
-    "framework": "SwiftUI",
-    "includeCodeExamples": true
+    "query": "Button",
+    "path": "documentation/SwiftUI/Button",
+    "includeDesignGuidance": true
   }
 }
 ```

@@ -145,7 +145,7 @@ class HealthChecker {
     // Test 5: Search Functionality
     console.log('\n5️⃣  Testing search functionality...');
     try {
-      const searchResult = await this.toolProvider.searchGuidelines({
+      const searchResult = await this.toolProvider.searchHumanInterfaceGuidelines({
         query: 'button',
         platform: 'iOS',
         limit: 5

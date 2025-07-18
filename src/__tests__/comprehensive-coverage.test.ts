@@ -24,7 +24,7 @@ describe('Comprehensive Content Coverage Tests', () => {
 
   // Helper function to test search terms
   const testSearchTerm = async (term: string, expectedMinResults: number = 1, description?: string) => {
-    const results = await toolProvider.searchGuidelines({ query: term, limit: 10 });
+    const results = await toolProvider.searchHumanInterfaceGuidelines({ query: term, limit: 10 });
     expect(results.results.length).toBeGreaterThanOrEqual(expectedMinResults);
     
     if (results.results.length === 0) {
@@ -431,7 +431,7 @@ describe('Comprehensive Content Coverage Tests', () => {
       const platforms = ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'];
       
       for (const platform of platforms) {
-        const results = await toolProvider.searchGuidelines({ 
+        const results = await toolProvider.searchHumanInterfaceGuidelines({ 
           query: 'buttons', 
           platform: platform as any,
           limit: 5 
@@ -447,9 +447,9 @@ describe('Comprehensive Content Coverage Tests', () => {
       const navigationTerms = ['navigation', 'menu', 'toolbar'];
       
       for (const term of navigationTerms) {
-        const allResults = await toolProvider.searchGuidelines({ query: term, limit: 10 });
-        const iosResults = await toolProvider.searchGuidelines({ query: term, platform: 'iOS', limit: 10 });
-        const macResults = await toolProvider.searchGuidelines({ query: term, platform: 'macOS', limit: 10 });
+        const allResults = await toolProvider.searchHumanInterfaceGuidelines({ query: term, limit: 10 });
+        const iosResults = await toolProvider.searchHumanInterfaceGuidelines({ query: term, platform: 'iOS', limit: 10 });
+        const macResults = await toolProvider.searchHumanInterfaceGuidelines({ query: term, platform: 'macOS', limit: 10 });
         
         expect(allResults.results.length).toBeGreaterThan(0);
         console.log(`✅ ${term}: All=${allResults.results.length}, iOS=${iosResults.results.length}, macOS=${macResults.results.length}`);
@@ -471,7 +471,7 @@ describe('Comprehensive Content Coverage Tests', () => {
       ];
 
       for (const term of technicalTerms) {
-        const results = await toolProvider.searchGuidelines({ query: term, limit: 5 });
+        const results = await toolProvider.searchHumanInterfaceGuidelines({ query: term, limit: 5 });
         // Even technical terms should find some related content
         if (results.results.length === 0) {
           console.warn(`⚠️ No results for technical term: "${term}"`);
@@ -492,7 +492,7 @@ describe('Comprehensive Content Coverage Tests', () => {
       ];
 
       for (const query of compoundQueries) {
-        const results = await toolProvider.searchGuidelines({ query, limit: 5 });
+        const results = await toolProvider.searchHumanInterfaceGuidelines({ query, limit: 5 });
         expect(results.results.length).toBeGreaterThan(0);
         console.log(`✅ Compound query "${query}": ${results.results.length} results`);
       }

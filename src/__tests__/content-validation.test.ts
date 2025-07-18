@@ -153,7 +153,7 @@ describe('Content Validation Tests', () => {
 
       for (const fileName of criticalFiles) {
         const searchTerm = fileName.replace('.md', '').replace(/-/g, ' ');
-        const results = await toolProvider.searchGuidelines({ query: searchTerm, limit: 10 });
+        const results = await toolProvider.searchHumanInterfaceGuidelines({ query: searchTerm, limit: 10 });
         
         expect(results.results.length).toBeGreaterThan(0);
         
@@ -176,7 +176,7 @@ describe('Content Validation Tests', () => {
 
       for (const { platform, terms } of platformContent) {
         for (const term of terms) {
-          const results = await toolProvider.searchGuidelines({ 
+          const results = await toolProvider.searchHumanInterfaceGuidelines({ 
             query: term, 
             platform: platform as any,
             limit: 5 
@@ -206,7 +206,7 @@ describe('Content Validation Tests', () => {
         
         for (const term of importantTerms) {
           if (term.length > 2) {
-            const results = await toolProvider.searchGuidelines({ query: term, limit: 5 });
+            const results = await toolProvider.searchHumanInterfaceGuidelines({ query: term, limit: 5 });
             if (results.results.length > 0) {
               foundSearchableTerms++;
             }
@@ -254,7 +254,7 @@ describe('Content Validation Tests', () => {
       ];
 
       for (const feature of appleFeatures) {
-        const results = await toolProvider.searchGuidelines({ query: feature.term, limit: 10 });
+        const results = await toolProvider.searchHumanInterfaceGuidelines({ query: feature.term, limit: 10 });
         
         expect(results.results.length).toBeGreaterThan(0);
         
@@ -306,7 +306,7 @@ describe('Content Validation Tests', () => {
       ];
 
       for (const testCase of testCases) {
-        const results = await toolProvider.searchGuidelines({ 
+        const results = await toolProvider.searchHumanInterfaceGuidelines({ 
           query: testCase.query, 
           limit: 5 
         });
@@ -338,11 +338,11 @@ describe('Content Validation Tests', () => {
       ];
 
       for (const { primary, alternatives } of synonymPairs) {
-        const primaryResults = await toolProvider.searchGuidelines({ query: primary, limit: 5 });
+        const primaryResults = await toolProvider.searchHumanInterfaceGuidelines({ query: primary, limit: 5 });
         expect(primaryResults.results.length).toBeGreaterThan(0);
         
         for (const alternative of alternatives) {
-          const altResults = await toolProvider.searchGuidelines({ query: alternative, limit: 5 });
+          const altResults = await toolProvider.searchHumanInterfaceGuidelines({ query: alternative, limit: 5 });
           
           if (altResults.results.length === 0) {
             console.warn(`⚠️ Synonym gap: "${alternative}" (for ${primary}) returns no results`);
@@ -375,7 +375,7 @@ describe('Content Validation Tests', () => {
       ];
 
       for (const query of complexQueries) {
-        const results = await toolProvider.searchGuidelines({ query, limit: 5 });
+        const results = await toolProvider.searchHumanInterfaceGuidelines({ query, limit: 5 });
         
         expect(results.results.length).toBeGreaterThan(0);
         console.log(`✅ Complex query "${query}": ${results.results.length} results`);
@@ -397,7 +397,7 @@ describe('Content Validation Tests', () => {
       let foundCount = 0;
       
       for (const term of technicalTerms) {
-        const results = await toolProvider.searchGuidelines({ query: term, limit: 5 });
+        const results = await toolProvider.searchHumanInterfaceGuidelines({ query: term, limit: 5 });
         
         if (results.results.length > 0) {
           foundCount++;

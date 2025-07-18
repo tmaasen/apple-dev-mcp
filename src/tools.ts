@@ -7,15 +7,11 @@ import type { HIGCache } from './cache.js';
 import type { HIGResourceProvider } from './resources.js';
 import type { HIGStaticContentProvider } from './static-content.js';
 import { AppleDevAPIClient } from './services/apple-dev-api-client.service.js';
-import { ContentFusionService, type FusionRequest, type FusionResult } from './services/content-fusion.service.js';
 import type { 
   SearchGuidelinesArgs, 
-  GetComponentSpecArgs, 
   SearchResult,
-  HIGComponent,
   ApplePlatform,
   HIGCategory,
-  GetTechnicalDocumentationArgs,
   TechnicalDocumentation,
   TechnicalSearchResult,
   UnifiedSearchResult
@@ -27,7 +23,6 @@ export class HIGToolProvider {
   private resourceProvider: HIGResourceProvider;
   private staticContentProvider?: HIGStaticContentProvider;
   private appleDevAPIClient: AppleDevAPIClient;
-  private contentFusionService: ContentFusionService;
 
   constructor(crawleeService: CrawleeHIGService, cache: HIGCache, resourceProvider: HIGResourceProvider, staticContentProvider?: HIGStaticContentProvider, appleDevAPIClient?: AppleDevAPIClient) {
     this.crawleeService = crawleeService;
@@ -35,13 +30,12 @@ export class HIGToolProvider {
     this.resourceProvider = resourceProvider;
     this.staticContentProvider = staticContentProvider;
     this.appleDevAPIClient = appleDevAPIClient || new AppleDevAPIClient(cache);
-    this.contentFusionService = new ContentFusionService();
   }
 
   /**
-   * Search HIG content by keywords/topics with input validation
+   * Search Human Interface Guidelines content by keywords/topics with input validation
    */
-  async searchGuidelines(args: SearchGuidelinesArgs): Promise<{
+  async searchHumanInterfaceGuidelines(args: SearchGuidelinesArgs): Promise<{
     results: SearchResult[];
     total: number;
     query: string;
@@ -230,336 +224,12 @@ export class HIGToolProvider {
       .slice(0, limit);
   }
 
-  /**
-   * Get detailed specifications for a UI component with input validation
-   */
-  async getComponentSpec(args: GetComponentSpecArgs): Promise<{
-    component: HIGComponent | null;
-    relatedComponents: string[];
-    platforms: ApplePlatform[];
-    lastUpdated: string;
-  }> {
-    // Input validation
-    if (!args || typeof args !== 'object') {
-      throw new Error('Invalid arguments: expected object');
-    }
-    
-    const { componentName, platform } = args;
-    
-    // Validate required parameters
-    if (!componentName || typeof componentName !== 'string' || componentName.trim().length === 0) {
-      throw new Error('Invalid componentName: must be a non-empty string');
-    }
-    
-    if (componentName.length > 50) {
-      throw new Error('Component name too long: maximum 50 characters allowed');
-    }
-    
-    // Validate optional parameters
-    if (platform && !['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS', 'universal'].includes(platform)) {
-      throw new Error(`Invalid platform: ${platform}. Must be one of: iOS, macOS, watchOS, tvOS, visionOS, universal`);
-    }
-    
-    try {
-      const trimmedComponentName = componentName.trim();
-      
-      // Try to get component from static content first
-      let component: HIGComponent | null = null;
-      
-      if (this.staticContentProvider) {
-        try {
-          component = await this.getComponentFromStaticContent(trimmedComponentName, platform);
-        } catch {
-          // Fall through to fallback
-        }
-      }
-      
-      // Fall back to predefined components if static content fails
-      if (!component) {
-        component = this.getComponentSpecFallback(trimmedComponentName, platform);
-      }
-      
-      if (!component) {
-        return {
-          component: null,
-          relatedComponents: [],
-          platforms: [],
-          lastUpdated: new Date().toISOString()
-        };
-      }
 
-      return {
-        component,
-        relatedComponents: component.guidelines || [],
-        platforms: component.platforms || [],
-        lastUpdated: new Date().toISOString()
-      };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      // Fall through to fallback
-      throw new Error(`Failed to get component specification: ${errorMessage}`);
-    }
-  }
 
-  private async getComponentFromStaticContent(componentName: string, platform?: ApplePlatform): Promise<HIGComponent | null> {
-    if (!this.staticContentProvider) {
-      return null;
-    }
 
-    // Search for the component in static content
-    const searchQuery = componentName.toLowerCase().replace(/\s+/g, ' ');
-    const searchResults = await this.staticContentProvider.searchContent(searchQuery, platform, undefined, 3);
-    
-    if (searchResults.length === 0) {
-      return null;
-    }
 
-    // Find the best match (highest relevance score)
-    const bestMatch = searchResults[0];
-    
-    // Get the full content for this component
-    let fullContent = '';
-    try {
-      const section = await this.staticContentProvider.getSection(bestMatch.id);
-      fullContent = section?.content || bestMatch.snippet;
-    } catch {
-      fullContent = bestMatch.snippet;
-    }
 
-    // Extract guidelines and examples from content
-    const guidelines = this.extractGuidelines(fullContent);
-    const examples = this.extractExamples(fullContent);
-    const specifications = this.extractSpecifications(fullContent);
 
-    return {
-      id: bestMatch.id,
-      title: bestMatch.title,
-      description: bestMatch.snippet || `${bestMatch.title} component specifications and guidelines.`,
-      platforms: [bestMatch.platform] as ApplePlatform[],
-      url: bestMatch.url,
-      specifications,
-      guidelines,
-      examples,
-      lastUpdated: new Date()
-    };
-  }
-
-  private extractGuidelines(content: string): string[] {
-    const guidelines: string[] = [];
-    
-    // Look for common guideline patterns
-    const guidelinePatterns = [
-      /(?:^|\n)\s*[-•]\s*(.+?)(?=\n|$)/gm,
-      /(?:^|\n)\s*\d+\.\s*(.+?)(?=\n|$)/gm,
-      /(?:consider|should|must|avoid|ensure)\s+(.+?)(?:[.!]|$)/gim
-    ];
-
-    for (const pattern of guidelinePatterns) {
-      const matches = content.match(pattern);
-      if (matches) {
-        matches.forEach(match => {
-          const cleaned = match.replace(/^[-•\d.\s]+/, '').trim();
-          if (cleaned.length > 10 && cleaned.length < 200) {
-            guidelines.push(cleaned);
-          }
-        });
-      }
-    }
-
-    return guidelines.slice(0, 5); // Return top 5 guidelines
-  }
-
-  private extractExamples(content: string): string[] {
-    const examples: string[] = [];
-    
-    // Look for example patterns
-    const examplePatterns = [
-      /example[s]?[:\s]+(.+?)(?=\n\n|$)/gim,
-      /for example[,\s]+(.+?)(?=[.!]|$)/gim,
-      /such as[:\s]+(.+?)(?=[.!]|$)/gim
-    ];
-
-    for (const pattern of examplePatterns) {
-      const matches = content.match(pattern);
-      if (matches) {
-        matches.forEach(match => {
-          const cleaned = match.replace(/^(examples?[:\s]+|for example[,\s]+|such as[:\s]+)/i, '').trim();
-          if (cleaned.length > 5 && cleaned.length < 100) {
-            examples.push(cleaned);
-          }
-        });
-      }
-    }
-
-    return examples.slice(0, 3); // Return top 3 examples
-  }
-
-  private extractSpecifications(content: string): { [key: string]: any } {
-    const specs: { [key: string]: any } = {};
-    
-    // Look for measurement patterns
-    const heightMatch = content.match(/height[:\s]+(\d+(?:\.\d+)?)\s*pt/i);
-    if (heightMatch) {
-      specs.height = heightMatch[1] + 'pt';
-    }
-
-    const widthMatch = content.match(/width[:\s]+(\d+(?:\.\d+)?)\s*pt/i);
-    if (widthMatch) {
-      specs.width = widthMatch[1] + 'pt';
-    }
-
-    const minSizeMatch = content.match(/minimum[:\s]+(\d+(?:\.\d+)?)\s*pt/i);
-    if (minSizeMatch) {
-      specs.minimumSize = minSizeMatch[1] + 'pt';
-    }
-
-    // Touch target size is commonly 44pt
-    if (content.toLowerCase().includes('touch target') || content.toLowerCase().includes('44')) {
-      specs.touchTarget = '44pt x 44pt';
-    }
-
-    return specs;
-  }
-
-  /**
-   * Fallback method for component specs to avoid timeouts
-   */
-  private getComponentSpecFallback(componentName: string, platform?: ApplePlatform): HIGComponent | null {
-    const componentLower = componentName.toLowerCase();
-    
-    // Define known components with their specs
-    const knownComponents: { [key: string]: HIGComponent } = {
-      'button': {
-        id: 'buttons-fallback',
-        title: 'Buttons',
-        description: 'Buttons initiate app-specific actions, have customizable backgrounds, and can include a title or an icon.',
-        platforms: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-        url: 'https://developer.apple.com/design/human-interface-guidelines/buttons',
-        specifications: {
-          dimensions: { height: '44pt', minWidth: '44pt' }
-        },
-        guidelines: ['Make buttons easy to identify and predict', 'Size buttons appropriately for their importance', 'Use consistent styling throughout your app'],
-        examples: ['Primary action buttons', 'Secondary action buttons', 'Destructive action buttons'],
-        lastUpdated: new Date()
-      },
-      'navigation': {
-        id: 'navigation-fallback',
-        title: 'Navigation Bars',
-        description: 'A navigation bar appears at the top of an app screen, enabling navigation through a hierarchy of content.',
-        platforms: ['iOS', 'macOS', 'watchOS', 'tvOS'],
-        url: 'https://developer.apple.com/design/human-interface-guidelines/navigation-bars',
-        specifications: {
-          dimensions: { height: '44pt' }
-        },
-        guidelines: ['Use a navigation bar to help people navigate hierarchical screens', 'Show the current location in the navigation hierarchy', 'Use the title area to clarify the current screen'],
-        examples: ['Standard navigation bar', 'Large title navigation bar', 'Search-enabled navigation bar'],
-        lastUpdated: new Date()
-      },
-      'tab': {
-        id: 'tabs-fallback',
-        title: 'Tab Bars',
-        description: 'A tab bar appears at the bottom of an app screen and provides the ability to quickly switch between different sections.',
-        platforms: ['iOS'],
-        url: 'https://developer.apple.com/design/human-interface-guidelines/tab-bars',
-        specifications: {
-          dimensions: { height: '49pt' }
-        },
-        guidelines: ['Use tab bars for peer categories of content', 'Avoid using a tab bar for actions', 'Badge tabs sparingly'],
-        examples: ['Standard tab bar', 'Customizable tab bar', 'Translucent tab bar'],
-        lastUpdated: new Date()
-      },
-      'text field': {
-        id: 'text-fields-fallback',
-        title: 'Text Fields',
-        description: 'Text fields let people enter and edit text in a single line or multiple lines.',
-        platforms: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-        url: 'https://developer.apple.com/design/human-interface-guidelines/text-fields',
-        specifications: {
-          dimensions: { height: '44pt', minHeight: '36pt' },
-          touchTarget: '44pt x 44pt'
-        },
-        guidelines: ['Make text fields recognizable and easy to target', 'Use secure text fields for sensitive data', 'Provide clear feedback for validation errors', 'Use appropriate keyboard types for different content'],
-        examples: ['Standard text field', 'Search field', 'Secure text field', 'Multi-line text field'],
-        lastUpdated: new Date()
-      },
-      'textfield': {
-        id: 'text-fields-fallback',
-        title: 'Text Fields',
-        description: 'Text fields let people enter and edit text in a single line or multiple lines.',
-        platforms: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-        url: 'https://developer.apple.com/design/human-interface-guidelines/text-fields',
-        specifications: {
-          dimensions: { height: '44pt', minHeight: '36pt' },
-          touchTarget: '44pt x 44pt'
-        },
-        guidelines: ['Make text fields recognizable and easy to target', 'Use secure text fields for sensitive data', 'Provide clear feedback for validation errors', 'Use appropriate keyboard types for different content'],
-        examples: ['Standard text field', 'Search field', 'Secure text field', 'Multi-line text field'],
-        lastUpdated: new Date()
-      }
-    };
-
-    // Try exact match first
-    if (knownComponents[componentLower]) {
-      const component = knownComponents[componentLower];
-      // Filter by platform if specified
-      if (platform && !component.platforms?.includes(platform)) {
-        return null;
-      }
-      return component;
-    }
-
-    // Try partial matches
-    for (const [key, component] of Object.entries(knownComponents)) {
-      if (componentLower.includes(key) || key.includes(componentLower)) {
-        if (platform && !component.platforms?.includes(platform)) {
-          continue;
-        }
-        return component;
-      }
-    }
-
-    return null;
-  }
-
-  /**
-   * Get design tokens for specific components
-   */
-  async getDesignTokens(args: { component: string; platform: string; tokenType?: string }): Promise<{
-    component: string;
-    platform: string;
-    tokens: {
-      colors?: { [key: string]: string };
-      spacing?: { [key: string]: string };
-      typography?: { [key: string]: string };
-      dimensions?: { [key: string]: string };
-    };
-  }> {
-    const { component, platform, tokenType = 'all' } = args;
-
-    const componentLower = component.toLowerCase();
-    const designTokens = this.getDesignTokenDatabase(componentLower, platform);
-    
-    const tokens: any = {};
-    
-    if (tokenType === 'all' || tokenType === 'colors') {
-      tokens.colors = designTokens.colors;
-    }
-    if (tokenType === 'all' || tokenType === 'spacing') {
-      tokens.spacing = designTokens.spacing;
-    }
-    if (tokenType === 'all' || tokenType === 'typography') {
-      tokens.typography = designTokens.typography;
-    }
-    if (tokenType === 'all' || tokenType === 'dimensions') {
-      tokens.dimensions = designTokens.dimensions;
-    }
-
-    return {
-      component,
-      platform,
-      tokens
-    };
-  }
 
   /**
    * Get accessibility requirements for specific components
@@ -587,64 +257,10 @@ export class HIGToolProvider {
     };
   }
 
-  /**
-   * Get technical documentation for Apple frameworks and symbols
-   */
-  async getTechnicalDocumentation(args: GetTechnicalDocumentationArgs): Promise<{
-    documentation: TechnicalDocumentation | null;
-    designGuidance?: SearchResult[];
-    success: boolean;
-    error?: string;
-  }> {
-    // Input validation
-    if (!args || typeof args !== 'object') {
-      throw new Error('Invalid arguments: expected object');
-    }
-    
-    const { path, includeDesignGuidance = false } = args;
-    
-    // Validate required parameters
-    if (!path || typeof path !== 'string' || path.trim().length === 0) {
-      throw new Error('Invalid path: must be a non-empty string');
-    }
-    
-    if (path.length > 200) {
-      throw new Error('Path too long: maximum 200 characters allowed');
-    }
-    
-    try {
-      const documentation = await this.appleDevAPIClient.getTechnicalDocumentation(path.trim());
-      
-      // Optionally include design guidance
-      let designGuidance: SearchResult[] | undefined;
-      if (includeDesignGuidance && this.staticContentProvider) {
-        try {
-          const designQuery = this.extractDesignRelevantTerms(documentation.symbol);
-          designGuidance = await this.staticContentProvider.searchContent(designQuery, undefined, undefined, 3);
-        } catch {
-          // Fall through to design guidance fallback
-        }
-      }
-      
-      return {
-        documentation,
-        designGuidance,
-        success: true
-      };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      // Fall through to fallback
-      return {
-        documentation: null,
-        success: false,
-        error: errorMessage
-      };
-    }
-  }
 
 
   /**
-   * Search technical documentation symbols
+   * Search technical documentation symbols or get specific documentation by path
    */
   async searchTechnicalDocumentation(args: {
     query: string;
@@ -652,19 +268,23 @@ export class HIGToolProvider {
     symbolType?: string;
     platform?: string;
     maxResults?: number;
+    path?: string;
+    includeDesignGuidance?: boolean;
   }): Promise<{
     results: TechnicalSearchResult[];
     total: number;
     query: string;
     success: boolean;
     error?: string;
+    documentation?: TechnicalDocumentation | null;
+    designGuidance?: SearchResult[];
   }> {
     // Input validation
     if (!args || typeof args !== 'object') {
       throw new Error('Invalid arguments: expected object');
     }
     
-    const { query, framework, symbolType, platform, maxResults = 20 } = args;
+    const { query, framework, symbolType, platform, maxResults = 20, path, includeDesignGuidance = false } = args;
     
     // Validate required parameters
     if (typeof query !== 'string') {
@@ -688,8 +308,76 @@ export class HIGToolProvider {
       throw new Error('Invalid maxResults: must be a number between 1 and 100');
     }
     
+    // Validate optional path parameter
+    if (path && (typeof path !== 'string' || path.length > 200)) {
+      throw new Error('Invalid path: must be a string with maximum 200 characters');
+    }
+    
     try {
-      // Use fallback technical search since Apple doesn't provide public API access
+      let documentation: TechnicalDocumentation | null = null;
+      let designGuidance: SearchResult[] | undefined;
+      
+      // If path is provided, try to get specific documentation first
+      if (path && path.trim().length > 0) {
+        try {
+          let finalPath = path.trim();
+          
+          // If path doesn't contain "documentation/", try to find it in our technical database
+          if (!finalPath.includes('documentation/')) {
+            const technicalDatabase = this.getTechnicalDatabase();
+            const foundItem = technicalDatabase.find(item => 
+              item.symbol.toLowerCase() === finalPath.toLowerCase() ||
+              item.title.toLowerCase() === finalPath.toLowerCase()
+            );
+            
+            if (foundItem) {
+              // Use the path from our database
+              finalPath = foundItem.path;
+            } else {
+              // Try to construct a common path pattern
+              finalPath = `documentation/swiftui/${finalPath.toLowerCase()}`;
+            }
+          }
+          
+          documentation = await this.appleDevAPIClient.getTechnicalDocumentation(finalPath);
+          
+          // Optionally include design guidance
+          if (includeDesignGuidance && this.staticContentProvider && documentation) {
+            try {
+              const designQuery = this.extractDesignRelevantTerms(documentation.symbol);
+              designGuidance = await this.staticContentProvider.searchContent(designQuery, undefined, undefined, 3);
+            } catch {
+              // Fall through to design guidance fallback
+            }
+          }
+        } catch {
+          // Fall back to database lookup
+          const technicalDatabase = this.getTechnicalDatabase();
+          const foundItem = technicalDatabase.find(item => 
+            item.symbol.toLowerCase() === path.trim().toLowerCase() ||
+            item.title.toLowerCase() === path.trim().toLowerCase()
+          );
+          
+          if (foundItem) {
+            // Convert our database item to TechnicalDocumentation format
+            documentation = {
+              id: foundItem.symbol.toLowerCase(),
+              symbol: foundItem.symbol,
+              framework: foundItem.framework,
+              symbolKind: foundItem.symbolType,
+              platforms: foundItem.platforms,
+              abstract: foundItem.abstract,
+              apiReference: `# ${foundItem.title}\n\n**Framework:** ${foundItem.framework}\n**Type:** ${foundItem.symbolType}\n**Platforms:** ${foundItem.platforms.join(', ')}\n\n## Overview\n${foundItem.abstract}`,
+              codeExamples: [],
+              relatedSymbols: [],
+              url: `https://developer.apple.com${foundItem.path}`,
+              lastUpdated: new Date()
+            };
+          }
+        }
+      }
+      
+      // Perform search functionality (always for now, regardless of path)
       const fallbackResults = this.generateTechnicalSearchFallback(query.trim(), {
         framework,
         symbolType,
@@ -701,7 +389,9 @@ export class HIGToolProvider {
         results: fallbackResults,
         total: fallbackResults.length,
         query: query.trim(),
-        success: true
+        success: true,
+        documentation,
+        designGuidance
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -717,28 +407,10 @@ export class HIGToolProvider {
   }
 
   /**
-   * Generate fallback technical search results based on common iOS/macOS components
+   * Get the technical database (extracted for reuse)
    */
-  private generateTechnicalSearchFallback(query: string, options: {
-    framework?: string;
-    symbolType?: string;
-    platform?: string;
-    maxResults?: number;
-  }): TechnicalSearchResult[] {
-    const queryLower = query.toLowerCase();
-    const { framework, symbolType, platform, maxResults = 20 } = options;
-    
-    // Technical documentation database for common components
-    const technicalDatabase: Array<{
-      symbol: string;
-      title: string;
-      abstract: string;
-      framework: string;
-      symbolType: string;
-      platforms: string[];
-      path: string;
-      keywords: string[];
-    }> = [
+  private getTechnicalDatabase() {
+    return [
       {
         symbol: 'UITextField',
         title: 'UITextField',
@@ -889,8 +561,65 @@ export class HIGToolProvider {
         platforms: ['iOS', 'iPadOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
         path: '/documentation/swiftui/list',
         keywords: ['list', 'table', 'rows', 'data', 'swiftui']
+      },
+      // Layout containers
+      {
+        symbol: 'VStack',
+        title: 'VStack',
+        abstract: 'A view that arranges its children in a vertical line.',
+        framework: 'SwiftUI',
+        symbolType: 'struct',
+        platforms: ['iOS', 'iPadOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
+        path: '/documentation/swiftui/vstack',
+        keywords: ['vstack', 'vertical', 'stack', 'layout', 'container', 'swiftui']
+      },
+      {
+        symbol: 'HStack',
+        title: 'HStack',
+        abstract: 'A view that arranges its children in a horizontal line.',
+        framework: 'SwiftUI',
+        symbolType: 'struct',
+        platforms: ['iOS', 'iPadOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
+        path: '/documentation/swiftui/hstack',
+        keywords: ['hstack', 'horizontal', 'stack', 'layout', 'container', 'swiftui']
+      },
+      {
+        symbol: 'ZStack',
+        title: 'ZStack',
+        abstract: 'A view that overlays its children, aligning them in both axes.',
+        framework: 'SwiftUI',
+        symbolType: 'struct',
+        platforms: ['iOS', 'iPadOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
+        path: '/documentation/swiftui/zstack',
+        keywords: ['zstack', 'overlay', 'stack', 'layout', 'container', 'swiftui']
+      },
+      {
+        symbol: 'ScrollView',
+        title: 'ScrollView',
+        abstract: 'A scrollable view.',
+        framework: 'SwiftUI',
+        symbolType: 'struct',
+        platforms: ['iOS', 'iPadOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
+        path: '/documentation/swiftui/scrollview',
+        keywords: ['scrollview', 'scroll', 'container', 'swiftui']
       }
     ];
+  }
+
+  /**
+   * Generate fallback technical search results based on common iOS/macOS components
+   */
+  private generateTechnicalSearchFallback(query: string, options: {
+    framework?: string;
+    symbolType?: string;
+    platform?: string;
+    maxResults?: number;
+  }): TechnicalSearchResult[] {
+    const queryLower = query.toLowerCase();
+    const { framework, symbolType, platform, maxResults = 20 } = options;
+    
+    // Use shared technical database
+    const technicalDatabase = this.getTechnicalDatabase();
 
     // Filter results based on query and options
     const filteredResults = technicalDatabase.filter(item => {
@@ -1138,117 +867,6 @@ export class HIGToolProvider {
     return differences;
   }
 
-  /**
-   * Get design token database for components
-   */
-  private getDesignTokenDatabase(component: string, platform: string): any {
-    const tokens: any = {
-      colors: {},
-      spacing: {},
-      typography: {},
-      dimensions: {}
-    };
-
-    // Platform-specific system colors
-    const systemColors = {
-      iOS: {
-        primary: '#007AFF',
-        secondary: '#5856D6', 
-        success: '#34C759',
-        warning: '#FF9500',
-        destructive: '#FF3B30',
-        label: '#000000',
-        secondaryLabel: '#3C3C43',
-        background: '#FFFFFF',
-        secondaryBackground: '#F2F2F7'
-      },
-      macOS: {
-        primary: '#007AFF',
-        secondary: '#5856D6',
-        success: '#28CD41',
-        warning: '#FF9500', 
-        destructive: '#FF3B30',
-        label: '#000000',
-        secondaryLabel: '#808080',
-        background: '#FFFFFF',
-        secondaryBackground: '#F5F5F5'
-      }
-    };
-
-    // Component-specific tokens
-    switch (component) {
-      case 'button':
-        tokens.colors = systemColors[platform as keyof typeof systemColors] || systemColors.iOS;
-        tokens.spacing = {
-          paddingHorizontal: '16pt',
-          paddingVertical: '11pt',
-          marginMinimum: '8pt'
-        };
-        tokens.typography = {
-          fontSize: '17pt',
-          fontWeight: '600',
-          lineHeight: '22pt'
-        };
-        tokens.dimensions = {
-          minHeight: '44pt',
-          minWidth: '44pt',
-          cornerRadius: '8pt'
-        };
-        break;
-        
-      case 'navigation':
-      case 'navigation bar':
-        tokens.colors = {
-          background: systemColors[platform as keyof typeof systemColors]?.background || '#FFFFFF',
-          tint: systemColors[platform as keyof typeof systemColors]?.primary || '#007AFF',
-          title: systemColors[platform as keyof typeof systemColors]?.label || '#000000'
-        };
-        tokens.spacing = {
-          contentInset: '16pt',
-          titleSpacing: '8pt'
-        };
-        tokens.typography = {
-          titleFontSize: '17pt',
-          titleFontWeight: '600'
-        };
-        tokens.dimensions = {
-          height: platform === 'iOS' ? '44pt' : '52pt',
-          maxTitleWidth: '200pt'
-        };
-        break;
-        
-      case 'tab':
-      case 'tab bar':
-        tokens.colors = {
-          background: systemColors[platform as keyof typeof systemColors]?.secondaryBackground || '#F2F2F7',
-          selectedTint: systemColors[platform as keyof typeof systemColors]?.primary || '#007AFF',
-          unselectedTint: systemColors[platform as keyof typeof systemColors]?.secondaryLabel || '#8E8E93'
-        };
-        tokens.spacing = {
-          iconSpacing: '4pt',
-          horizontalPadding: '12pt'
-        };
-        tokens.typography = {
-          labelFontSize: '10pt',
-          labelFontWeight: '400'
-        };
-        tokens.dimensions = {
-          height: '49pt',
-          iconSize: '25pt',
-          maxTabs: '5'
-        };
-        break;
-        
-      default:
-        // Generic component tokens
-        tokens.colors = systemColors[platform as keyof typeof systemColors] || systemColors.iOS;
-        tokens.spacing = { padding: '16pt', margin: '8pt' };
-        tokens.typography = { fontSize: '17pt', fontWeight: '400' };
-        tokens.dimensions = { minHeight: '44pt' };
-    }
-
-    return tokens;
-  }
 
   /**
    * Get accessibility requirements database
@@ -1394,7 +1012,7 @@ export class HIGToolProvider {
       if (includeDesign) {
         sources.push('design-guidelines');
         try {
-          const designSearch = await this.searchGuidelines({
+          const designSearch = await this.searchHumanInterfaceGuidelines({
             query,
             platform,
             category: category as HIGCategory,
@@ -1669,266 +1287,5 @@ export class HIGToolProvider {
 
 
 
-  /**
-   * Generate fused guidance combining design principles with technical implementation
-   * Phase 3: Comprehensive content fusion for end-to-end developer guidance
-   */
-  async generateFusedGuidance(args: {
-    component: string;
-    platform?: ApplePlatform;
-    framework?: string;
-    useCase?: string;
-    complexity?: 'beginner' | 'intermediate' | 'advanced';
-    includeCodeExamples?: boolean;
-    includeAccessibility?: boolean;
-    includeTestingGuidance?: boolean;
-    includeStepByStep?: boolean;
-  }): Promise<{
-    fusedContent?: {
-      id: string;
-      title: string;
-      description: string;
-      designGuidance: {
-        principles: string[];
-        bestPractices: string[];
-        doAndDonts: {
-          dos: string[];
-          donts: string[];
-        };
-        accessibility: string[];
-        visualExamples: string[];
-      };
-      technicalImplementation: {
-        frameworks: string[];
-        codeExamples: Array<{
-          framework: string;
-          language: string;
-          code: string;
-          description: string;
-        }>;
-        apiReferences: Array<{
-          symbol: string;
-          framework: string;
-          url: string;
-          description: string;
-        }>;
-        architecturalNotes: string[];
-      };
-      implementationGuide: {
-        steps: Array<{
-          stepNumber: number;
-          title: string;
-          description: string;
-          designConsiderations: string[];
-          codeSnippet?: string;
-          resources: string[];
-        }>;
-        prerequisites: string[];
-        commonPitfalls: string[];
-        testingGuidance: string[];
-      };
-      platformSpecific: {
-        [platform: string]: {
-          designAdaptations: string[];
-          implementationDifferences: string[];
-          platformBestPractices: string[];
-          codeExamples: Array<{
-            framework: string;
-            code: string;
-            description: string;
-          }>;
-        };
-      };
-      crossReferences: {
-        relatedComponents: string[];
-        designPatterns: string[];
-        technicalConcepts: string[];
-      };
-      metadata: {
-        confidence: number;
-        lastUpdated: Date;
-        sources: string[];
-        complexity: 'beginner' | 'intermediate' | 'advanced';
-        estimatedImplementationTime: string;
-      };
-    };
-    implementationGuide?: {
-      title: string;
-      overview: string;
-      designPhase: {
-        guidelines: string[];
-        decisions: Array<{
-          decision: string;
-          rationale: string;
-          alternatives: string[];
-        }>;
-        designTokens: Array<{
-          property: string;
-          value: string;
-          platform: string;
-        }>;
-      };
-      implementationPhase: {
-        setup: Array<{
-          step: string;
-          code?: string;
-          notes: string[];
-        }>;
-        coreImplementation: Array<{
-          feature: string;
-          implementation: string;
-          codeExample: string;
-          designAlignment: string[];
-        }>;
-        refinement: Array<{
-          aspect: string;
-          guidance: string;
-          codeSnippet?: string;
-        }>;
-      };
-      validationPhase: {
-        designValidation: string[];
-        functionalTesting: string[];
-        accessibilityTesting: string[];
-        performanceTesting: string[];
-      };
-    };
-    success: boolean;
-    error?: string;
-  }> {
-    const {
-      component,
-      platform = 'iOS',
-      framework,
-      useCase,
-      complexity = 'intermediate',
-      includeCodeExamples = true,
-      includeAccessibility = true,
-      includeTestingGuidance = true,
-      includeStepByStep = true
-    } = args;
-
-    // Input validation
-    if (!component || typeof component !== 'string' || component.trim().length === 0) {
-      throw new Error('Invalid component: must be a non-empty string');
-    }
-
-    if (component.length > 50) {
-      throw new Error('Component name too long: maximum 50 characters allowed');
-    }
-
-    try {
-      // First, search for design guidelines and technical documentation
-      let designResults: SearchResult[] = [];
-      let technicalResults: TechnicalSearchResult[] = [];
-
-      // Search design guidelines
-      if (this.staticContentProvider) {
-        try {
-          const designSearch = await this.searchGuidelines({
-            query: component,
-            platform,
-            limit: 5
-          });
-          designResults = designSearch.results;
-        } catch {
-          // Fall through to fallback
-        }
-      }
-
-      // Search technical documentation
-      try {
-        const technicalSearch = await this.searchTechnicalDocumentation({
-          query: component,
-          platform,
-          framework,
-          maxResults: 5
-        });
-        technicalResults = technicalSearch.results;
-      } catch {
-        // Fall through to fallback
-      }
-
-      // If we found relevant content, generate fused guidance
-      let fusedContent;
-      let implementationGuide;
-
-      if (designResults.length > 0 || technicalResults.length > 0) {
-        // Find the best cross-reference match
-        const bestDesignResult = designResults[0];
-        const bestTechnicalResult = technicalResults[0];
-
-        if (bestDesignResult && bestTechnicalResult) {
-          // Generate cross-reference for fusion
-          const bestCrossRef = {
-            designSection: bestDesignResult.title,
-            designUrl: bestDesignResult.url,
-            technicalSymbol: bestTechnicalResult.title,
-            technicalUrl: bestTechnicalResult.url,
-            confidence: 0.5,
-            mappingType: 'related' as const,
-            explanation: 'Inferred mapping based on search results',
-            platforms: [platform],
-            frameworks: [bestTechnicalResult.framework]
-          };
-
-          // Generate fused content using new interface
-          const fusionRequest: FusionRequest = {
-            component,
-            platform,
-            framework: framework as any, // TODO: Fix Framework type
-            useCase,
-            complexity,
-            includeCodeExamples,
-            includeAccessibility,
-            includeTestingGuidance
-          };
-          
-          const fusionResult: FusionResult = await this.contentFusionService.generateFusedContent(
-            bestDesignResult,
-            bestTechnicalResult,
-            bestCrossRef,
-            fusionRequest
-          );
-          
-          if (fusionResult.success && fusionResult.content) {
-            fusedContent = fusionResult.content;
-          } else {
-            // Fall through to fallback
-          }
-        }
-
-        // Generate step-by-step implementation guide if requested
-        if (includeStepByStep) {
-          implementationGuide = {
-            title: `${component} Implementation Guide`,
-            overview: `Implementation guide for ${component} on ${platform}`,
-            phases: ['Design', 'Implementation', 'Validation']
-          };
-        }
-      }
-
-      // If no specific content found, generate generic guidance
-      if (!fusedContent && !implementationGuide) {
-        implementationGuide = {
-          title: `${component} Implementation Guide`,
-          overview: `Generic implementation guide for ${component} on ${platform}`,
-          phases: ['Design', 'Implementation', 'Validation']
-        };
-      }
-
-      return {
-        fusedContent,
-        implementationGuide,
-        success: true
-      };
-
-    } catch (error) {
-      return {
-        success: false,
-        error: `Fused guidance generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
-      };
-    }
-  }
 
 }

@@ -134,7 +134,7 @@ Scrapers now serve as fallback when static content is unavailable. Still importa
 
 Ideas for new features:
 - **Desktop Extension improvements**: Better UX, configuration options
-- **Content Fusion enhancements**: Improved design + technical integration
+- **Unified search enhancements**: Improved design + technical integration
 - **Enhanced static content generation**: Better performance and coverage
 - **Advanced search capabilities**: Cross-reference improvements, wildcard patterns
 - **Additional Apple platforms support**: New platforms and frameworks
@@ -199,7 +199,7 @@ scraper.discoverSections().then(console.log);
 - [ ] **Scraper fallback** works when static content unavailable  
 - [ ] **MCP resources** load correctly (`hig://ios`, `hig://buttons`, etc.)
 - [ ] **Search tools** return relevant results from static indices
-- [ ] **Content Fusion tools** (`generate_fused_guidance`, `generate_implementation_guide`) work
+- [ ] **Unified search tools** (`search_unified`) work
 - [ ] **Technical Documentation tools** integrate properly with API docs
 - [ ] **Component specs** include proper Apple attribution
 - [ ] **Cross-platform features** work across iOS, macOS, watchOS, tvOS, visionOS

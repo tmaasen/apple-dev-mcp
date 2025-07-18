@@ -40,7 +40,7 @@ describe('Authentication Search Tests', () => {
     ];
 
     test.each(criticalTerms)('should find results for "%s"', async (term) => {
-      const results = await toolProvider.searchGuidelines({ query: term, limit: 10 });
+      const results = await toolProvider.searchHumanInterfaceGuidelines({ query: term, limit: 10 });
       
       expect(results.results.length).toBeGreaterThan(0);
       expect(results.total).toBeGreaterThan(0);
@@ -62,7 +62,7 @@ describe('Authentication Search Tests', () => {
     ];
 
     test.each(workingTerms)('should find results for "%s"', async (term) => {
-      const results = await toolProvider.searchGuidelines({ query: term, limit: 10 });
+      const results = await toolProvider.searchHumanInterfaceGuidelines({ query: term, limit: 10 });
       
       expect(results.results.length).toBeGreaterThan(0);
       expect(results.total).toBeGreaterThan(0);
@@ -76,7 +76,7 @@ describe('Authentication Search Tests', () => {
 
   describe('Expected Authentication Content', () => {
     test('should find "Sign in with Apple" content specifically', async () => {
-      const results = await toolProvider.searchGuidelines({ 
+      const results = await toolProvider.searchHumanInterfaceGuidelines({ 
         query: 'sign in with apple', 
         limit: 5 
       });
@@ -97,7 +97,7 @@ describe('Authentication Search Tests', () => {
     });
 
     test('should find Privacy guidelines', async () => {
-      const results = await toolProvider.searchGuidelines({ 
+      const results = await toolProvider.searchHumanInterfaceGuidelines({ 
         query: 'privacy', 
         limit: 5 
       });
@@ -118,7 +118,7 @@ describe('Authentication Search Tests', () => {
     });
 
     test('should find authentication-related content with broader terms', async () => {
-      const results = await toolProvider.searchGuidelines({ 
+      const results = await toolProvider.searchHumanInterfaceGuidelines({ 
         query: 'authentication login security', 
         limit: 10 
       });
@@ -147,27 +147,29 @@ describe('Authentication Search Tests', () => {
   });
 
   describe('Component Spec Functionality', () => {
-    test('should return component spec for Text Field', async () => {
+    test('should return search results for Text Field', async () => {
       // This was mentioned as broken in the user's test
-      const spec = await toolProvider.getComponentSpec({ 
-        componentName: 'Text Field',
+      const results = await toolProvider.searchHumanInterfaceGuidelines({ 
+        query: 'Text Field',
         platform: 'iOS' 
       });
       
-      expect(spec).not.toBeNull();
-      expect(spec).toBeDefined();
+      expect(results).not.toBeNull();
+      expect(results).toBeDefined();
+      expect(results.results).toBeDefined();
+      expect(results.total).toBeGreaterThan(0);
       
-      if (spec && spec.component) {
-        expect(spec.component.title).toBeDefined();
-        expect(spec.component.description).toBeDefined();
-        console.log(`\nText Field component spec found: ${spec.component.title}`);
+      if (results && results.results.length > 0) {
+        expect(results.results[0].title).toBeDefined();
+        expect(results.results[0].snippet).toBeDefined();
+        console.log(`\nText Field search results found: ${results.results[0].title}`);
       }
     });
   });
 
   describe('Search Quality Validation', () => {
     test('should return results with meaningful relevance scores', async () => {
-      const results = await toolProvider.searchGuidelines({ 
+      const results = await toolProvider.searchHumanInterfaceGuidelines({ 
         query: 'button touch target', 
         limit: 5 
       });
@@ -194,11 +196,11 @@ describe('Authentication Search Tests', () => {
     });
 
     test('should handle empty and whitespace queries gracefully', async () => {
-      const emptyResult = await toolProvider.searchGuidelines({ query: '', limit: 5 });
+      const emptyResult = await toolProvider.searchHumanInterfaceGuidelines({ query: '', limit: 5 });
       expect(emptyResult.results.length).toBe(0);
       expect(emptyResult.total).toBe(0);
       
-      const whitespaceResult = await toolProvider.searchGuidelines({ query: '   ', limit: 5 });
+      const whitespaceResult = await toolProvider.searchHumanInterfaceGuidelines({ query: '   ', limit: 5 });
       expect(whitespaceResult.results.length).toBe(0);
       expect(whitespaceResult.total).toBe(0);
     });
@@ -206,12 +208,12 @@ describe('Authentication Search Tests', () => {
 
   describe('Platform and Category Filtering', () => {
     test('should respect platform filtering for authentication content', async () => {
-      const allResults = await toolProvider.searchGuidelines({ 
+      const allResults = await toolProvider.searchHumanInterfaceGuidelines({ 
         query: 'sign in with apple', 
         limit: 10 
       });
       
-      const iosResults = await toolProvider.searchGuidelines({ 
+      const iosResults = await toolProvider.searchHumanInterfaceGuidelines({ 
         query: 'sign in with apple', 
         platform: 'iOS',
         limit: 10 
@@ -228,12 +230,12 @@ describe('Authentication Search Tests', () => {
     });
 
     test('should respect category filtering for authentication content', async () => {
-      const allResults = await toolProvider.searchGuidelines({ 
+      const allResults = await toolProvider.searchHumanInterfaceGuidelines({ 
         query: 'privacy security', 
         limit: 10 
       });
       
-      const foundationsResults = await toolProvider.searchGuidelines({ 
+      const foundationsResults = await toolProvider.searchHumanInterfaceGuidelines({ 
         query: 'privacy security', 
         category: 'foundations',
         limit: 10 

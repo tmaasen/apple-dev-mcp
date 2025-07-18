@@ -1,0 +1,56 @@
+# Minimal DXT for npx execution - only keep essentials
+
+# Development files
+src/
+__tests__/
+__mocks__/
+.github/
+scripts/
+storage/
+# Keep dist for the compiled server
+# dist/
+coverage/
+.jest/
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+# server/
+
+# Config files
+tsconfig.json
+jest.config.cjs
+jest.setup.js
+eslint.config.js
+.eslintrc.js
+.prettierrc
+
+# Content and docs
+content/
+docs/
+*.md
+!README.md
+
+# Dependencies - include essential runtime dependencies for DXT
+node_modules/
+.npm/
+
+# Git and IDE
+.git/
+.gitignore
+.gitattributes
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Logs and temp
+*.log
+logs/
+.cache/
+temp/
+tmp/
+.env*
+.claude/

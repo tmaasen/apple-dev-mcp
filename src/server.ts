@@ -212,7 +212,7 @@ class AppleHIGMCPServer {
       return {
         tools: [
           {
-            name: 'search_guidelines',
+            name: 'search_human_interface_guidelines',
             description: 'Search Apple Human Interface Guidelines by keywords, with optional platform and category filters',
             inputSchema: {
               type: 'object',
@@ -248,50 +248,6 @@ class AppleHIGMCPServer {
             },
           },
           {
-            name: 'get_component_spec',
-            description: 'Get detailed specifications and guidelines for a specific UI component',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                componentName: {
-                  type: 'string',
-                  description: 'Name of the UI component (e.g., "Button", "Navigation Bar", "Tab Bar")',
-                },
-                platform: {
-                  type: 'string',
-                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS', 'universal'],
-                  description: 'Target platform for the component',
-                },
-              },
-              required: ['componentName'],
-            },
-          },
-          {
-            name: 'get_design_tokens',
-            description: 'Get design system values (colors, spacing, typography) for specific components',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                component: {
-                  type: 'string',
-                  description: 'Component name (e.g., "Button", "Navigation Bar", "Tab Bar")',
-                },
-                platform: {
-                  type: 'string',
-                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-                  description: 'Target platform',
-                },
-                tokenType: {
-                  type: 'string',
-                  enum: ['colors', 'spacing', 'typography', 'dimensions', 'all'],
-                  description: 'Type of design tokens to retrieve',
-                  default: 'all'
-                }
-              },
-              required: ['component', 'platform'],
-            },
-          },
-          {
             name: 'get_accessibility_requirements',
             description: 'Get accessibility requirements and guidelines for specific components',
             inputSchema: {
@@ -311,37 +267,8 @@ class AppleHIGMCPServer {
             },
           },
           {
-            name: 'get_technical_documentation',
-            description: 'Get Apple API documentation for frameworks and symbols with optional design guidance',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                path: {
-                  type: 'string',
-                  description: 'Documentation path (e.g., "documentation/SwiftUI/Button") or symbol path',
-                },
-                includeDesignGuidance: {
-                  type: 'boolean',
-                  description: 'Include related design guidelines from HIG',
-                  default: false,
-                },
-                includeRelatedSymbols: {
-                  type: 'boolean',
-                  description: 'Include related symbols and references',
-                  default: true,
-                },
-                includeCodeExamples: {
-                  type: 'boolean',
-                  description: 'Include code examples when available',
-                  default: true,
-                },
-              },
-              required: ['path'],
-            },
-          },
-          {
             name: 'search_technical_documentation',
-            description: 'Search Apple technical documentation with wildcard support',
+            description: 'Search Apple technical documentation or get specific documentation by path',
             inputSchema: {
               type: 'object',
               properties: {
@@ -366,6 +293,15 @@ class AppleHIGMCPServer {
                   description: 'Maximum number of results (default: 20)',
                   minimum: 1,
                   maximum: 100,
+                },
+                path: {
+                  type: 'string',
+                  description: 'Optional: Documentation path for getting specific documentation (e.g., "documentation/SwiftUI/Button")',
+                },
+                includeDesignGuidance: {
+                  type: 'boolean',
+                  description: 'Include related design guidelines from HIG when using path parameter',
+                  default: false,
                 },
               },
               required: ['query'],
@@ -431,60 +367,6 @@ class AppleHIGMCPServer {
               required: ['query'],
             },
           },
-          {
-            name: 'generate_fused_guidance',
-            description: 'Generate comprehensive fused guidance combining design principles with technical implementation details',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                component: {
-                  type: 'string',
-                  description: 'Component name (e.g., "Button", "Navigation Bar", "Text Field")',
-                },
-                platform: {
-                  type: 'string',
-                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-                  description: 'Target platform for the component',
-                  default: 'iOS',
-                },
-                framework: {
-                  type: 'string',
-                  description: 'Framework to use (e.g., "SwiftUI", "UIKit", "AppKit")',
-                },
-                useCase: {
-                  type: 'string',
-                  description: 'Specific use case or context for the component',
-                },
-                complexity: {
-                  type: 'string',
-                  enum: ['beginner', 'intermediate', 'advanced'],
-                  description: 'Complexity level for the guidance',
-                  default: 'intermediate',
-                },
-                includeCodeExamples: {
-                  type: 'boolean',
-                  description: 'Include code examples in the guidance',
-                  default: true,
-                },
-                includeAccessibility: {
-                  type: 'boolean',
-                  description: 'Include accessibility guidance',
-                  default: true,
-                },
-                includeTestingGuidance: {
-                  type: 'boolean',
-                  description: 'Include testing recommendations',
-                  default: true,
-                },
-                includeStepByStep: {
-                  type: 'boolean',
-                  description: 'Include step-by-step implementation guide',
-                  default: true,
-                },
-              },
-              required: ['component'],
-            },
-          },
         ],
       };
     });
@@ -511,23 +393,13 @@ class AppleHIGMCPServer {
         let result: any;
         
         switch (name) {
-          case 'search_guidelines': {
+          case 'search_human_interface_guidelines': {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            result = await this.toolProvider.searchGuidelines(args as any);
+            result = await this.toolProvider.searchHumanInterfaceGuidelines(args as any);
             break;
           }
 
-          case 'get_component_spec': {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            result = await this.toolProvider.getComponentSpec(args as any);
-            break;
-          }
 
-          case 'get_design_tokens': {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            result = await this.toolProvider.getDesignTokens(args as any);
-            break;
-          }
 
           case 'get_accessibility_requirements': {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -535,11 +407,6 @@ class AppleHIGMCPServer {
             break;
           }
 
-          case 'get_technical_documentation': {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            result = await this.toolProvider.getTechnicalDocumentation(args as any);
-            break;
-          }
 
 
           case 'search_technical_documentation': {
@@ -557,11 +424,6 @@ class AppleHIGMCPServer {
 
 
 
-          case 'generate_fused_guidance': {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            result = await this.toolProvider.generateFusedGuidance(args as any);
-            break;
-          }
 
 
           default:

@@ -34,36 +34,20 @@
   },
   "tools": [
     {
-      "name": "search_guidelines",
+      "name": "search_human_interface_guidelines",
       "description": "Search Apple Human Interface Guidelines by keywords, with optional platform and category filters"
-    },
-    {
-      "name": "get_component_spec", 
-      "description": "Get detailed specifications and guidelines for a specific UI component"
-    },
-    {
-      "name": "get_design_tokens",
-      "description": "Get design system values (colors, spacing, typography) for specific components"
     },
     {
       "name": "get_accessibility_requirements",
       "description": "Get accessibility requirements and guidelines for specific components"
     },
     {
-      "name": "get_technical_documentation",
-      "description": "Get Apple API documentation for frameworks and symbols with optional design guidance"
-    },
-    {
       "name": "search_technical_documentation",
-      "description": "Search Apple technical documentation with wildcard support"
+      "description": "Search Apple technical documentation with wildcard support and optional path-based lookup"
     },
     {
       "name": "search_unified",
       "description": "Unified search across both HIG design guidelines and technical documentation with cross-references"
-    },
-    {
-      "name": "generate_fused_guidance",
-      "description": "Generate comprehensive fused guidance combining design principles with technical implementation details"
     }
   ],
   "compatibility": {
