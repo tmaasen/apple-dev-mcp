@@ -40,10 +40,10 @@ describe('Comprehensive Search Functionality', () => {
     test.each(authenticationQueries)(
       'should find results for "$query"',
       async ({ query, expectedMinResults, expectedTopResult }) => {
-        const result = await toolProvider.searchHumanInterfaceGuidelines({ query, limit: 5 });
+        const result = await toolProvider.searchHumanInterfaceGuidelines({ query });
         
         expect(result.total).toBeGreaterThanOrEqual(expectedMinResults);
-        expect(result.results).toHaveLength(Math.min(5, result.total));
+        expect(result.results.length).toBeGreaterThanOrEqual(Math.min(5, result.total));
         
         if (expectedTopResult) {
           expect(result.results[0].title).toBe(expectedTopResult);
@@ -76,7 +76,7 @@ describe('Comprehensive Search Functionality', () => {
     test.each(uiQueries)(
       'should find UI components for "$query"',
       async ({ query, expectedMinResults, expectedTopResult }) => {
-        const result = await toolProvider.searchHumanInterfaceGuidelines({ query, limit: 5 });
+        const result = await toolProvider.searchHumanInterfaceGuidelines({ query });
         
         expect(result.total).toBeGreaterThanOrEqual(expectedMinResults);
         
@@ -100,7 +100,7 @@ describe('Comprehensive Search Functionality', () => {
     test.each(errorQueries)(
       'should find error handling content for "$query"',
       async ({ query, expectedMinResults, expectedTopResult }) => {
-        const result = await toolProvider.searchHumanInterfaceGuidelines({ query, limit: 5 });
+        const result = await toolProvider.searchHumanInterfaceGuidelines({ query });
         
         expect(result.total).toBeGreaterThanOrEqual(expectedMinResults);
         
@@ -124,7 +124,7 @@ describe('Comprehensive Search Functionality', () => {
     test.each(accessibilityQueries)(
       'should find accessibility content for "$query"',
       async ({ query, expectedMinResults, expectedTopResult }) => {
-        const result = await toolProvider.searchHumanInterfaceGuidelines({ query, limit: 5 });
+        const result = await toolProvider.searchHumanInterfaceGuidelines({ query });
         
         expect(result.total).toBeGreaterThanOrEqual(expectedMinResults);
         
@@ -178,7 +178,7 @@ describe('Comprehensive Search Functionality', () => {
     test.each(visualQueries)(
       'should find visual design content for "$query"',
       async ({ query, expectedMinResults, expectedTopResult }) => {
-        const result = await toolProvider.searchHumanInterfaceGuidelines({ query, limit: 5 });
+        const result = await toolProvider.searchHumanInterfaceGuidelines({ query });
         
         expect(result.total).toBeGreaterThanOrEqual(expectedMinResults);
         
@@ -219,23 +219,21 @@ describe('Comprehensive Search Functionality', () => {
       ];
 
       for (const query of edgeCases) {
-        const result = await toolProvider.searchHumanInterfaceGuidelines({ query, limit: 5 });
+        const result = await toolProvider.searchHumanInterfaceGuidelines({ query });
         expect(result).toBeDefined();
         expect(result.total).toBeGreaterThanOrEqual(0);
         expect(Array.isArray(result.results)).toBe(true);
       }
     });
 
-    test('should respect category filters', async () => {
+    test('should return results for button query', async () => {
       const result = await toolProvider.searchHumanInterfaceGuidelines({ 
-        query: 'button', 
-        category: 'selection-and-input',
-        limit: 5 
+        query: 'button'
       });
       
-      result.results.forEach(r => {
-        expect(r.category).toBe('selection-and-input');
-      });
+      expect(result.results.length).toBeGreaterThan(0);
+      expect(result.results[0]).toHaveProperty('title');
+      expect(result.results[0]).toHaveProperty('category');
     });
   });
 
@@ -251,7 +249,7 @@ describe('Comprehensive Search Functionality', () => {
       let queriesWithResults = 0;
       
       for (const query of coverageQueries) {
-        const result = await toolProvider.searchHumanInterfaceGuidelines({ query, limit: 1 });
+        const result = await toolProvider.searchHumanInterfaceGuidelines({ query });
         totalResults += result.total;
         if (result.total > 0) {
           queriesWithResults++;

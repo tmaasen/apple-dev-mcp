@@ -213,7 +213,8 @@ class AppleHIGMCPServer {
         tools: [
           {
             name: 'search_human_interface_guidelines',
-            description: 'Search Apple Human Interface Guidelines by keywords, with optional platform and category filters',
+            title: 'Search HIG Guidelines',
+            description: 'Search Apple Human Interface Guidelines by keywords',
             inputSchema: {
               type: 'object',
               properties: {
@@ -224,24 +225,7 @@ class AppleHIGMCPServer {
                 platform: {
                   type: 'string',
                   enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS', 'universal'],
-                  description: 'Filter by Apple platform',
-                },
-                category: {
-                  type: 'string',
-                  enum: [
-                    'foundations', 'layout', 'navigation', 'presentation',
-                    'selection-and-input', 'status', 'system-capabilities',
-                    'visual-design', 'icons-and-images', 'color-and-materials',
-                    'typography', 'motion', 'technologies'
-                  ],
-                  description: 'Filter by HIG category',
-                },
-                limit: {
-                  type: 'number',
-                  minimum: 1,
-                  maximum: 50,
-                  default: 10,
-                  description: 'Maximum number of results to return',
+                  description: 'Optional: Filter by Apple platform',
                 },
               },
               required: ['query'],
@@ -249,6 +233,7 @@ class AppleHIGMCPServer {
           },
           {
             name: 'get_accessibility_requirements',
+            title: 'Get Accessibility Requirements',
             description: 'Get accessibility requirements and guidelines for specific components',
             inputSchema: {
               type: 'object',
@@ -268,40 +253,22 @@ class AppleHIGMCPServer {
           },
           {
             name: 'search_technical_documentation',
-            description: 'Search Apple technical documentation or get specific documentation by path',
+            title: 'Search Technical Documentation',
+            description: 'Search Apple technical documentation and API references',
             inputSchema: {
               type: 'object',
               properties: {
                 query: {
                   type: 'string',
-                  description: 'Search query (supports wildcards: * and ?)',
+                  description: 'Search query (API names, symbols, frameworks)',
                 },
                 framework: {
                   type: 'string',
-                  description: 'Search within specific framework only',
-                },
-                symbolType: {
-                  type: 'string',
-                  description: 'Filter by symbol type (class, protocol, struct, etc.)',
+                  description: 'Optional: Search within specific framework (e.g., "SwiftUI", "UIKit")',
                 },
                 platform: {
                   type: 'string',
-                  description: 'Filter by platform (iOS, macOS, etc.)',
-                },
-                maxResults: {
-                  type: 'number',
-                  description: 'Maximum number of results (default: 20)',
-                  minimum: 1,
-                  maximum: 100,
-                },
-                path: {
-                  type: 'string',
-                  description: 'Optional: Documentation path for getting specific documentation (e.g., "documentation/SwiftUI/Button")',
-                },
-                includeDesignGuidance: {
-                  type: 'boolean',
-                  description: 'Include related design guidelines from HIG when using path parameter',
-                  default: false,
+                  description: 'Optional: Filter by platform (iOS, macOS, etc.)',
                 },
               },
               required: ['query'],
@@ -309,7 +276,8 @@ class AppleHIGMCPServer {
           },
           {
             name: 'search_unified',
-            description: 'Unified search across both HIG design guidelines and technical documentation with cross-references',
+            title: 'Unified Search',
+            description: 'Unified search across both HIG design guidelines and technical documentation',
             inputSchema: {
               type: 'object',
               properties: {
@@ -320,48 +288,7 @@ class AppleHIGMCPServer {
                 platform: {
                   type: 'string',
                   enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS', 'universal'],
-                  description: 'Filter by Apple platform',
-                },
-                category: {
-                  type: 'string',
-                  enum: [
-                    'foundations', 'layout', 'navigation', 'presentation',
-                    'selection-and-input', 'status', 'system-capabilities',
-                    'visual-design', 'icons-and-images', 'color-and-materials',
-                    'typography', 'motion', 'technologies'
-                  ],
-                  description: 'Filter by HIG category',
-                },
-                includeDesign: {
-                  type: 'boolean',
-                  description: 'Include design guidelines in search',
-                  default: true,
-                },
-                includeTechnical: {
-                  type: 'boolean',
-                  description: 'Include technical documentation in search',
-                  default: true,
-                },
-                maxResults: {
-                  type: 'number',
-                  minimum: 1,
-                  maximum: 50,
-                  default: 20,
-                  description: 'Maximum number of unified results to return',
-                },
-                maxDesignResults: {
-                  type: 'number',
-                  minimum: 1,
-                  maximum: 25,
-                  default: 10,
-                  description: 'Maximum number of design results to fetch',
-                },
-                maxTechnicalResults: {
-                  type: 'number',
-                  minimum: 1,
-                  maximum: 25,
-                  default: 10,
-                  description: 'Maximum number of technical results to fetch',
+                  description: 'Optional: Filter by Apple platform',
                 },
               },
               required: ['query'],

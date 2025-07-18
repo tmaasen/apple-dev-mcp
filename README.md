@@ -100,7 +100,7 @@ hig://ios/foundations  # iOS-specific foundations
 - `get_accessibility_requirements` - Accessibility guidelines
 
 **Technical Documentation**
-- `search_technical_documentation` - Search frameworks and symbols, with optional path-based lookup
+- `search_technical_documentation` - Search frameworks and symbols
 
 ### Example
 ```json
@@ -108,8 +108,7 @@ hig://ios/foundations  # iOS-specific foundations
   "name": "search_technical_documentation",
   "arguments": {
     "query": "Button",
-    "path": "documentation/SwiftUI/Button",
-    "includeDesignGuidance": true
+    "framework": "SwiftUI"
   }
 }
 ```

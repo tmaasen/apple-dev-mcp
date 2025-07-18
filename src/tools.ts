@@ -11,8 +11,6 @@ import type {
   SearchGuidelinesArgs, 
   SearchResult,
   ApplePlatform,
-  HIGCategory,
-  TechnicalDocumentation,
   TechnicalSearchResult,
   UnifiedSearchResult
 } from './types.js';
@@ -49,7 +47,8 @@ export class HIGToolProvider {
       throw new Error('Invalid arguments: expected object');
     }
     
-    const { query, platform, category, limit = 10 } = args;
+    const { query, platform } = args;
+    const limit = 10; // Use sensible default internally
     
     // Validate required parameters
     if (typeof query !== 'string') {
@@ -63,8 +62,7 @@ export class HIGToolProvider {
         total: 0,
         query: query.trim(),
         filters: {
-          platform,
-          category
+          platform
         }
       };
     }
@@ -78,18 +76,6 @@ export class HIGToolProvider {
       throw new Error(`Invalid platform: ${platform}. Must be one of: iOS, macOS, watchOS, tvOS, visionOS, universal`);
     }
     
-    if (category && ![
-      'foundations', 'layout', 'navigation', 'presentation',
-      'selection-and-input', 'status', 'system-capabilities',
-      'visual-design', 'icons-and-images', 'color-and-materials',
-      'typography', 'motion', 'technologies'
-    ].includes(category)) {
-      throw new Error(`Invalid category: ${category}`);
-    }
-    
-    if (typeof limit !== 'number' || limit < 1 || limit > 50) {
-      throw new Error('Invalid limit: must be a number between 1 and 50');
-    }
     
     try {
       let results: SearchResult[] = [];
@@ -99,7 +85,7 @@ export class HIGToolProvider {
         if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
           // Try regular static search with longer timeout for complex searches
           results = await Promise.race([
-            this.staticContentProvider.searchContent(query.trim(), platform, category, limit),
+            this.staticContentProvider.searchContent(query.trim(), platform, undefined, limit),
             new Promise<SearchResult[]>((_, reject) => setTimeout(() => reject(new Error('Search timeout')), 8000))
           ]);
         }
@@ -112,7 +98,7 @@ export class HIGToolProvider {
         try {
           // Try simple keyword search on static content first
           if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
-            results = await this.staticContentProvider.keywordSearchContent(query.trim(), platform, category, limit);
+            results = await this.staticContentProvider.keywordSearchContent(query.trim(), platform, undefined, limit);
           }
         } catch {
           // Fall through to minimal fallback
@@ -120,7 +106,7 @@ export class HIGToolProvider {
         
         // Only use hardcoded fallback if static content completely unavailable
         if (!results || results.length === 0) {
-          results = this.getMinimalFallbackResults(query.trim(), platform, category, limit);
+          results = this.getMinimalFallbackResults(query.trim(), platform, limit);
         }
       }
 
@@ -129,8 +115,7 @@ export class HIGToolProvider {
         total: results.length,
         query: query.trim(),
         filters: {
-          platform,
-          category
+          platform
         }
       };
     } catch (error) {
@@ -143,7 +128,7 @@ export class HIGToolProvider {
   /**
    * Minimal fallback search with hardcoded results (last resort only)
    */
-  private getMinimalFallbackResults(query: string, platform?: ApplePlatform, category?: string, limit: number = 10): SearchResult[] {
+  private getMinimalFallbackResults(query: string, platform?: ApplePlatform, limit: number = 10): SearchResult[] {
     const queryLower = query.toLowerCase();
     const fallbackData = [
       // Buttons & Touch Targets
@@ -200,10 +185,6 @@ export class HIGToolProvider {
         return;
       }
       
-      // Apply category filter
-      if (category && item.category !== category) {
-        return;
-      }
       
       if (relevanceScore > 0) {
         results.push({
@@ -265,26 +246,21 @@ export class HIGToolProvider {
   async searchTechnicalDocumentation(args: {
     query: string;
     framework?: string;
-    symbolType?: string;
     platform?: string;
-    maxResults?: number;
-    path?: string;
-    includeDesignGuidance?: boolean;
   }): Promise<{
     results: TechnicalSearchResult[];
     total: number;
     query: string;
     success: boolean;
     error?: string;
-    documentation?: TechnicalDocumentation | null;
-    designGuidance?: SearchResult[];
   }> {
     // Input validation
     if (!args || typeof args !== 'object') {
       throw new Error('Invalid arguments: expected object');
     }
     
-    const { query, framework, symbolType, platform, maxResults = 20, path, includeDesignGuidance = false } = args;
+    const { query, framework, platform } = args;
+    const maxResults = 20; // Use sensible default internally
     
     // Validate required parameters
     if (typeof query !== 'string') {
@@ -304,83 +280,11 @@ export class HIGToolProvider {
       throw new Error('Query too long: maximum 100 characters allowed');
     }
     
-    if (typeof maxResults !== 'number' || maxResults < 1 || maxResults > 100) {
-      throw new Error('Invalid maxResults: must be a number between 1 and 100');
-    }
-    
-    // Validate optional path parameter
-    if (path && (typeof path !== 'string' || path.length > 200)) {
-      throw new Error('Invalid path: must be a string with maximum 200 characters');
-    }
-    
     try {
-      let documentation: TechnicalDocumentation | null = null;
-      let designGuidance: SearchResult[] | undefined;
       
-      // If path is provided, try to get specific documentation first
-      if (path && path.trim().length > 0) {
-        try {
-          let finalPath = path.trim();
-          
-          // If path doesn't contain "documentation/", try to find it in our technical database
-          if (!finalPath.includes('documentation/')) {
-            const technicalDatabase = this.getTechnicalDatabase();
-            const foundItem = technicalDatabase.find(item => 
-              item.symbol.toLowerCase() === finalPath.toLowerCase() ||
-              item.title.toLowerCase() === finalPath.toLowerCase()
-            );
-            
-            if (foundItem) {
-              // Use the path from our database
-              finalPath = foundItem.path;
-            } else {
-              // Try to construct a common path pattern
-              finalPath = `documentation/swiftui/${finalPath.toLowerCase()}`;
-            }
-          }
-          
-          documentation = await this.appleDevAPIClient.getTechnicalDocumentation(finalPath);
-          
-          // Optionally include design guidance
-          if (includeDesignGuidance && this.staticContentProvider && documentation) {
-            try {
-              const designQuery = this.extractDesignRelevantTerms(documentation.symbol);
-              designGuidance = await this.staticContentProvider.searchContent(designQuery, undefined, undefined, 3);
-            } catch {
-              // Fall through to design guidance fallback
-            }
-          }
-        } catch {
-          // Fall back to database lookup
-          const technicalDatabase = this.getTechnicalDatabase();
-          const foundItem = technicalDatabase.find(item => 
-            item.symbol.toLowerCase() === path.trim().toLowerCase() ||
-            item.title.toLowerCase() === path.trim().toLowerCase()
-          );
-          
-          if (foundItem) {
-            // Convert our database item to TechnicalDocumentation format
-            documentation = {
-              id: foundItem.symbol.toLowerCase(),
-              symbol: foundItem.symbol,
-              framework: foundItem.framework,
-              symbolKind: foundItem.symbolType,
-              platforms: foundItem.platforms,
-              abstract: foundItem.abstract,
-              apiReference: `# ${foundItem.title}\n\n**Framework:** ${foundItem.framework}\n**Type:** ${foundItem.symbolType}\n**Platforms:** ${foundItem.platforms.join(', ')}\n\n## Overview\n${foundItem.abstract}`,
-              codeExamples: [],
-              relatedSymbols: [],
-              url: `https://developer.apple.com${foundItem.path}`,
-              lastUpdated: new Date()
-            };
-          }
-        }
-      }
-      
-      // Perform search functionality (always for now, regardless of path)
+      // Perform search functionality  
       const fallbackResults = this.generateTechnicalSearchFallback(query.trim(), {
         framework,
-        symbolType,
         platform,
         maxResults
       });
@@ -389,9 +293,7 @@ export class HIGToolProvider {
         results: fallbackResults,
         total: fallbackResults.length,
         query: query.trim(),
-        success: true,
-        documentation,
-        designGuidance
+        success: true
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -611,12 +513,11 @@ export class HIGToolProvider {
    */
   private generateTechnicalSearchFallback(query: string, options: {
     framework?: string;
-    symbolType?: string;
     platform?: string;
     maxResults?: number;
   }): TechnicalSearchResult[] {
     const queryLower = query.toLowerCase();
-    const { framework, symbolType, platform, maxResults = 20 } = options;
+    const { framework, platform, maxResults = 20 } = options;
     
     // Use shared technical database
     const technicalDatabase = this.getTechnicalDatabase();
@@ -633,15 +534,11 @@ export class HIGToolProvider {
       const matchesFramework = !framework || 
         item.framework.toLowerCase().includes(framework.toLowerCase());
 
-      // Filter by symbol type if specified
-      const matchesSymbolType = !symbolType || 
-        item.symbolType.toLowerCase().includes(symbolType.toLowerCase());
-
       // Filter by platform if specified
       const matchesPlatform = !platform || 
         item.platforms.some(p => p.toLowerCase().includes(platform.toLowerCase()));
 
-      return matchesQuery && matchesFramework && matchesSymbolType && matchesPlatform;
+      return matchesQuery && matchesFramework && matchesPlatform;
     });
 
     // Sort by relevance score (highest first)
@@ -668,7 +565,7 @@ export class HIGToolProvider {
   /**
    * Calculate relevance score for technical search results
    */
-  private calculateTechnicalRelevanceScore(item: any, queryLower: string, framework?: string): number {
+  private calculateTechnicalRelevanceScore(item: { symbol: string; title: string; framework: string; keywords: string[]; abstract: string }, queryLower: string, framework?: string): number {
     let score = 0;
     
     // Exact symbol match gets highest score
@@ -721,88 +618,6 @@ export class HIGToolProvider {
     return (start > 0 ? '...' : '') + snippet + (end < content.length ? '...' : '');
   }
 
-  /**
-   * Extract design-relevant terms from technical symbols for cross-referencing
-   */
-  private extractDesignRelevantTerms(symbol: string): string {
-    const symbolLower = symbol.toLowerCase();
-    
-    // Map technical symbols to design-relevant terms
-    const designMappings: Record<string, string[]> = {
-      'button': ['button', 'buttons', 'interactive', 'touch target'],
-      'uibutton': ['button', 'buttons', 'interactive', 'touch target'],
-      'view': ['layout', 'view', 'container', 'hierarchy'],
-      'uiview': ['layout', 'view', 'container', 'hierarchy'],
-      'label': ['text', 'typography', 'labels', 'content'],
-      'uilabel': ['text', 'typography', 'labels', 'content'],
-      'textfield': ['input', 'text field', 'form', 'data entry'],
-      'uitextfield': ['input', 'text field', 'form', 'data entry'],
-      'textview': ['text', 'content', 'editing', 'input'],
-      'uitextview': ['text', 'content', 'editing', 'input'],
-      'imageview': ['image', 'visual', 'media', 'content'],
-      'uiimageview': ['image', 'visual', 'media', 'content'],
-      'navigationbar': ['navigation', 'navigation bar', 'hierarchy'],
-      'uinavigationbar': ['navigation', 'navigation bar', 'hierarchy'],
-      'tabbar': ['tab bar', 'navigation', 'organization'],
-      'uitabbar': ['tab bar', 'navigation', 'organization'],
-      'scrollview': ['scroll', 'content', 'layout', 'navigation'],
-      'uiscrollview': ['scroll', 'content', 'layout', 'navigation'],
-      'tableview': ['table', 'list', 'data', 'organization'],
-      'uitableview': ['table', 'list', 'data', 'organization'],
-      'collectionview': ['collection', 'grid', 'layout', 'organization'],
-      'uicollectionview': ['collection', 'grid', 'layout', 'organization'],
-      'picker': ['picker', 'selection', 'input', 'data entry'],
-      'uipicker': ['picker', 'selection', 'input', 'data entry'],
-      'switch': ['toggle', 'switch', 'control', 'input'],
-      'uiswitch': ['toggle', 'switch', 'control', 'input'],
-      'slider': ['slider', 'control', 'input', 'range'],
-      'uislider': ['slider', 'control', 'input', 'range'],
-      'stepper': ['stepper', 'control', 'input', 'increment'],
-      'uistepper': ['stepper', 'control', 'input', 'increment'],
-      'segmentedcontrol': ['segmented control', 'selection', 'navigation'],
-      'uisegmentedcontrol': ['segmented control', 'selection', 'navigation'],
-      'activityindicator': ['loading', 'progress', 'feedback'],
-      'uiactivityindicator': ['loading', 'progress', 'feedback'],
-      'progressview': ['progress', 'feedback', 'loading'],
-      'uiprogressview': ['progress', 'feedback', 'loading'],
-      'alert': ['alert', 'dialog', 'notification', 'feedback'],
-      'uialert': ['alert', 'dialog', 'notification', 'feedback'],
-      'actionsheet': ['action sheet', 'menu', 'selection'],
-      'uiactionsheet': ['action sheet', 'menu', 'selection'],
-      'popover': ['popover', 'overlay', 'context'],
-      'uipopover': ['popover', 'overlay', 'context'],
-      'toolbar': ['toolbar', 'navigation', 'actions'],
-      'uitoolbar': ['toolbar', 'navigation', 'actions'],
-      'searchbar': ['search', 'input', 'discovery'],
-      'uisearchbar': ['search', 'input', 'discovery'],
-      'pagecontrol': ['page control', 'navigation', 'paging'],
-      'uipagecontrol': ['page control', 'navigation', 'paging']
-    };
-    
-    // Check for direct mappings
-    for (const [tech, design] of Object.entries(designMappings)) {
-      if (symbolLower.includes(tech)) {
-        return design.join(' ');
-      }
-    }
-    
-    // Extract common UI-related terms
-    const uiTerms = [
-      'button', 'view', 'label', 'text', 'image', 'navigation', 'tab', 'scroll',
-      'table', 'collection', 'picker', 'switch', 'slider', 'stepper', 'control',
-      'activity', 'progress', 'alert', 'action', 'popover', 'toolbar', 'search',
-      'page', 'menu', 'modal', 'sheet', 'bar', 'field', 'indicator'
-    ];
-    
-    const foundTerms = uiTerms.filter(term => symbolLower.includes(term));
-    
-    if (foundTerms.length > 0) {
-      return foundTerms.join(' ');
-    }
-    
-    // Fallback to the original symbol name
-    return symbol;
-  }
 
 
   /**
@@ -849,7 +664,7 @@ export class HIGToolProvider {
   /**
    * Identify key differences between platforms
    */
-  private identifyKeyDifferences(platformData: any[]): string[] {
+  private identifyKeyDifferences(platformData: Array<{ guidelines?: string[]; platform?: string }>): string[] {
     const differences: string[] = [];
     
     // Compare specifications
@@ -871,7 +686,7 @@ export class HIGToolProvider {
   /**
    * Get accessibility requirements database
    */
-  private getAccessibilityDatabase(component: string, _platform: string): any {
+  private getAccessibilityDatabase(component: string, _platform: string): { minimumTouchTarget: string; contrastRatio: string; wcagCompliance: string; voiceOverSupport: string[]; keyboardNavigation: string[]; additionalGuidelines: string[] } {
     const baseRequirements = {
       minimumTouchTarget: '44pt x 44pt',
       contrastRatio: '4.5:1 (WCAG AA)',
@@ -964,12 +779,6 @@ export class HIGToolProvider {
   async searchUnified(args: {
     query: string;
     platform?: ApplePlatform;
-    category?: string;
-    includeDesign?: boolean;
-    includeTechnical?: boolean;
-    maxResults?: number;
-    maxDesignResults?: number;
-    maxTechnicalResults?: number;
   }): Promise<{
     results: UnifiedSearchResult[];
     designResults: SearchResult[];
@@ -983,16 +792,12 @@ export class HIGToolProvider {
       relevance: number;
     }>;
   }> {
-    const {
-      query,
-      platform,
-      category,
-      includeDesign = true,
-      includeTechnical = true,
-      maxResults = 20,
-      maxDesignResults = 10,
-      maxTechnicalResults = 10
-    } = args;
+    const { query, platform } = args;
+    
+    // Use sensible defaults internally
+    const includeDesign = true;
+    const includeTechnical = true;
+    const maxResults = 20;
 
     // Input validation
     if (!query || typeof query !== 'string' || query.trim().length === 0) {
@@ -1014,9 +819,7 @@ export class HIGToolProvider {
         try {
           const designSearch = await this.searchHumanInterfaceGuidelines({
             query,
-            platform,
-            category: category as HIGCategory,
-            limit: maxDesignResults
+            platform
           });
           designResults = designSearch.results;
         } catch {
@@ -1030,8 +833,7 @@ export class HIGToolProvider {
         try {
           const technicalSearch = await this.searchTechnicalDocumentation({
             query,
-            platform,
-            maxResults: maxTechnicalResults
+            platform
           });
           technicalResults = technicalSearch.results;
         } catch {

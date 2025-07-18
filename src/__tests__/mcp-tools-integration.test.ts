@@ -77,8 +77,7 @@ describe('MCP Tools Integration Tests', () => {
     test('should search for buttons successfully', async () => {
       const result = await toolProvider.searchHumanInterfaceGuidelines({
         query: 'button',
-        platform: 'iOS',
-        limit: 10
+        platform: 'iOS'
       });
 
       expect(result).toEqual({
@@ -92,22 +91,18 @@ describe('MCP Tools Integration Tests', () => {
         total: expect.any(Number),
         query: 'button',
         filters: {
-          platform: 'iOS',
-          category: undefined
+          platform: 'iOS'
         }
       });
     });
 
-    test('should search with platform and category filters', async () => {
+    test('should search with platform filter', async () => {
       const result = await toolProvider.searchHumanInterfaceGuidelines({
         query: 'navigation',
-        platform: 'iOS',
-        category: 'navigation',
-        limit: 5
+        platform: 'iOS'
       });
 
       expect(result.filters.platform).toBe('iOS');
-      expect(result.filters.category).toBe('navigation');
       expect(result.results.length).toBeGreaterThanOrEqual(0);
     });
 
@@ -125,20 +120,15 @@ describe('MCP Tools Integration Tests', () => {
     test('should validate input parameters', async () => {
       await expect(toolProvider.searchHumanInterfaceGuidelines({
         query: 'test',
-        platform: 'InvalidPlatform' as any,
-        limit: 10
+        platform: 'InvalidPlatform' as any
       })).rejects.toThrow('Invalid platform');
 
-      await expect(toolProvider.searchHumanInterfaceGuidelines({
-        query: 'test',
-        category: 'invalid-category' as any,
-        limit: 10
-      })).rejects.toThrow('Invalid category');
-
-      await expect(toolProvider.searchHumanInterfaceGuidelines({
-        query: 'test',
-        limit: 100
-      })).rejects.toThrow('Invalid limit');
+      // Test that the method succeeds with only required parameters
+      const result = await toolProvider.searchHumanInterfaceGuidelines({
+        query: 'test'
+      });
+      expect(result).toBeDefined();
+      expect(result.results).toBeDefined();
     });
 
     test('should fallback to minimal search when static content fails', async () => {
@@ -147,8 +137,7 @@ describe('MCP Tools Integration Tests', () => {
 
       const result = await toolProvider.searchHumanInterfaceGuidelines({
         query: 'button',
-        platform: 'iOS',
-        limit: 10
+        platform: 'iOS'
       });
 
       // Should still return results from fallback
@@ -214,60 +203,41 @@ describe('MCP Tools Integration Tests', () => {
       });
     });
 
-    test('should get technical documentation for UIButton', async () => {
+    test('should search technical documentation for UIButton', async () => {
       const result = await toolProvider.searchTechnicalDocumentation({
-        query: 'UIButton',
-        path: 'documentation/UIKit/UIButton'
+        query: 'UIButton'
       });
 
       expect(result.success).toBe(true);
-      expect(result.documentation).toBeTruthy();
-      expect(result.documentation?.symbol).toBe('UIButton');
-      expect(result.documentation?.framework).toBe('UIKit');
-    });
-
-    test('should include design guidance when requested', async () => {
-      mockStaticContentProvider.searchContent.mockResolvedValue([
-        {
-          id: 'buttons-design',
-          title: 'Button Design Guidelines',
-          url: 'https://developer.apple.com/design/human-interface-guidelines/buttons',
-          platform: 'iOS',
-          relevanceScore: 0.85,
-          snippet: 'Design guidelines for buttons',
-          type: 'guideline',
-          category: 'visual-design'
-        }
-      ]);
-
-      const result = await toolProvider.searchTechnicalDocumentation({
-        query: 'UIButton',
-        path: 'documentation/UIKit/UIButton',
-        includeDesignGuidance: true
-      });
-
-      expect(result.designGuidance).toBeDefined();
-      expect(result.designGuidance?.length).toBeGreaterThan(0);
-    });
-
-    test('should validate path input', async () => {
-      await expect(toolProvider.searchTechnicalDocumentation({
-        query: 'test',
-        path: 'a'.repeat(250) // Too long
-      })).rejects.toThrow('Invalid path: must be a string with maximum 200 characters');
-    });
-
-    test('should handle API errors gracefully', async () => {
-      mockAppleDevAPIClient.getTechnicalDocumentation.mockRejectedValue(new Error('API Error'));
-
-      const result = await toolProvider.searchTechnicalDocumentation({
-        query: 'test',
-        path: 'invalid/path'
-      });
-
-      expect(result.success).toBe(true); // Should still return search results
       expect(result.results).toBeDefined();
-      expect(result.documentation).toBeNull(); // API call failed, but search still works
+      expect(result.results.length).toBeGreaterThan(0);
+    });
+
+    test('should search technical documentation with framework filter', async () => {
+      const result = await toolProvider.searchTechnicalDocumentation({
+        query: 'Button',
+        framework: 'UIKit'
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.results).toBeDefined();
+      expect(result.results.length).toBeGreaterThan(0);
+    });
+
+    test('should validate query input', async () => {
+      await expect(toolProvider.searchTechnicalDocumentation({
+        query: 'a'.repeat(150) // Too long
+      })).rejects.toThrow('Query too long');
+    });
+
+    test('should handle search errors gracefully', async () => {
+      const result = await toolProvider.searchTechnicalDocumentation({
+        query: 'nonexistentapi'
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.results).toBeDefined();
+      expect(Array.isArray(result.results)).toBe(true);
     });
   });
 
@@ -301,8 +271,7 @@ describe('MCP Tools Integration Tests', () => {
 
     test('should search for button technical documentation', async () => {
       const result = await toolProvider.searchTechnicalDocumentation({
-        query: 'button',
-        maxResults: 10
+        query: 'button'
       });
 
       expect(result.success).toBe(true);
@@ -329,8 +298,7 @@ describe('MCP Tools Integration Tests', () => {
 
       const result = await toolProvider.searchTechnicalDocumentation({
         query: 'button',
-        framework: 'SwiftUI',
-        maxResults: 10
+        framework: 'SwiftUI'
       });
 
       expect(result.results[0].framework).toBe('SwiftUI');
@@ -350,10 +318,11 @@ describe('MCP Tools Integration Tests', () => {
         query: 'a'.repeat(150), // Too long
       })).rejects.toThrow('Query too long');
 
-      await expect(toolProvider.searchTechnicalDocumentation({
-        query: 'test',
-        maxResults: 150 // Too many
-      })).rejects.toThrow('Invalid maxResults');
+      const result = await toolProvider.searchTechnicalDocumentation({
+        query: 'test'
+      });
+      expect(result).toBeDefined();
+      expect(result.success).toBe(true);
     });
   });
 
@@ -392,8 +361,7 @@ describe('MCP Tools Integration Tests', () => {
     test('should perform unified search across design and technical content', async () => {
       const result = await toolProvider.searchUnified({
         query: 'button',
-        platform: 'iOS',
-        maxResults: 20
+        platform: 'iOS'
       });
 
       expect(result.results.length).toBeGreaterThan(0);
@@ -406,9 +374,7 @@ describe('MCP Tools Integration Tests', () => {
 
     test('should create cross-references between design and technical content', async () => {
       const result = await toolProvider.searchUnified({
-        query: 'button',
-        includeDesign: true,
-        includeTechnical: true
+        query: 'button'
       });
 
       expect(result.crossReferences.length).toBeGreaterThan(0);
@@ -419,30 +385,25 @@ describe('MCP Tools Integration Tests', () => {
       });
     });
 
-    test('should allow filtering to design only', async () => {
+    test('should include both design and technical results', async () => {
       const result = await toolProvider.searchUnified({
-        query: 'button',
-        includeDesign: true,
-        includeTechnical: false
+        query: 'button'
       });
 
       expect(result.designResults.length).toBeGreaterThan(0);
-      expect(result.technicalResults.length).toBe(0);
+      expect(result.technicalResults.length).toBeGreaterThan(0);
       expect(result.sources).toContain('design-guidelines');
-      expect(result.sources).not.toContain('technical-documentation');
+      expect(result.sources).toContain('technical-documentation');
     });
 
-    test('should allow filtering to technical only', async () => {
+    test('should return unified results with cross-references', async () => {
       const result = await toolProvider.searchUnified({
-        query: 'button',
-        includeDesign: false,
-        includeTechnical: true
+        query: 'button'
       });
 
-      expect(result.designResults.length).toBe(0);
-      expect(result.technicalResults.length).toBeGreaterThan(0);
-      expect(result.sources).toContain('technical-documentation');
-      expect(result.sources).not.toContain('design-guidelines');
+      expect(result.results.length).toBeGreaterThan(0);
+      expect(result.total).toBeGreaterThan(0);
+      expect(result.crossReferences).toBeDefined();
     });
   });
 
@@ -456,8 +417,7 @@ describe('MCP Tools Integration Tests', () => {
       );
 
       const result = await toolProvider.searchTechnicalDocumentation({
-        query: 'UIButton',
-        path: 'documentation/UIKit/UIButton'
+        query: 'UIButton'
       });
 
       expect(result.success).toBe(true); // Still returns search results despite API error
