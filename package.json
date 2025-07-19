@@ -83,7 +83,6 @@
   },
   "files": [
     "dist/**/*",
-    "content/**/*",
     "manifest.json",
     "icon.png",
     "apple-dev-mcp.dxt",

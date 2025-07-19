@@ -11,7 +11,7 @@ export interface HIGSection {
   content?: string;
   lastUpdated?: Date;
   quality?: ContentQualityMetrics;
-  extractionMethod?: 'crawlee' | 'fallback' | 'static';
+  extractionMethod?: 'crawlee' | 'fallback';
   structuredContent?: StructuredHIGContent;
 }
 
@@ -438,7 +438,7 @@ export interface FrameworkInfo {
 }
 
 export interface UpdateCheckResult {
-  source: 'hig-static' | 'api-documentation' | 'git-repository';
+  source: 'hig-dynamic' | 'api-documentation' | 'git-repository';
   isUpdateAvailable: boolean;
   currentVersion?: string;
   latestVersion?: string;
@@ -507,7 +507,7 @@ export interface ContentFusionResult {
 
 
 export interface EnhancedCacheEntry<T> extends CacheEntry<T> {
-  source: 'hig-static' | 'api-documentation' | 'scraped' | 'fused';
+  source: 'hig-dynamic' | 'api-documentation' | 'scraped' | 'fused';
   quality: number;
   lastValidated: Date;
   invalidationRules: string[];

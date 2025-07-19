@@ -35,7 +35,6 @@ class AppleHIGMCPServer {
   private resourceProvider: HIGResourceProvider;
   private toolProvider: HIGToolProvider;
   private appleDevAPIClient: AppleDevAPIClient;
-  private useStaticContent: boolean = false;
 
   constructor() {
     this.server = new Server(
@@ -77,17 +76,6 @@ class AppleHIGMCPServer {
       this.setupHandlers();
   }
 
-  /**
-   * Lazy initialization of static content (called on first request)
-   */
-  private async initializeContentOnDemand(): Promise<void> {
-    if (this.useStaticContent !== false) {
-      return; // Already initialized or attempted
-    }
-
-    // Static content is no longer used - this is now a no-op
-    this.useStaticContent = false;
-  }
 
 
   /**

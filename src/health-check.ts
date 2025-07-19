@@ -69,7 +69,7 @@ class HealthChecker {
       // Skip heavy crawling, test fallback functionality instead
       console.log('   ℹ️  Using lightweight fallback discovery (no browser automation)');
       
-      // Test that we have static fallback sections available
+      // Test that we have dynamic content discovery working
       const knownSections = [
         { platform: 'iOS', title: 'Buttons' },
         { platform: 'iOS', title: 'Navigation Bars' },
@@ -119,7 +119,7 @@ class HealthChecker {
     // Test 4: Content Extraction (Fallback-based)
     console.log('\n4️⃣  Testing content extraction...');
     try {
-      // Test a simple resource that uses static/fallback content
+      // Test a simple resource that uses dynamic content discovery
       const basicResource = await this.resourceProvider.getResource('hig://ios');
       
       if (basicResource && basicResource.content.length > 50) {
