@@ -16,10 +16,10 @@
 ## ✨ Features
 
 - **🎨 Complete Coverage**: HIG design guidelines + Apple API documentation for iOS, macOS, watchOS, tvOS, visionOS
-- **⚡ Ultra-Fast**: Instant responses via pre-generated static content (no scraping delays)
+- **⚡ Smart Caching**: Fast responses via intelligent caching with graceful degradation
 - **🔍 Smart Search**: Unified search across design and technical content
 - **🤖 Enhanced Search**: Advanced search combining design principles with technical implementation
-- **🔄 Always Current**: Auto-updated content every 4 months via GitHub Actions
+- **🔄 Always Current**: Dynamic content discovery ensures latest Apple guidelines
 
 ## 🚀 Quick Start
 

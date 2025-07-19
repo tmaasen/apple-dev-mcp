@@ -85,6 +85,11 @@ export class ContentProcessorService implements IContentProcessor {
     const startTime = Date.now();
     
     try {
+      // Step 0: Check for JavaScript error pages
+      if (this.isJavaScriptErrorPage(html)) {
+        throw new Error('JavaScript error page detected - content requires browser JavaScript execution');
+      }
+      
       // Step 1: Clean the HTML
       const cleanedHtml = this.cleanHtml(html);
       
@@ -244,6 +249,38 @@ export class ContentProcessorService implements IContentProcessor {
   }
 
   /**
+   * Check if HTML content is a JavaScript error page
+   */
+  private isJavaScriptErrorPage(html: string): boolean {
+    const lowerHtml = html.toLowerCase();
+    const plainText = html.replace(/<[^>]*>/g, '').trim();
+    
+    // Primary indicators: explicit JavaScript error messages
+    const criticalErrorIndicators = [
+      'please turn on javascript in your browser and refresh the page',
+      'this page requires javascript',
+      'javascript is required to view this content',
+      'enable javascript and refresh'
+    ];
+    
+    const hasCriticalError = criticalErrorIndicators.some(indicator => 
+      lowerHtml.includes(indicator)
+    );
+    
+    // Secondary check: Very minimal content that's mostly CSS/style with noscript
+    const hasNoscriptOnly = lowerHtml.includes('<noscript>') && 
+                           lowerHtml.includes('class="noscript"') &&
+                           plainText.length < 150;
+    
+    // Tertiary check: Content is only CSS styles with almost no readable text
+    const isMostlyCSS = html.includes('<style>') && 
+                       plainText.length < 100 &&
+                       html.length > 1000; // Large HTML but tiny text content
+    
+    return hasCriticalError || hasNoscriptOnly || isMostlyCSS;
+  }
+
+  /**
    * Clean and normalize markdown content
    */
   private cleanMarkdown(markdown: string): string {
@@ -386,10 +423,10 @@ export class ContentProcessorService implements IContentProcessor {
       specs.dimensions = {};
       dimensionMatches.forEach(match => {
         if (match.toLowerCase().includes('width')) {
-          specs.dimensions!.width = match.split(':')[1]?.trim();
+          specs.dimensions.width = match.split(':')[1]?.trim();
         }
         if (match.toLowerCase().includes('height')) {
-          specs.dimensions!.height = match.split(':')[1]?.trim();
+          specs.dimensions.height = match.split(':')[1]?.trim();
         }
       });
     }
@@ -400,10 +437,10 @@ export class ContentProcessorService implements IContentProcessor {
       specs.spacing = {};
       spacingMatches.forEach(match => {
         if (match.toLowerCase().includes('padding')) {
-          specs.spacing!.padding = match.split(':')[1]?.trim();
+          specs.spacing.padding = match.split(':')[1]?.trim();
         }
         if (match.toLowerCase().includes('margin')) {
-          specs.spacing!.margin = match.split(':')[1]?.trim();
+          specs.spacing.margin = match.split(':')[1]?.trim();
         }
       });
     }
@@ -512,20 +549,5 @@ export class ContentProcessorService implements IContentProcessor {
     });
     
     return Math.min((reduction * 0.7) + (artifactsRemoved * 0.1), 1);
-  }
-
-  private removeExistingAttribution(content: string): string {
-    return content
-      .replace(/---\s*\*\*Attribution Notice\*\*[\s\S]*?---/g, '')
-      .replace(/\*\*Attribution Notice\*\*[\s\S]*?(?=\n\n|$)/g, '')
-      .replace(/---[\s\S]*?Apple Inc\.[\s\S]*?---/g, '')
-      .trim();
-  }
-
-  private cleanContent(content: string): string {
-    return content
-      .replace(/\n{3,}/g, '\n\n') // Remove excessive line breaks
-      .replace(/^[ \t]+/gm, '')   // Remove leading whitespace
-      .trim();
   }
 }

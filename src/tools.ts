@@ -5,7 +5,6 @@
 import type { CrawleeHIGService } from './services/crawlee-hig.service.js';
 import type { HIGCache } from './cache.js';
 import type { HIGResourceProvider } from './resources.js';
-import type { HIGStaticContentProvider } from './static-content.js';
 import { AppleDevAPIClient } from './services/apple-dev-api-client.service.js';
 import type { 
   SearchGuidelinesArgs, 
@@ -19,14 +18,12 @@ export class HIGToolProvider {
   private crawleeService: CrawleeHIGService;
   private _cache: HIGCache;
   private resourceProvider: HIGResourceProvider;
-  private staticContentProvider?: HIGStaticContentProvider;
   private appleDevAPIClient: AppleDevAPIClient;
 
-  constructor(crawleeService: CrawleeHIGService, cache: HIGCache, resourceProvider: HIGResourceProvider, staticContentProvider?: HIGStaticContentProvider, appleDevAPIClient?: AppleDevAPIClient) {
+  constructor(crawleeService: CrawleeHIGService, cache: HIGCache, resourceProvider: HIGResourceProvider, appleDevAPIClient?: AppleDevAPIClient) {
     this.crawleeService = crawleeService;
     this._cache = cache;
     this.resourceProvider = resourceProvider;
-    this.staticContentProvider = staticContentProvider;
     this.appleDevAPIClient = appleDevAPIClient || new AppleDevAPIClient(cache);
   }
 
@@ -80,34 +77,12 @@ export class HIGToolProvider {
     try {
       let results: SearchResult[] = [];
       
-      // Try static content search first (more reliable, less aggressive timeouts)
+      // Use live search via crawlee service as primary source
       try {
-        if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
-          // Try regular static search with longer timeout for complex searches
-          results = await Promise.race([
-            this.staticContentProvider.searchContent(query.trim(), platform, undefined, limit),
-            new Promise<SearchResult[]>((_, reject) => setTimeout(() => reject(new Error('Search timeout')), 8000))
-          ]);
-        }
+        results = await this.crawleeService.searchContent(query.trim(), platform, undefined, limit);
       } catch {
-        // Continue to keyword search fallback
-      }
-      
-      // If static search failed or returned no results, try keyword search on static content
-      if (!results || results.length === 0) {
-        try {
-          // Try simple keyword search on static content first
-          if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
-            results = await this.staticContentProvider.keywordSearchContent(query.trim(), platform, undefined, limit);
-          }
-        } catch {
-          // Fall through to minimal fallback
-        }
-        
-        // Only use hardcoded fallback if static content completely unavailable
-        if (!results || results.length === 0) {
-          results = this.getMinimalFallbackResults(query.trim(), platform, limit);
-        }
+        // Fall back to minimal hardcoded results
+        results = this.getMinimalFallbackResults(query.trim(), platform, limit);
       }
 
       return {

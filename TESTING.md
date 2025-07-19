@@ -69,29 +69,21 @@ Specifically tests the authentication/login scenarios that were previously faili
 - Component spec functionality
 - Search quality validation
 
-### 4. Desktop Extension Tests (`desktop-extension.test.ts`)
-Tests specific to Desktop Extension functionality:
-- **Extension building** and packaging (`.dxt` creation)
-- **Manifest validation** (DXT spec compliance)
-- **Icon integration** (SVG/PNG handling)
-- **Installation simulation** (extension structure validation)
-- **MCP protocol compatibility** through extension interface
+### 4. Dynamic Content Discovery Tests (`crawlee-hig.test.ts`)
+Tests specific to dynamic content discovery functionality:
+- **Recursive page crawling** (2-level depth discovery)
+- **Content quality validation** (JavaScript error page detection)
+- **Cache performance** (TTL and graceful degradation)
+- **Content processing** (HTML to markdown conversion)
+- **Apple website compatibility** (SPA architecture handling)
 
-### 5. Content Fusion Tests (`content-fusion.test.ts`)
-Tests the AI-powered content fusion capabilities:
-- **Design + Technical integration** (combining HIG with API docs)
-- **Implementation guide generation** (step-by-step guides)
-- **Cross-reference mapping** (design concepts to technical symbols)
-- **Platform-specific adaptations** (iOS SwiftUI vs macOS AppKit)
-- **Code example generation** (contextual code samples)
-
-### 6. Quick Coverage Script (`scripts/test-coverage.js`)
+### 5. Quick Coverage Script (`scripts/test-coverage.js`)
 Lightweight test that can be run anytime to verify:
 - **41 critical search terms** that users commonly look for
 - **Platform-specific searches** across all Apple platforms
 - **Component specification functionality** 
 - **Technical documentation integration**
-- **Desktop Extension build process**
+- **Dynamic content discovery performance**
 - **Overall discoverability score**
 
 ## 🎯 Key Metrics We Track
@@ -128,12 +120,12 @@ npm test -- --testNamePattern="Comprehensive Content Coverage"
 ```
 Runs all 220+ search scenarios (takes ~3 minutes).
 
-### Desktop Extension Tests
+### Dynamic Content Discovery Tests
 ```bash
-npm test -- --testNamePattern="Desktop Extension"
-npm run build:extension  # Test actual extension building
+npm test -- --testNamePattern="Dynamic Content Discovery"
+npm run health-check  # Test actual content discovery
 ```
-Tests extension building, manifest validation, and installation readiness.
+Tests content discovery, processing, and cache performance.
 
 ### Content Fusion Tests
 ```bash
@@ -157,7 +149,7 @@ Validates search index against actual content files.
 ```bash
 npm test  # Run all tests
 npm run lint  # Code quality
-npm run build:extension  # Extension building
+npm run test:automation  # Content processing testing
 npm run health-check  # Integration testing
 ```
 
@@ -167,8 +159,8 @@ npm run health-check  # Integration testing
 1. **New "0 results" scenarios** when content is added
 2. **Relevance score degradation** (scores dropping below thresholds)
 3. **Platform filtering issues** (iOS searches returning macOS-only content)
-4. **Desktop Extension build failures** (`.dxt` creation issues)
-5. **Content fusion failures** (design + technical integration breaking)
+4. **Content discovery failures** (pages not being found or processed)
+5. **Cache performance issues** (TTL expiration or degradation problems)
 6. **Technical documentation gaps** (missing API docs or broken links)
 7. **Synonym gaps** (synonyms not finding related content)
 
@@ -177,8 +169,8 @@ The tests will fail if:
 - Any critical search term returns 0 results
 - Relevance scores drop below minimum thresholds
 - Platform-specific searches fail to find platform content
-- Desktop Extension build process fails
-- Content fusion tools return errors or invalid content
+- Dynamic content discovery process fails
+- Content processing returns errors or invalid content
 - Technical documentation integration breaks
 - Cross-platform consistency is broken
 

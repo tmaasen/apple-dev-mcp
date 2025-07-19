@@ -19,15 +19,8 @@ This is an Apple Dev MCP (Model Context Protocol) server that provides complete 
 ### Development
 - `npm run dev` - Start development server using tsx
 - `npm start` - Run compiled server from `dist/`
-- `npm run health-check` - Test scraper functionality
-- `npm run generate-content` - Generate static HIG content files (full discovery + enhanced keyword search)
-- `npm run generate-content:offline` - Fast offline generation (14 core sections, keyword search only)
-- `npm run validate-content` - Validate generated content
-
-### Desktop Extension
-- `npm run build:extension` - Build Desktop Extension (.dxt file)
-- `npm run package:extension` - Alias for build:extension
-- `npm run extension:dev` - Development build with extension packaging
+- `npm run health-check` - Test dynamic scraping functionality
+- `npm run test:automation` - Automated MCP server testing
 
 ### Testing with MCP Inspector
 ```bash
@@ -36,7 +29,7 @@ npx @modelcontextprotocol/inspector dist/server.js
 
 ## Architecture Overview
 
-The project uses a hybrid static/dynamic architecture with static content generation and live scraping fallback:
+The project uses a pure dynamic architecture with live content discovery and scraping:
 
 ### Core Components
 
@@ -44,115 +37,95 @@ The project uses a hybrid static/dynamic architecture with static content genera
    - Coordinates all components and handles MCP protocol communication
    - Sets up request handlers for resources and tools
    - Manages graceful startup/shutdown
-   - Initializes static content provider with fallback to scraping
+   - Initializes dynamic content services
 
-2. **HIGStaticContentProvider** (`src/static-content.ts`) - Primary content source
-   - Loads pre-generated markdown files from `content/` directory
-   - Provides instant responses (no scraping delays)
-   - Uses pre-built search indices for fast queries
-   - Falls back to scraper if static content unavailable
+2. **CrawleeHIGService** (`src/services/crawlee-hig.service.ts`) - Primary content discovery engine
+   - Uses Crawlee with Playwright for JavaScript-capable web scraping
+   - Recursive discovery of ALL Apple HIG pages (2-level depth)
+   - Smart content extraction with multiple fallback strategies
+   - Handles Apple's complex SPA architecture
 
-3. **HIGScraper** (`src/scraper.ts`) - Fallback web scraping engine
-   - Respectful scraping with rate limiting (1 second delays)
-   - Intelligent fallback content when Apple's SPA fails to load
-   - Maintains curated list of known HIG sections (~65 URLs)
-   - Converts HTML to clean markdown format
-
-4. **HIGCache** (`src/cache.ts`) - Smart caching layer (for scraping)
+3. **HIGCache** (`src/cache.ts`) - Smart caching layer
    - TTL-based caching with graceful degradation
    - Backup cache entries for offline resilience 
    - Two-tier caching: fresh data + stale fallback data
    - Methods: `getWithGracefulFallback()`, `setWithGracefulDegradation()`
 
-5. **HIGResourceProvider** (`src/resources.ts`) - MCP Resources implementation
+4. **HIGResourceProvider** (`src/resources.ts`) - MCP Resources implementation
    - Serves structured content via URIs like `hig://ios`, `hig://ios/buttons`
    - Platform-specific and category-specific resource organization
-   - Prefers static content, falls back to scraping
+   - Uses dynamic content discovery
    - Generates comprehensive content with proper Apple attribution
 
-6. **HIGToolsService** (`src/services/tools.service.ts`) - MCP Tools implementation with enhanced keyword search
+5. **HIGToolsService** (`src/services/tools.service.ts`) - MCP Tools implementation
    - Interactive search with advanced keyword matching and intent recognition
-   - 8 focused tools including design guidelines, technical documentation, and content fusion
+   - 4 focused tools for design guidelines and technical documentation
    - Multi-factor relevance scoring (keyword + structure + context + synonym expansion)
    - Enhanced keyword search with synonym expansion and intelligent matching
    - Optimized for fast response times without external model dependencies
 
-7. **EnhancedKeywordSearchService** (`src/services/enhanced-keyword-search.service.ts`) - Advanced search capabilities
-   - Sophisticated keyword matching with synonym expansion and stemming
-   - Query analysis with intent recognition and entity extraction
-   - Multi-dimensional relevance scoring with configurable weights
-   - Support for contextual search across Apple platform design patterns without external dependencies
-
-8. **ContentProcessor** (`src/services/content-processor.service.ts`) - Content processing pipeline
+6. **ContentProcessor** (`src/services/content-processor.service.ts`) - Content processing pipeline
    - HTML to markdown conversion using Turndown.js (images removed for MCP efficiency)
    - Structured content extraction (overview, guidelines, examples, specifications)
-   - Quality validation with comprehensive scoring and SLA monitoring
+   - Quality validation with comprehensive scoring and JavaScript error page detection
    - Apple-specific content pattern recognition and enhancement
 
-9. **ContentFusionService** (`src/services/content-fusion.service.ts`) - AI-powered content fusion
-   - Intelligently combines design guidelines with technical implementation details
-   - Generates comprehensive implementation guides and fused guidance
-   - Live content pattern matching without hard-coded knowledge bases
-   - Apple Code Review compliant with respectful content usage
+7. **AppleDevAPIClient** (`src/services/apple-dev-api-client.service.ts`) - Technical documentation integration
+   - Provides access to Apple's API documentation and technical references
+   - Integrates with design guidelines for comprehensive development guidance
+   - Caches technical content for performance optimization
 
-10. **AppleDevAPIClient** (`src/services/apple-dev-api-client.service.ts`) - Technical documentation integration
-    - Provides access to Apple's API documentation and technical references
-    - Integrates with design guidelines for comprehensive development guidance
-    - Caches technical content for performance optimization
-
-11. **Desktop Extension Support** (`scripts/build-extension.js`, `manifest.json`) - Modern distribution
-    - Builds DXT-compliant Desktop Extensions for one-click installation
-    - Packages server, content, and dependencies in portable .dxt format
-    - Includes proper manifest, icon, and validation for Claude Desktop integration
+8. **Desktop Extension Support** (`scripts/build-extension.js`, `manifest.json`) - Modern distribution
+   - Builds DXT-compliant Desktop Extensions for one-click installation
+   - Packages server and dependencies in portable .dxt format
+   - Includes proper manifest, icon, and validation for Claude Desktop integration
 
 ### Data Flow
 
 ```
 MCP Client → AppleHIGMCPServer → HIGResourceProvider/HIGToolsService
                                             ↓
-                                 HIGStaticContentProvider (primary)
-                                            ↓ (fallback)
-                                     HIGScraper → HIGCache → Apple's Website
+                                   CrawleeHIGService → HIGCache → Apple's Website
 
 Search Flow:
-Query → EnhancedKeywordSearchService → Advanced Keyword Matching + Synonym Expansion
+Query → HIGToolsService → Advanced Keyword Matching + Synonym Expansion
                             ↓
                     Multi-factor Scoring (keyword + synonym + structure + context)
                             ↓
                     Ranked Results (with intent recognition and boost factors)
 ```
 
-### Content Generation and Processing
+### Content Discovery and Processing
 
 ```
-GitHub Action (every 4 months) → ContentGenerator → Enhanced Content Processing Pipeline
-                                        ↓
-                                ContentProcessor (Turndown.js + Structure Extraction)
-                                        ↓
-                                Quality Validation + SLA Monitoring
-                                        ↓
-                        Markdown Files + Search Indices + Enhanced Keyword Indexes
-                                        ↓
-                                content/ directory
-                                        ↓
-                        HIGStaticContentProvider + EnhancedKeywordSearchService
+User Request → CrawleeHIGService → Recursive Page Discovery (2-level depth)
+                        ↓
+                Playwright Browser Automation → Apple HIG Website
+                        ↓
+                Content Extraction + Quality Validation
+                        ↓
+                HIGCache (with graceful degradation)
+                        ↓
+                Structured Content Response
 ```
 
 ### Key Patterns
 
-**Static-First with Fallback**: The system prioritizes pre-generated static content for performance and reliability, falling back to live scraping only when static content is unavailable.
+**Pure Dynamic Discovery**: The system discovers ALL Apple HIG pages dynamically using recursive crawling, ensuring complete coverage without maintaining static lists.
 
-**Graceful Degradation**: Multiple fallback layers ensure availability - static content → cached scraping → live scraping → contextual fallback content.
+**JavaScript-Capable Scraping**: Uses Playwright for full browser automation to handle Apple's complex Single Page Application architecture.
 
-**Performance Optimization**: Static content provides instant responses (no scraping delays) and scales to unlimited concurrent users.
+**Graceful Degradation**: Multiple fallback layers ensure availability - cached content → live scraping → contextual fallback content.
+
+**Smart Content Validation**: Advanced detection of JavaScript error pages and malformed content to ensure only clean, useful content is cached.
 
 **Enhanced Keyword Search**: Multi-factor relevance scoring combines advanced keyword matching with synonym expansion, content structure analysis, and contextual relevance for superior search results.
 
 **Intent Recognition**: Query analysis extracts user intent (find_component, find_guideline, compare_platforms, etc.) and entities (components, platforms, properties) for more accurate results.
 
-**Optimized Performance**: The system uses fast keyword-based search with intelligent synonym expansion and relevance scoring, providing consistent performance without external model dependencies.
+**Optimized Performance**: The system uses intelligent caching with TTL-based expiration and graceful degradation for consistent performance.
 
-**Respectful Scraping**: Rate limiting, appropriate user agents, and fallback to known URLs when Apple's SPA architecture prevents dynamic discovery.
+**Respectful Scraping**: Rate limiting, appropriate user agents, and browser automation that respects Apple's website architecture.
 
 **Attribution Compliance**: All content includes proper Apple attribution and fair use notices.
 

@@ -1,7 +1,7 @@
 {
   "name": "apple-dev-mcp",
   "version": "2.0.3",
-  "description": "Complete Apple development guidance: Human Interface Guidelines (design) + Technical Documentation (API) for iOS, macOS, watchOS, tvOS, and visionOS",
+  "description": "Complete Apple development guidance: Human Interface Guidelines (design) + Technical Documentation for iOS, macOS, watchOS, tvOS, and visionOS",
   "main": "dist/server.js",
   "type": "module",
   "bin": {
@@ -20,27 +20,12 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "health-check": "node dist/health-check.js",
-    "generate-content": "tsx src/generators/content-generator.ts",
-    "generate-content:offline": "DISABLE_SEMANTIC_SEARCH=true tsx src/generators/content-generator.ts",
-    "validate-content": "tsx src/scripts/validate-content.ts && npm run health-check",
-    "prepack": "npm run clean:build",
-    "prepublishOnly": "npm run test && npm run lint",
     "security-audit": "npm audit --audit-level=moderate",
     "validate": "npm run lint && npm run test && npm run build",
-    "type-check": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.ts\"",
-    "format:check": "prettier --check \"src/**/*.ts\"",
-    "ci": "npm run lint && npm run type-check && npm run test && npm run build",
-    "test:mcp": "jest src/__tests__/mcp-tools-integration.test.ts --verbose",
-    "test:mcp-watch": "jest src/__tests__/mcp-tools-integration.test.ts --watch --verbose",
-    "test:mcp-fast": "jest src/__tests__/mcp-tools-integration.test.ts --silent --maxWorkers=1",
-    "test:all-tools": "npm run test:mcp && npm run health-check",
+    "ci": "npm run lint && npm run test && npm run build",
     "test:automation": "node scripts/test-mcp-tools.js",
-    "test:quick": "npm run build && npm run test:mcp-fast",
-    "build:extension": "npx @anthropic-ai/dxt pack",
-    "package:extension": "npx @anthropic-ai/dxt pack",
-    "release:full": "npm run ci && npm run build:extension",
-    "validate-shipping": "node scripts/simple-validation.js"
+    "package:extension": "npx @anthropic-ai/dxt pack"
   },
   "keywords": [
     "mcp",

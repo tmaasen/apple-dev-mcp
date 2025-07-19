@@ -55,9 +55,9 @@ This project adheres to a code of conduct. By participating, you are expected to
    npm run build:extension
    ```
 
-7. Generate static content (optional):
+7. Test dynamic content discovery:
    ```bash
-   npm run generate-content
+   npm run health-check
    ```
 
 ## Making Changes
@@ -70,7 +70,7 @@ Use descriptive branch names:
 - `feature/desktop-extension-improvements` - Desktop Extension features
 - `docs/update-installation-guide` - Documentation updates
 - `scraper/update-selectors-for-new-layout` - Scraper maintenance
-- `content/regenerate-static-content` - Static content updates
+- `scraper/improve-content-discovery` - Content discovery improvements
 
 ### Commit Messages
 
@@ -79,55 +79,54 @@ Write clear commit messages:
 - `feat: add support for visionOS guidelines`
 - `docs: improve installation instructions`
 - `scraper: handle graceful degradation for failed requests`
-- `content: regenerate static HIG content for Q2 updates`
+- `scraper: improve dynamic content discovery for new sections`
 
 ## Common Contribution Types
 
-### 📄 Static Content Updates (Most Important)
+### 🔍 Content Discovery Improvements (Most Important)
 
-Our hybrid architecture prioritizes pre-generated static content for performance. The most valuable contributions are helping maintain and improve this content!
+Our pure dynamic architecture discovers content in real-time. The most valuable contributions are helping improve content discovery and processing!
 
-**When to update static content:**
-- Apple releases new HIG updates
-- GitHub Action content generation fails
-- Content becomes stale (>6 months old)
+**When to improve content discovery:**
+- Apple releases new HIG sections or changes website structure
+- JavaScript error pages are detected
+- Content extraction fails for specific pages
 - New Apple platforms or design systems are released
 
-**How to update static content:**
+**How to improve content discovery:**
 
-1. **Trigger content regeneration:**
+1. **Test content discovery:**
    ```bash
-   npm run generate-content
-   ```
-
-2. **Test the generated content:**
-   ```bash
-   npm run validate-content
    npm run health-check
    ```
 
-3. **Review generated files:**
-   - Check `content/platforms/` for new/updated sections
-   - Verify `content/metadata/` has updated indices
-   - Ensure attribution is properly included
-
-### 🔧 Scraper Fixes (Fallback System)
-
-Scrapers now serve as fallback when static content is unavailable. Still important for reliability!
-
-**When to fix scrapers:**
-- Static content generation is failing
-- New HIG sections aren't being discovered
-- Content extraction returns empty results
-
-**How to fix scrapers:**
-
-1. Identify broken URLs in the content generation script
-2. Update `scripts/generate-hig-content.ts` section discovery
-3. Test with both static and dynamic modes:
+2. **Test specific content extraction:**
    ```bash
-   npm run generate-content  # Test static generation
-   npm run health-check      # Test scraper fallback
+   npm run test:automation
+   ```
+
+3. **Monitor discovery performance:**
+   - Check CrawleeHIGService logs for failed discoveries
+   - Verify ContentProcessor handles new page structures
+   - Ensure JavaScript error page detection works correctly
+
+### 🔧 Content Processing Fixes
+
+The dynamic architecture relies on robust content processing. Important for reliability!
+
+**When to fix content processing:**
+- JavaScript error pages are being cached
+- New HIG sections aren't being discovered
+- Content extraction returns malformed results
+
+**How to fix content processing:**
+
+1. Identify failed content extraction patterns
+2. Update `ContentProcessor` for new page structures
+3. Test with dynamic discovery:
+   ```bash
+   npm run health-check      # Test content discovery
+   npm run test:automation   # Test processing pipeline
    ```
 
 ### 🆕 New Features
@@ -135,11 +134,11 @@ Scrapers now serve as fallback when static content is unavailable. Still importa
 Ideas for new features:
 - **Desktop Extension improvements**: Better UX, configuration options
 - **Unified search enhancements**: Improved design + technical integration
-- **Enhanced static content generation**: Better performance and coverage
+- **Enhanced dynamic content discovery**: Better performance and coverage
 - **Advanced search capabilities**: Cross-reference improvements, wildcard patterns
 - **Additional Apple platforms support**: New platforms and frameworks
-- **Content freshness monitoring**: Update notifications and version tracking
-- **GitHub Action improvements**: Better automation and error handling
+- **Cache optimization**: Improved TTL strategies and invalidation
+- **Performance monitoring**: Better tracking of discovery and processing metrics
 
 ### 📚 Documentation
 
@@ -195,15 +194,15 @@ scraper.discoverSections().then(console.log);
 ### Manual Testing Checklist
 
 - [ ] **Desktop Extension**: `.dxt` builds and installs correctly in Claude Desktop
-- [ ] **Static content** loads correctly (primary mode)
-- [ ] **Scraper fallback** works when static content unavailable  
+- [ ] **Dynamic content discovery** works correctly for all platforms
+- [ ] **Content processing** handles JavaScript error pages properly  
 - [ ] **MCP resources** load correctly (`hig://ios`, `hig://buttons`, etc.)
-- [ ] **Search tools** return relevant results from static indices
+- [ ] **Search tools** return relevant results from dynamic content
 - [ ] **Unified search tools** (`search_unified`) work
 - [ ] **Technical Documentation tools** integrate properly with API docs
 - [ ] **Component specs** include proper Apple attribution
 - [ ] **Cross-platform features** work across iOS, macOS, watchOS, tvOS, visionOS
-- [ ] **Content generation** script completes successfully
+- [ ] **Cache performance** provides reasonable response times
 
 ## Submitting Changes
 
@@ -270,49 +269,47 @@ For the most up-to-date and official information, please refer to Apple's offici
 ---
 ```
 
-## Static Content Generation
+## Dynamic Content Discovery
 
-### Understanding the Hybrid System
+### Understanding the Pure Dynamic System
 
-Our architecture uses two content sources:
+Our architecture uses live content discovery:
 
-1. **Static Content (Primary)**: Pre-generated markdown files updated every 4 months
-2. **Live Scraping (Fallback)**: Real-time content extraction when static unavailable
+1. **Dynamic Discovery**: Real-time crawling of ALL Apple HIG pages
+2. **Smart Caching**: TTL-based caching with graceful degradation
+3. **Content Processing**: JavaScript-capable extraction with quality validation
 
-### Content Generation Workflow
+### Content Discovery Workflow
 
 ```bash
-# Generate all static content
-npm run generate-content
-
-# Validate generated content
-npm run validate-content
-
-# Test both static and fallback modes
+# Test dynamic content discovery
 npm run health-check
+
+# Test content processing pipeline
+npm run test:automation
+
+# Monitor performance
+npm run dev  # Check logs for discovery patterns
 ```
 
-### Static Content Structure
+### Dynamic Content Flow
 
 ```
-content/
-├── platforms/          # Platform-specific guidelines
-│   ├── ios/           # iOS markdown files
-│   ├── macos/         # macOS markdown files
-│   └── ...
-├── metadata/          # Search optimization
-│   ├── search-index.json
-│   ├── cross-references.json
-│   └── generation-info.json
-└── images/           # Future: visual assets
+User Request → CrawleeHIGService → Recursive Page Discovery
+                    ↓
+            Playwright Browser → Apple HIG Website
+                    ↓
+            Content Extraction → Quality Validation
+                    ↓
+            HIGCache (TTL-based) → Structured Response
 ```
 
-### Contributing to Content Generation
+### Contributing to Content Discovery
 
-1. **Fix content extraction**: Update `scripts/generate-hig-content.ts`
-2. **Improve search indices**: Enhance keyword extraction
-3. **Add new platforms**: Extend platform discovery
-4. **Optimize performance**: Improve generation speed
+1. **Fix content extraction**: Update `ContentProcessor` service
+2. **Improve discovery patterns**: Enhance `CrawleeHIGService` crawling
+3. **Add error detection**: Expand JavaScript error page detection
+4. **Optimize performance**: Improve caching strategies
 
 ## Getting Help
 
@@ -353,7 +350,7 @@ npm run build:extension
 - **Manifest**: `manifest.json` - DXT specification compliant
 - **Icon**: `icon.png` - Abstract design (trademark-safe)
 - **Server**: `dist/server.js` - MCP server entry point
-- **Content**: `content/` - Static Apple content
+- **Dependencies**: Node.js modules and MCP server runtime
 - **Build Script**: `scripts/build-extension.js` - Extension packaging
 
 ### Contributing to Extensions

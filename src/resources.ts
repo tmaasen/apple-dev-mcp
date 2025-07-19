@@ -4,32 +4,21 @@
 
 import type { CrawleeHIGService } from './services/crawlee-hig.service.js';
 import type { HIGCache } from './cache.js';
-import type { HIGStaticContentProvider } from './static-content.js';
 import type { HIGResource, ApplePlatform, HIGCategory } from './types.js';
 
 export class HIGResourceProvider {
   private crawleeService: CrawleeHIGService;
   private cache: HIGCache;
-  private staticContentProvider?: HIGStaticContentProvider;
 
-  constructor(crawleeService: CrawleeHIGService, cache: HIGCache, staticContentProvider?: HIGStaticContentProvider) {
+  constructor(crawleeService: CrawleeHIGService, cache: HIGCache) {
     this.crawleeService = crawleeService;
     this.cache = cache;
-    this.staticContentProvider = staticContentProvider;
   }
 
   /**
    * List all available HIG resources
    */
   async listResources(): Promise<HIGResource[]> {
-    // Try static content first
-    if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
-      try {
-        return await this.staticContentProvider.listResources();
-      } catch {
-        // Fall through to scraper fallback
-      }
-    }
     
     // Fallback to scraper
     const cacheKey = 'resources:list';
@@ -155,17 +144,6 @@ export class HIGResourceProvider {
    * Get content for a specific resource URI
    */
   async getResource(uri: string): Promise<HIGResource | null> {
-    // Try static content first
-    if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
-      try {
-        const resource = await this.staticContentProvider.getResource(uri);
-        if (resource) {
-          return resource;
-        }
-      } catch {
-        // Fall through to scraper fallback
-      }
-    }
     
     // Fallback to scraper
     const cacheKey = `resource:${uri}`;
@@ -542,21 +520,6 @@ For the most up-to-date and official information, please refer to Apple's offici
     name: string;
     description: string;
   }> {
-    // Try static content first
-    if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
-      try {
-        const resource = await this.staticContentProvider.getResource(`hig://${topic}`);
-        if (resource) {
-          return {
-            content: resource.content,
-            name: resource.name,
-            description: resource.description
-          };
-        }
-      } catch {
-        // Fall through to scraper fallback
-      }
-    }
 
     // Fallback to scraper
     const sections = await this.crawleeService.discoverSections();
@@ -602,21 +565,6 @@ For the most up-to-date and official information, please refer to Apple's offici
     name: string;
     description: string;
   }> {
-    // Try static content first
-    if (this.staticContentProvider && await this.staticContentProvider.isAvailable()) {
-      try {
-        const resource = await this.staticContentProvider.getResource(`hig://${topic}/${platform.toLowerCase()}`);
-        if (resource) {
-          return {
-            content: resource.content,
-            name: resource.name,
-            description: resource.description
-          };
-        }
-      } catch {
-        // Fall through to scraper fallback
-      }
-    }
 
     // Fallback to scraper
     const sections = await this.crawleeService.discoverSections();

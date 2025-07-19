@@ -9,21 +9,18 @@ import { HIGCache } from './cache.js';
 import { CrawleeHIGService } from './services/crawlee-hig.service.js';
 import { HIGResourceProvider } from './resources.js';
 import { HIGToolProvider } from './tools.js';
-import { HIGStaticContentProvider } from './static-content.js';
 
 class HealthChecker {
   private cache: HIGCache;
   private crawleeService: CrawleeHIGService;
-  private staticContentProvider: HIGStaticContentProvider;
   private resourceProvider: HIGResourceProvider;
   private toolProvider: HIGToolProvider;
 
   constructor() {
     this.cache = new HIGCache(3600);
     this.crawleeService = new CrawleeHIGService(this.cache);
-    this.staticContentProvider = new HIGStaticContentProvider();
-    this.resourceProvider = new HIGResourceProvider(this.crawleeService, this.cache, this.staticContentProvider);
-    this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.resourceProvider, this.staticContentProvider);
+    this.resourceProvider = new HIGResourceProvider(this.crawleeService, this.cache);
+    this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.resourceProvider);
   }
 
   async runHealthCheck(): Promise<void> {

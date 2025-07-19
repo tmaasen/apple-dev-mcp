@@ -86,7 +86,6 @@ export class CrawleeHIGService {
     };
   }
 
-
   /**
    * Discover all HIG sections using dynamic discovery
    */
@@ -124,7 +123,7 @@ export class CrawleeHIGService {
       // Return section with minimal fallback content
       return {
         ...section,
-        content: this.getMinimalFallbackContent(section),
+        content: "",
         lastUpdated: new Date()
       };
     }
@@ -596,25 +595,6 @@ export class CrawleeHIGService {
     
     this.lastRequestTime = Date.now();
     this.requestCount++;
-  }
-
-  /**
-   * Get minimal fallback content when all extraction methods fail
-   */
-  private getMinimalFallbackContent(section: HIGSection): string {
-    return `# ${section.title}
-
-This section is part of Apple's Human Interface Guidelines.
-
-**Note**: Content extraction failed. Please visit the official documentation for complete information:
-${section.url}
-
----
-**Attribution Notice**
-
-This content is sourced from Apple's Human Interface Guidelines: ${section.url}
-
-© Apple Inc. All rights reserved. For the most up-to-date and official information, please refer to Apple's official documentation.`;
   }
 
   /**

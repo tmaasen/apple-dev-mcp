@@ -94,7 +94,7 @@ describe('HIGToolProvider', () => {
       });
 
       expect(result.results).toBeTruthy();
-      expect(result.results[0].title).toBe('Buttons');
+      expect(result.results[0].title).toBe('iOS Button');
       expect(result.results[0].platform).toBe('iOS');
       expect(result.total).toBe(1);
     });

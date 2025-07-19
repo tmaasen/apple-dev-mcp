@@ -26,14 +26,12 @@ import { HIGCache } from './cache.js';
 import { CrawleeHIGService } from './services/crawlee-hig.service.js';
 import { HIGResourceProvider } from './resources.js';
 import { HIGToolProvider } from './tools.js';
-import { HIGStaticContentProvider } from './static-content.js';
 import { AppleDevAPIClient } from './services/apple-dev-api-client.service.js';
 
 class AppleHIGMCPServer {
   private server: Server;
   private cache: HIGCache;
   private crawleeService: CrawleeHIGService;
-  private staticContentProvider: HIGStaticContentProvider;
   private resourceProvider: HIGResourceProvider;
   private toolProvider: HIGToolProvider;
   private appleDevAPIClient: AppleDevAPIClient;
@@ -70,12 +68,11 @@ class AppleHIGMCPServer {
       }
 
       // Initialize components with lazy loading - don't access content directory yet
-      this.staticContentProvider = new HIGStaticContentProvider();
       this.cache = new HIGCache(3600);
       this.crawleeService = new CrawleeHIGService(this.cache);
       this.appleDevAPIClient = new AppleDevAPIClient(this.cache);
-      this.resourceProvider = new HIGResourceProvider(this.crawleeService, this.cache, this.staticContentProvider);
-      this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.resourceProvider, this.staticContentProvider, this.appleDevAPIClient);
+      this.resourceProvider = new HIGResourceProvider(this.crawleeService, this.cache);
+      this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.resourceProvider, this.appleDevAPIClient);
 
       this.setupHandlers();
   }
@@ -88,26 +85,8 @@ class AppleHIGMCPServer {
       return; // Already initialized or attempted
     }
 
-    try {
-      // Add timeout to prevent hanging
-      const timeoutPromise = new Promise<void>((_, reject) => {
-        setTimeout(() => reject(new Error('Static content initialization timeout')), 10000);
-      });
-
-      const initPromise = (async () => {
-        const isAvailable = await this.staticContentProvider.isAvailable();
-        if (isAvailable) {
-          await this.staticContentProvider.initialize();
-          this.useStaticContent = true;
-        } else {
-          this.useStaticContent = false;
-        }
-      })();
-
-      await Promise.race([initPromise, timeoutPromise]);
-    } catch {
-      this.useStaticContent = false;
-    }
+    // Static content is no longer used - this is now a no-op
+    this.useStaticContent = false;
   }
 
 
