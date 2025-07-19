@@ -6,10 +6,38 @@
  * A Model Context Protocol server that provides complete Apple development guidance,
  * combining Human Interface Guidelines (design) with Technical Documentation (API).
  * 
- * @version 2.0.0
  * @author Tanner Maasen
  * @license MIT
  */
+
+// Aggressively silence all logging to prevent MCP protocol interference
+process.env.CRAWLEE_LOG_LEVEL = 'OFF';
+process.env.DEBUG = '';
+process.env.PLAYWRIGHT_BROWSERS_PATH = '';
+process.env.PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = '1';
+process.env.CRAWLEE_VERBOSE_LOG = '0';
+process.env.PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = '1';
+
+// Silence console methods during MCP mode
+if (process.env.NODE_ENV !== 'development') {
+  console.log = () => {};
+  console.warn = () => {};
+  console.info = () => {};
+  console.debug = () => {};
+  console.error = () => {}; // Also silence error logs
+}
+
+// Override process.stderr.write to catch any stderr leakage
+const originalStderrWrite = process.stderr.write;
+process.stderr.write = function(chunk: any, encoding?: any, callback?: any) {
+  // Only allow MCP protocol errors through, block everything else
+  if (typeof chunk === 'string' && chunk.includes('jsonrpc')) {
+    return originalStderrWrite.call(this, chunk, encoding, callback);
+  }
+  // Silently ignore all other stderr output
+  if (typeof callback === 'function') callback();
+  return true;
+};
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
@@ -26,7 +54,7 @@ import { HIGCache } from './cache.js';
 import { CrawleeHIGService } from './services/crawlee-hig.service.js';
 import { HIGResourceProvider } from './resources.js';
 import { HIGToolProvider } from './tools.js';
-import { AppleDevAPIClient } from './services/apple-dev-api-client.service.js';
+import { AppleContentAPIClient } from './services/apple-content-api-client.service.js';
 
 class AppleHIGMCPServer {
   private server: Server;
@@ -34,7 +62,7 @@ class AppleHIGMCPServer {
   private crawleeService: CrawleeHIGService;
   private resourceProvider: HIGResourceProvider;
   private toolProvider: HIGToolProvider;
-  private appleDevAPIClient: AppleDevAPIClient;
+  private appleContentAPIClient: AppleContentAPIClient;
 
   constructor() {
     this.server = new Server(
@@ -69,14 +97,12 @@ class AppleHIGMCPServer {
       // Initialize components with lazy loading - don't access content directory yet
       this.cache = new HIGCache(3600);
       this.crawleeService = new CrawleeHIGService(this.cache);
-      this.appleDevAPIClient = new AppleDevAPIClient(this.cache);
+      this.appleContentAPIClient = new AppleContentAPIClient(this.cache);
       this.resourceProvider = new HIGResourceProvider(this.crawleeService, this.cache);
-      this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.resourceProvider, this.appleDevAPIClient);
+      this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.resourceProvider, this.appleContentAPIClient);
 
       this.setupHandlers();
   }
-
-
 
   /**
    * Compare semantic versions
@@ -96,7 +122,6 @@ class AppleHIGMCPServer {
     return 0;
   }
   
-
   /**
    * Set up MCP request handlers with comprehensive error handling
    */
@@ -104,12 +129,7 @@ class AppleHIGMCPServer {
     // Resource handlers
     this.server.setRequestHandler(ListResourcesRequestSchema, async () => {
       try {
-        // Initialize content on first request
-        await this.initializeContentOnDemand();
-        
-        // const startTime = Date.now();
         const resources = await this.resourceProvider.listResources();
-        // const _duration = Date.now() - startTime;
         
         return {
           resources: resources.map(resource => ({
@@ -131,11 +151,7 @@ class AppleHIGMCPServer {
 
     this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
       try {
-        // Initialize content on first request
-        await this.initializeContentOnDemand();
-        
         const { uri } = request.params;
-        // const startTime = Date.now();
         
         // Validate URI format
         if (!uri || typeof uri !== 'string') {
@@ -147,7 +163,6 @@ class AppleHIGMCPServer {
         }
         
         const resource = await this.resourceProvider.getResource(uri);
-        // const _duration = Date.now() - startTime;
         
         if (!resource) {
           throw new McpError(ErrorCode.InvalidRequest, `Resource not found: ${uri}`);
@@ -267,11 +282,7 @@ class AppleHIGMCPServer {
 
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       try {
-        // Initialize content on first request
-        await this.initializeContentOnDemand();
-        
         const { name, arguments: args } = request.params;
-        // const startTime = Date.now();
         
         // Validate tool name
         if (!name || typeof name !== 'string') {
@@ -288,38 +299,21 @@ class AppleHIGMCPServer {
         
         switch (name) {
           case 'search_human_interface_guidelines': {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             result = await this.toolProvider.searchHumanInterfaceGuidelines(args as any);
             break;
           }
-
-
-
           case 'get_accessibility_requirements': {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             result = await this.toolProvider.getAccessibilityRequirements(args as any);
             break;
           }
-
-
-
           case 'search_technical_documentation': {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             result = await this.toolProvider.searchTechnicalDocumentation(args as any);
             break;
           }
-
-
           case 'search_unified': {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             result = await this.toolProvider.searchUnified(args as any);
             break;
           }
-
-
-
-
-
           default:
             throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
         }

@@ -1,0 +1,34 @@
+{
+  "timestamp": "2025-07-19T23:21:16.985Z",
+  "duration": 304410,
+  "statistics": {
+    "totalSections": 113,
+    "successful": 113,
+    "failed": 0,
+    "successRate": 100,
+    "averageQuality": 10
+  },
+  "config": {
+    "outputDirectory": "content",
+    "maxConcurrentScrapes": 3,
+    "enableQualityValidation": true,
+    "minQualityThreshold": 0.5
+  },
+  "platforms": [
+    "universal",
+    "iOS",
+    "macOS",
+    "watchOS",
+    "tvOS",
+    "visionOS"
+  ],
+  "categories": [
+    "foundations",
+    "layout",
+    "selection-and-input",
+    "navigation",
+    "presentation",
+    "visual-design",
+    "technologies"
+  ]
+}

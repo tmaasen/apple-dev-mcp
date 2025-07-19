@@ -597,6 +597,7 @@ export class CrawleeHIGService {
     this.requestCount++;
   }
 
+
   /**
    * Search content using existing discovery and extraction capabilities
    */

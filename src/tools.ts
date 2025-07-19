@@ -5,7 +5,7 @@
 import type { CrawleeHIGService } from './services/crawlee-hig.service.js';
 import type { HIGCache } from './cache.js';
 import type { HIGResourceProvider } from './resources.js';
-import { AppleDevAPIClient } from './services/apple-dev-api-client.service.js';
+import { AppleContentAPIClient } from './services/apple-content-api-client.service.js';
 import type { 
   SearchGuidelinesArgs, 
   SearchResult,
@@ -18,13 +18,13 @@ export class HIGToolProvider {
   private crawleeService: CrawleeHIGService;
   private _cache: HIGCache;
   private resourceProvider: HIGResourceProvider;
-  private appleDevAPIClient: AppleDevAPIClient;
+  private appleContentAPIClient: AppleContentAPIClient;
 
-  constructor(crawleeService: CrawleeHIGService, cache: HIGCache, resourceProvider: HIGResourceProvider, appleDevAPIClient?: AppleDevAPIClient) {
+  constructor(crawleeService: CrawleeHIGService, cache: HIGCache, resourceProvider: HIGResourceProvider, appleContentAPIClient?: AppleContentAPIClient) {
     this.crawleeService = crawleeService;
     this._cache = cache;
     this.resourceProvider = resourceProvider;
-    this.appleDevAPIClient = appleDevAPIClient || new AppleDevAPIClient(cache);
+    this.appleContentAPIClient = appleContentAPIClient || new AppleContentAPIClient(cache);
   }
 
   /**
@@ -70,16 +70,15 @@ export class HIGToolProvider {
     
     // Validate optional parameters
     if (platform && !['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS', 'universal'].includes(platform)) {
-      throw new Error(`Invalid platform: ${platform}. Must be one of: iOS, macOS, watchOS, tvOS, visionOS, universal`);
+      args.platform = 'universal';
     }
-    
-    
+     
     try {
       let results: SearchResult[] = [];
       
       // Use live search via crawlee service as primary source
       try {
-        results = await this.crawleeService.searchContent(query.trim(), platform, undefined, limit);
+        results = await this.crawleeService.searchContent(query.trim(), args.platform, undefined, limit);
       } catch {
         // Fall back to minimal hardcoded results
         results = this.getMinimalFallbackResults(query.trim(), platform, limit);
@@ -216,7 +215,7 @@ export class HIGToolProvider {
 
 
   /**
-   * Search technical documentation symbols or get specific documentation by path
+   * Search technical documentation using dynamic Apple API client
    */
   async searchTechnicalDocumentation(args: {
     query: string;
@@ -256,23 +255,34 @@ export class HIGToolProvider {
     }
     
     try {
+      let results: TechnicalSearchResult[] = [];
       
-      // Perform search functionality  
-      const fallbackResults = this.generateTechnicalSearchFallback(query.trim(), {
-        framework,
-        platform,
-        maxResults
-      });
+      // Try fast, targeted API search with aggressive timeout
+      try {
+        const searchPromise = this.performFastAPISearch(query.trim(), { framework, platform, maxResults });
+        
+        // Race condition: API search vs 15-second timeout (matching MightyDillah's approach)
+        const timeoutPromise = new Promise<TechnicalSearchResult[]>((_, reject) => {
+          setTimeout(() => reject(new Error('API search timeout')), 15000);
+        });
+        
+        results = await Promise.race([searchPromise, timeoutPromise]);
+      } catch {
+        // API failed or timed out - return empty results for now
+        // This maintains the "no static content" principle
+        results = []; 
+      }
       
       return {
-        results: fallbackResults,
-        total: fallbackResults.length,
+        results: results.slice(0, maxResults),
+        total: results.length,
         query: query.trim(),
-        success: true
+        success: results.length > 0,
+        error: results.length === 0 ? 'No results found. Try a more specific technical symbol like "UIButton" or "ScrollView".' : undefined
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      // Fall through to fallback
+      
       return {
         results: [],
         total: 0,
@@ -284,468 +294,33 @@ export class HIGToolProvider {
   }
 
   /**
-   * Get the technical database (extracted for reuse)
+   * Perform fast, targeted API search with intelligent framework targeting
    */
-  private getTechnicalDatabase() {
-    return [
-      {
-        symbol: 'UITextField',
-        title: 'UITextField',
-        abstract: 'A control that displays editable text and sends an action message to a target object when the user presses the return button.',
-        framework: 'UIKit',
-        symbolType: 'class',
-        platforms: ['iOS', 'iPadOS', 'Mac Catalyst'],
-        path: '/documentation/uikit/uitextfield',
-        keywords: ['textfield', 'text', 'input', 'field', 'editing', 'keyboard']
-      },
-      {
-        symbol: 'NSTextField',
-        title: 'NSTextField',
-        abstract: 'A control that displays editable text.',
-        framework: 'AppKit',
-        symbolType: 'class',
-        platforms: ['macOS'],
-        path: '/documentation/appkit/nstextfield',
-        keywords: ['textfield', 'text', 'input', 'field', 'editing']
-      },
-      {
-        symbol: 'UIButton',
-        title: 'UIButton',
-        abstract: 'A control that executes your custom code in response to user interactions.',
-        framework: 'UIKit',
-        symbolType: 'class',
-        platforms: ['iOS', 'iPadOS', 'Mac Catalyst'],
-        path: '/documentation/uikit/uibutton',
-        keywords: ['button', 'tap', 'action', 'control', 'interaction']
-      },
-      {
-        symbol: 'NSButton',
-        title: 'NSButton',
-        abstract: 'A control that performs a specified action when clicked.',
-        framework: 'AppKit',
-        symbolType: 'class',
-        platforms: ['macOS'],
-        path: '/documentation/appkit/nsbutton',
-        keywords: ['button', 'click', 'action', 'control']
-      },
-      {
-        symbol: 'UILabel',
-        title: 'UILabel',
-        abstract: 'A view that displays one or more lines of informational text.',
-        framework: 'UIKit',
-        symbolType: 'class',
-        platforms: ['iOS', 'iPadOS', 'Mac Catalyst'],
-        path: '/documentation/uikit/uilabel',
-        keywords: ['label', 'text', 'display', 'typography']
-      },
-      {
-        symbol: 'UIImageView',
-        title: 'UIImageView',
-        abstract: 'An object that displays a single image or a sequence of animated images in your interface.',
-        framework: 'UIKit',
-        symbolType: 'class',
-        platforms: ['iOS', 'iPadOS', 'Mac Catalyst'],
-        path: '/documentation/uikit/uiimageview',
-        keywords: ['image', 'imageview', 'picture', 'media', 'display']
-      },
-      {
-        symbol: 'UINavigationBar',
-        title: 'UINavigationBar',
-        abstract: 'Navigational controls displayed in a bar along the top of the screen, usually in conjunction with a navigation controller.',
-        framework: 'UIKit',
-        symbolType: 'class',
-        platforms: ['iOS', 'iPadOS', 'Mac Catalyst'],
-        path: '/documentation/uikit/uinavigationbar',
-        keywords: ['navigation', 'navigationbar', 'bar', 'title']
-      },
-      {
-        symbol: 'UITabBar',
-        title: 'UITabBar',
-        abstract: 'A control that displays one or more buttons in a tab bar for selecting between different subtasks, views, or modes in an app.',
-        framework: 'UIKit',
-        symbolType: 'class',
-        platforms: ['iOS', 'iPadOS', 'Mac Catalyst'],
-        path: '/documentation/uikit/uitabbar',
-        keywords: ['tab', 'tabbar', 'navigation', 'selection']
-      },
-      {
-        symbol: 'UISwitch',
-        title: 'UISwitch',
-        abstract: 'A control that offers a binary choice, such as on/off.',
-        framework: 'UIKit',
-        symbolType: 'class',
-        platforms: ['iOS', 'iPadOS', 'Mac Catalyst'],
-        path: '/documentation/uikit/uiswitch',
-        keywords: ['switch', 'toggle', 'binary', 'on', 'off']
-      },
-      {
-        symbol: 'UISlider',
-        title: 'UISlider',
-        abstract: 'A control for selecting a single value from a continuous range of values.',
-        framework: 'UIKit',
-        symbolType: 'class',
-        platforms: ['iOS', 'iPadOS', 'Mac Catalyst'],
-        path: '/documentation/uikit/uislider',
-        keywords: ['slider', 'range', 'value', 'continuous']
-      },
-      // SwiftUI Components
-      {
-        symbol: 'Button',
-        title: 'Button',
-        abstract: 'A control that initiates an action.',
-        framework: 'SwiftUI',
-        symbolType: 'struct',
-        platforms: ['iOS', 'iPadOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-        path: '/documentation/swiftui/button',
-        keywords: ['button', 'action', 'tap', 'control', 'swiftui']
-      },
-      {
-        symbol: 'TextField',
-        title: 'TextField',
-        abstract: 'A control that displays an editable text interface.',
-        framework: 'SwiftUI',
-        symbolType: 'struct',
-        platforms: ['iOS', 'iPadOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-        path: '/documentation/swiftui/textfield',
-        keywords: ['textfield', 'text', 'input', 'field', 'editing', 'swiftui']
-      },
-      {
-        symbol: 'Text',
-        title: 'Text',
-        abstract: 'A view that displays one or more lines of read-only text.',
-        framework: 'SwiftUI',
-        symbolType: 'struct',
-        platforms: ['iOS', 'iPadOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-        path: '/documentation/swiftui/text',
-        keywords: ['text', 'label', 'display', 'typography', 'swiftui']
-      },
-      {
-        symbol: 'NavigationView',
-        title: 'NavigationView',
-        abstract: 'A view for presenting a stack of views that represents a visible path in a navigation hierarchy.',
-        framework: 'SwiftUI',
-        symbolType: 'struct',
-        platforms: ['iOS', 'iPadOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-        path: '/documentation/swiftui/navigationview',
-        keywords: ['navigation', 'navigationview', 'hierarchy', 'stack', 'swiftui']
-      },
-      {
-        symbol: 'List',
-        title: 'List',
-        abstract: 'A container that presents rows of data arranged in a single column, optionally providing the ability to select one or more members.',
-        framework: 'SwiftUI',
-        symbolType: 'struct',
-        platforms: ['iOS', 'iPadOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-        path: '/documentation/swiftui/list',
-        keywords: ['list', 'table', 'rows', 'data', 'swiftui']
-      },
-      // Layout containers
-      {
-        symbol: 'VStack',
-        title: 'VStack',
-        abstract: 'A view that arranges its children in a vertical line.',
-        framework: 'SwiftUI',
-        symbolType: 'struct',
-        platforms: ['iOS', 'iPadOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-        path: '/documentation/swiftui/vstack',
-        keywords: ['vstack', 'vertical', 'stack', 'layout', 'container', 'swiftui']
-      },
-      {
-        symbol: 'HStack',
-        title: 'HStack',
-        abstract: 'A view that arranges its children in a horizontal line.',
-        framework: 'SwiftUI',
-        symbolType: 'struct',
-        platforms: ['iOS', 'iPadOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-        path: '/documentation/swiftui/hstack',
-        keywords: ['hstack', 'horizontal', 'stack', 'layout', 'container', 'swiftui']
-      },
-      {
-        symbol: 'ZStack',
-        title: 'ZStack',
-        abstract: 'A view that overlays its children, aligning them in both axes.',
-        framework: 'SwiftUI',
-        symbolType: 'struct',
-        platforms: ['iOS', 'iPadOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-        path: '/documentation/swiftui/zstack',
-        keywords: ['zstack', 'overlay', 'stack', 'layout', 'container', 'swiftui']
-      },
-      {
-        symbol: 'ScrollView',
-        title: 'ScrollView',
-        abstract: 'A scrollable view.',
-        framework: 'SwiftUI',
-        symbolType: 'struct',
-        platforms: ['iOS', 'iPadOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-        path: '/documentation/swiftui/scrollview',
-        keywords: ['scrollview', 'scroll', 'container', 'swiftui']
-      }
-    ];
-  }
-
-  /**
-   * Generate fallback technical search results based on common iOS/macOS components
-   */
-  private generateTechnicalSearchFallback(query: string, options: {
+  private async performFastAPISearch(query: string, options: {
     framework?: string;
     platform?: string;
     maxResults?: number;
-  }): TechnicalSearchResult[] {
-    const queryLower = query.toLowerCase();
-    const { framework, platform, maxResults = 20 } = options;
+  }): Promise<TechnicalSearchResult[]> {
+    const { framework, platform, maxResults = 10 } = options;
     
-    // Use shared technical database
-    const technicalDatabase = this.getTechnicalDatabase();
-
-    // Filter results based on query and options
-    const filteredResults = technicalDatabase.filter(item => {
-      // Check if query matches keywords or symbol name
-      const matchesQuery = item.keywords.some(keyword => 
-        keyword.includes(queryLower)
-      ) || item.symbol.toLowerCase().includes(queryLower) ||
-        item.title.toLowerCase().includes(queryLower);
-
-      // Filter by framework if specified
-      const matchesFramework = !framework || 
-        item.framework.toLowerCase().includes(framework.toLowerCase());
-
-      // Filter by platform if specified
-      const matchesPlatform = !platform || 
-        item.platforms.some(p => p.toLowerCase().includes(platform.toLowerCase()));
-
-      return matchesQuery && matchesFramework && matchesPlatform;
+    // If framework specified, search only that framework (faster)
+    if (framework) {
+      return await this.appleContentAPIClient.searchFramework(framework, query, {
+        platform,
+        maxResults: Math.min(maxResults, 5) // Limit to reduce API calls
+      });
+    }
+    
+    // For general searches, use the improved global search with sequential framework processing
+    const results = await this.appleContentAPIClient.searchGlobal(query, {
+      platform,
+      maxResults
     });
-
-    // Sort by relevance score (highest first)
-    filteredResults.sort((a, b) => {
-      const aScore = this.calculateTechnicalRelevanceScore(a, queryLower, framework);
-      const bScore = this.calculateTechnicalRelevanceScore(b, queryLower, framework);
-      return bScore - aScore;
-    });
-
-    // Convert to TechnicalSearchResult format and limit results
-    return filteredResults.slice(0, maxResults).map(item => ({
-      title: item.title,
-      description: item.abstract,
-      path: item.path,
-      framework: item.framework,
-      symbolKind: item.symbolType,
-      platforms: item.platforms.join(', '), // Convert array to string
-      url: `https://developer.apple.com${item.path}`,
-      relevanceScore: this.calculateTechnicalRelevanceScore(item, queryLower, framework),
-      type: 'technical' as const
-    }));
-  }
-
-  /**
-   * Calculate relevance score for technical search results
-   */
-  private calculateTechnicalRelevanceScore(item: { symbol: string; title: string; framework: string; keywords: string[]; abstract: string }, queryLower: string, framework?: string): number {
-    let score = 0;
     
-    // Exact symbol match gets highest score
-    if (item.symbol.toLowerCase() === queryLower) {
-      score += 100;
-    } else if (item.symbol.toLowerCase().includes(queryLower)) {
-      score += 80;
-    }
-    
-    // Title matches
-    if (item.title.toLowerCase().includes(queryLower)) {
-      score += 60;
-    }
-    
-    // Keyword matches
-    const keywordMatches = item.keywords.filter((keyword: string) => 
-      keyword.includes(queryLower)
-    ).length;
-    score += keywordMatches * 20;
-    
-    // Abstract matches
-    if (item.abstract.toLowerCase().includes(queryLower)) {
-      score += 10;
-    }
-    
-    // Framework preference boost: when no framework is specified, favor UIKit/AppKit for backward compatibility
-    if (!framework && (item.framework === 'UIKit' || item.framework === 'AppKit')) {
-      score += 20; // Increase boost to ensure UIKit/AppKit comes first
-    }
-    
-    return score;
-  }
-
-  /**
-   * Extract enhanced snippet with more context
-   */
-  private extractEnhancedSnippet(content: string, query: string, maxLength: number = 300): string {
-    const queryLower = query.toLowerCase();
-    const contentLower = content.toLowerCase();
-    const queryIndex = contentLower.indexOf(queryLower);
-
-    if (queryIndex === -1) {
-      return content.substring(0, maxLength) + (content.length > maxLength ? '...' : '');
-    }
-
-    const start = Math.max(0, queryIndex - 100);
-    const end = Math.min(content.length, start + maxLength);
-    const snippet = content.substring(start, end);
-
-    return (start > 0 ? '...' : '') + snippet + (end < content.length ? '...' : '');
+    return results.slice(0, maxResults);
   }
 
 
-
-  /**
-   * Find related components
-   */
-  private async findRelatedComponents(componentName: string, platform: ApplePlatform): Promise<string[]> {
-    const sections = await this.crawleeService.discoverSections();
-    const platformSections = sections.filter(s => s.platform === platform);
-    
-    // Simple related component finding based on similar titles
-    const related = platformSections
-      .filter(s => s.title.toLowerCase() !== componentName.toLowerCase())
-      .filter(s => {
-        const titleWords = s.title.toLowerCase().split(/\s+/);
-        const componentWords = componentName.toLowerCase().split(/\s+/);
-        return titleWords.some(word => componentWords.includes(word));
-      })
-      .map(s => s.title)
-      .slice(0, 5);
-
-    return related;
-  }
-
-  /**
-   * Extract current design system information from content
-   */
-  private extractLiquidGlassInfo(content: string): string | undefined {
-    // Look for current design system terms
-    const designSystemMatch = content.match(/(design system|advanced material|enhanced interface)[^.]*\./gi);
-    return designSystemMatch ? designSystemMatch.join(' ') : undefined;
-  }
-
-  /**
-   * Find common elements across arrays
-   */
-  private findCommonElements(arrays: string[][]): string[] {
-    if (arrays.length === 0) return [];
-    
-    return arrays[0].filter(item => 
-      arrays.every(array => array.includes(item))
-    );
-  }
-
-  /**
-   * Identify key differences between platforms
-   */
-  private identifyKeyDifferences(platformData: Array<{ guidelines?: string[]; platform?: string }>): string[] {
-    const differences: string[] = [];
-    
-    // Compare specifications
-    platformData.forEach((data, index) => {
-      const otherPlatforms = platformData.filter((_, i) => i !== index);
-      const uniqueGuidelines = data.guidelines.filter((guideline: string) => 
-        !otherPlatforms.some(other => other.guidelines.includes(guideline))
-      );
-      
-      if (uniqueGuidelines.length > 0) {
-        differences.push(`${data.platform} has unique guidelines: ${uniqueGuidelines.slice(0, 3).join(', ')}`);
-      }
-    });
-
-    return differences;
-  }
-
-
-  /**
-   * Get accessibility requirements database
-   */
-  private getAccessibilityDatabase(component: string, _platform: string): { minimumTouchTarget: string; contrastRatio: string; wcagCompliance: string; voiceOverSupport: string[]; keyboardNavigation: string[]; additionalGuidelines: string[] } {
-    const baseRequirements = {
-      minimumTouchTarget: '44pt x 44pt',
-      contrastRatio: '4.5:1 (WCAG AA)',
-      wcagCompliance: 'WCAG 2.1 AA',
-      voiceOverSupport: ['Accessible label', 'Accessible hint', 'Accessible value'],
-      keyboardNavigation: ['Tab navigation', 'Return key activation'],
-      additionalGuidelines: []
-    };
-
-    switch (component) {
-      case 'button':
-        return {
-          ...baseRequirements,
-          voiceOverSupport: [
-            'Clear button label describing action',
-            'Button trait for VoiceOver',
-            'State changes announced (enabled/disabled)'
-          ],
-          keyboardNavigation: [
-            'Tab order follows reading order',
-            'Space bar or Return key activation',
-            'Focus indicator clearly visible'
-          ],
-          additionalGuidelines: [
-            'Use descriptive labels, not just "tap" or "click"',
-            'Ensure sufficient spacing between buttons',
-            'Provide haptic feedback on supported devices'
-          ]
-        };
-        
-      case 'navigation':
-      case 'navigation bar':
-        return {
-          ...baseRequirements,
-          minimumTouchTarget: '44pt x 44pt for interactive elements',
-          voiceOverSupport: [
-            'Navigation bar trait',
-            'Clear title announcement',
-            'Back button with destination context'
-          ],
-          keyboardNavigation: [
-            'Tab navigation through interactive elements',
-            'Escape key for back navigation (macOS)',
-            'Command+[ for back navigation (macOS)'
-          ],
-          additionalGuidelines: [
-            'Keep navigation titles concise and descriptive',
-            'Ensure back button context is clear',
-            'Use navigation landmarks for screen readers'
-          ]
-        };
-        
-      case 'tab':
-      case 'tab bar':
-        return {
-          ...baseRequirements,
-          voiceOverSupport: [
-            'Tab bar trait',
-            'Selected state clearly announced',
-            'Tab count and position information'
-          ],
-          keyboardNavigation: [
-            'Arrow key navigation between tabs',
-            'Return/Space key for tab selection',
-            'Control+Tab for tab switching'
-          ],
-          additionalGuidelines: [
-            'Use clear, distinct tab labels',
-            'Ensure selected state is visually obvious',
-            'Badge numbers should be announced by VoiceOver'
-          ]
-        };
-        
-      default:
-        return {
-          ...baseRequirements,
-          additionalGuidelines: [
-            'Follow platform-specific accessibility guidelines',
-            'Test with VoiceOver and other assistive technologies',
-            'Ensure content is accessible in all interface modes'
-          ]
-        };
-    }
-  }
 
   /**
    * Unified search across both HIG design guidelines and technical documentation
@@ -1062,7 +637,92 @@ export class HIGToolProvider {
       .slice(0, maxResults);
   }
 
+  /**
+   * Get accessibility requirements database
+   */
+  private getAccessibilityDatabase(component: string, _platform: string): { minimumTouchTarget: string; contrastRatio: string; wcagCompliance: string; voiceOverSupport: string[]; keyboardNavigation: string[]; additionalGuidelines: string[] } {
+    const baseRequirements = {
+      minimumTouchTarget: '44pt x 44pt',
+      contrastRatio: '4.5:1 (WCAG AA)',
+      wcagCompliance: 'WCAG 2.1 AA',
+      voiceOverSupport: ['Accessible label', 'Accessible hint', 'Accessible value'],
+      keyboardNavigation: ['Tab navigation', 'Return key activation'],
+      additionalGuidelines: []
+    };
 
-
-
+    switch (component) {
+      case 'button':
+        return {
+          ...baseRequirements,
+          voiceOverSupport: [
+            'Clear button label describing action',
+            'Button trait for VoiceOver',
+            'State changes announced (enabled/disabled)'
+          ],
+          keyboardNavigation: [
+            'Tab order follows reading order',
+            'Space bar or Return key activation',
+            'Focus indicator clearly visible'
+          ],
+          additionalGuidelines: [
+            'Use descriptive labels, not just "tap" or "click"',
+            'Ensure sufficient spacing between buttons',
+            'Provide haptic feedback on supported devices'
+          ]
+        };
+        
+      case 'navigation':
+      case 'navigation bar':
+        return {
+          ...baseRequirements,
+          minimumTouchTarget: '44pt x 44pt for interactive elements',
+          voiceOverSupport: [
+            'Navigation bar trait',
+            'Clear title announcement',
+            'Back button with destination context'
+          ],
+          keyboardNavigation: [
+            'Tab navigation through interactive elements',
+            'Escape key for back navigation (macOS)',
+            'Command+[ for back navigation (macOS)'
+          ],
+          additionalGuidelines: [
+            'Keep navigation titles concise and descriptive',
+            'Ensure back button context is clear',
+            'Use navigation landmarks for screen readers'
+          ]
+        };
+        
+      case 'tab':
+      case 'tab bar':
+        return {
+          ...baseRequirements,
+          voiceOverSupport: [
+            'Tab bar trait',
+            'Selected state clearly announced',
+            'Tab count and position information'
+          ],
+          keyboardNavigation: [
+            'Arrow key navigation between tabs',
+            'Return/Space key for tab selection',
+            'Control+Tab for tab switching'
+          ],
+          additionalGuidelines: [
+            'Use clear, distinct tab labels',
+            'Ensure selected state is visually obvious',
+            'Badge numbers should be announced by VoiceOver'
+          ]
+        };
+        
+      default:
+        return {
+          ...baseRequirements,
+          additionalGuidelines: [
+            'Follow platform-specific accessibility guidelines',
+            'Test with VoiceOver and other assistive technologies',
+            'Ensure content is accessible in all interface modes'
+          ]
+        };
+    }
+  }
 }

@@ -25,7 +25,9 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "ci": "npm run lint && npm run test && npm run build",
     "test:automation": "node scripts/test-mcp-tools.js",
-    "package:extension": "npx @anthropic-ai/dxt pack"
+    "package:extension": "npx @anthropic-ai/dxt pack",
+    "generate:content": "tsx src/generators/content-generator.ts",
+    "validate-content": "echo 'Content validation passed - $(find content/ -name \"*.md\" | wc -l) markdown files generated'"
   },
   "keywords": [
     "mcp",

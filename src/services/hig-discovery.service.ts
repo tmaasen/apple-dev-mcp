@@ -7,6 +7,10 @@
  * Replaces the static knownSections array with dynamic discovery capability.
  */
 
+// Silence Crawlee logging to prevent MCP protocol interference
+process.env.CRAWLEE_LOG_LEVEL = 'OFF';
+process.env.DEBUG = '';
+
 import { PlaywrightCrawler, Dataset } from '@crawlee/playwright';
 import type { HIGSection, ApplePlatform, HIGCategory } from '../types.js';
 import type { HIGCache } from '../cache.js';
@@ -66,8 +70,17 @@ export class HIGDiscoveryService {
       const dataset = await Dataset.open('hig-discovered-links');
       await dataset.drop();
 
-      // Configure Crawlee crawler
-      const crawler = new PlaywrightCrawler({
+      // Capture original process outputs
+      const originalStdoutWrite = process.stdout.write;
+      const originalStderrWrite = process.stderr.write;
+      
+      // Silence all output during crawler operation
+      process.stdout.write = () => true;
+      process.stderr.write = () => true;
+
+      try {
+        // Configure Crawlee crawler
+        const crawler = new PlaywrightCrawler({
         requestHandler: async ({ page, request, enqueueLinks }) => {
           await this.handlePageRequest(page, request, enqueueLinks, dataset);
         },
@@ -90,8 +103,17 @@ export class HIGDiscoveryService {
               '--silent',
               '--disable-logging',
               '--disable-dev-tools',
+              '--disable-extensions',
               '--disable-extensions-http-throttling'
-            ]
+            ],
+            env: {
+              ...process.env,
+              DEBUG: '',
+              CRAWLEE_LOG_LEVEL: 'OFF',
+              CRAWLEE_VERBOSE_LOG: '0',
+              PLAYWRIGHT_BROWSERS_PATH: '',
+              PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+            }
           }
         },
         
@@ -101,8 +123,14 @@ export class HIGDiscoveryService {
         }
       });
 
-      // Start crawling from HIG root
-      await crawler.run([{ url: this.config.baseUrl }]);
+        // Start crawling from HIG root
+        await crawler.run([{ url: this.config.baseUrl }]);
+
+      } finally {
+        // Restore original process outputs
+        process.stdout.write = originalStdoutWrite;
+        process.stderr.write = originalStderrWrite;
+      }
 
       // Convert discovered sections to array
       const sections = Array.from(this.discoveredSections.values());
