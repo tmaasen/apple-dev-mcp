@@ -1,7 +1,7 @@
 {
   "dxt_version": "0.1",
   "name": "apple-dev-mcp",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "display_name": "Apple Dev MCP",
   "description": "Complete Apple development guidance: Human Interface Guidelines (design) + Technical Documentation (API) for iOS, macOS, watchOS, tvOS, and visionOS",
   "author": {
@@ -35,19 +35,15 @@
   "tools": [
     {
       "name": "search_human_interface_guidelines",
-      "description": "Search Apple Human Interface Guidelines by keywords, with optional platform and category filters"
-    },
-    {
-      "name": "get_accessibility_requirements",
-      "description": "Get accessibility requirements and guidelines for specific components"
+      "description": "Search Apple Human Interface Guidelines by keywords, with optional platform and category filters. Returns full content for AI-friendly responses."
     },
     {
       "name": "search_technical_documentation",
-      "description": "Search Apple technical documentation with wildcard support and optional path-based lookup"
+      "description": "Search Apple technical documentation and API references with framework-specific searches and symbol lookups."
     },
     {
       "name": "search_unified",
-      "description": "Unified search across both HIG design guidelines and technical documentation with cross-references"
+      "description": "Unified search across both HIG design guidelines and technical documentation with intelligent cross-references and combined results."
     }
   ],
   "compatibility": {
