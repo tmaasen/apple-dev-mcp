@@ -26,9 +26,8 @@ eslint.config.js
 .prettierrc
 
 # Content and docs
-content/
+# content/ - KEEP content directory for static Apple HIG content
 docs/
-*.md
 !README.md
 
 # Dependencies - include essential runtime dependencies for DXT
