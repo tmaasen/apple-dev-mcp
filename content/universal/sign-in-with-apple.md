@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/sign-in-with-apple
 quality_score: 0.46
 content_length: 16546
-last_updated: 2025-07-19T23:47:43.398Z
+last_updated: 2025-07-20T03:11:50.729Z
 keywords: ["sign in with apple","universal","technologies","system","interface","buttons","voiceover","color","visual","design"]
 has_code_examples: false
 has_images: false

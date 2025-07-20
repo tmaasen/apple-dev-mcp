@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/nfc
 quality_score: 0.36
 content_length: 2663
-last_updated: 2025-07-19T23:47:15.160Z
+last_updated: 2025-07-20T03:11:24.940Z
 keywords: ["nfc","universal","technologies","system"]
 has_code_examples: false
 has_images: false

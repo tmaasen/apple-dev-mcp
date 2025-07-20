@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/maps
 quality_score: 0.49
 content_length: 13456
-last_updated: 2025-07-19T23:47:09.801Z
+last_updated: 2025-07-20T03:11:19.491Z
 keywords: ["maps","universal","technologies","interface","system","visual","color","selection","controls","presentation","design","icons","navigation"]
 has_code_examples: false
 has_images: false

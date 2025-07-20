@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/designing-for-macos
 quality_score: 0.44
 content_length: 2830
-last_updated: 2025-07-19T23:48:21.434Z
+last_updated: 2025-07-20T03:12:27.512Z
 keywords: ["designing for macos","macos","foundations","design","interface","input","controls","system"]
 has_code_examples: false
 has_images: false

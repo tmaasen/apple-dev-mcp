@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/machine-learning
 quality_score: 0.49
 content_length: 36661
-last_updated: 2025-07-19T23:47:09.738Z
+last_updated: 2025-07-20T03:11:19.356Z
 keywords: ["machine learning","universal","technologies","images","design","feedback","icons","controls","input","selection","presentation","materials"]
 has_code_examples: false
 has_images: false

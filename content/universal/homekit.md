@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/homekit
 quality_score: 0.49
 content_length: 20326
-last_updated: 2025-07-19T23:47:02.249Z
+last_updated: 2025-07-20T03:11:10.414Z
 keywords: ["homekit","universal","technologies","controls","system","input","images","icons","design","color","buttons","layout"]
 has_code_examples: false
 has_images: false

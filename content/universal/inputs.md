@@ -5,7 +5,7 @@ category: selection-and-input
 url: https://developer.apple.com/design/human-interface-guidelines/inputs
 quality_score: 0.1
 content_length: 292
-last_updated: 2025-07-19T23:45:13.657Z
+last_updated: 2025-07-20T03:09:07.660Z
 keywords: ["inputs","universal","selection-and-input","selection","controls","gestures"]
 has_code_examples: false
 has_images: false

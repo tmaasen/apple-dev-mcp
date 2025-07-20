@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/rating-indicators
 quality_score: 0.34
 content_length: 819
-last_updated: 2025-07-19T23:46:39.188Z
+last_updated: 2025-07-20T03:10:43.973Z
 keywords: ["rating indicators","universal","visual-design"]
 has_code_examples: false
 has_images: false

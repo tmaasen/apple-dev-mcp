@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/home-screen-quick-actions
 quality_score: 0.4
 content_length: 3110
-last_updated: 2025-07-19T23:48:03.535Z
+last_updated: 2025-07-20T03:12:06.830Z
 keywords: ["home screen quick actions","ios","foundations","interface","design","color"]
 has_code_examples: false
 has_images: false

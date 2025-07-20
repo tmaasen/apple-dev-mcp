@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/tap-to-pay-on-iphone
 quality_score: 0.49
 content_length: 13850
-last_updated: 2025-07-19T23:47:45.481Z
+last_updated: 2025-07-20T03:11:53.076Z
 keywords: ["tap to pay on iphone","universal","technologies","status","buttons","interface","design","accessibility","icons","color","selection","system","animation","visual"]
 has_code_examples: false
 has_images: false

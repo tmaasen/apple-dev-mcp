@@ -5,7 +5,7 @@ category: navigation
 url: https://developer.apple.com/design/human-interface-guidelines/modality
 quality_score: 0.4
 content_length: 4628
-last_updated: 2025-07-19T23:45:30.894Z
+last_updated: 2025-07-20T03:09:26.194Z
 keywords: ["modality","universal","navigation","design","buttons","presentation","visual"]
 has_code_examples: false
 has_images: false

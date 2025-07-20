@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/siri
 quality_score: 0.49
 content_length: 49953
-last_updated: 2025-07-19T23:47:17.551Z
+last_updated: 2025-07-20T03:11:27.869Z
 keywords: ["siri","universal","technologies","system","design","visual","interface","motion","input","controls","selection","images"]
 has_code_examples: false
 has_images: false

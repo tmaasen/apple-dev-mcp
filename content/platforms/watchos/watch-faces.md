@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/watch-faces
 quality_score: 0.42
 content_length: 3186
-last_updated: 2025-07-19T23:49:09.575Z
+last_updated: 2025-07-20T03:13:14.121Z
 keywords: ["watch faces","watchos","foundations","color","system","images","design"]
 has_code_examples: false
 has_images: false

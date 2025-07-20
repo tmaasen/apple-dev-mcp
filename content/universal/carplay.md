@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/carplay
 quality_score: 0.49
 content_length: 7577
-last_updated: 2025-07-19T23:46:54.514Z
+last_updated: 2025-07-20T03:11:02.424Z
 keywords: ["carplay","universal","technologies","icons","design","interface","system","navigation","layout","input","controls","motion","selection","visual","color","images"]
 has_code_examples: false
 has_images: false

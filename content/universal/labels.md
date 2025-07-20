@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/labels
 quality_score: 0.48
 content_length: 3117
-last_updated: 2025-07-19T23:46:13.915Z
+last_updated: 2025-07-20T03:10:12.487Z
 keywords: ["labels","universal","visual-design","interface","buttons","system","visual","color","presentation","input","design"]
 has_code_examples: false
 has_images: false

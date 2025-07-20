@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/in-app-purchase
 quality_score: 0.44
 content_length: 20024
-last_updated: 2025-07-19T23:47:07.658Z
+last_updated: 2025-07-20T03:11:16.583Z
 keywords: ["in app purchase","universal","technologies","design","system","feedback","input","materials","status"]
 has_code_examples: false
 has_images: false

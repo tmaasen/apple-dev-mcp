@@ -5,7 +5,7 @@ category: selection-and-input
 url: https://developer.apple.com/design/human-interface-guidelines/launching
 quality_score: 0.44
 content_length: 4229
-last_updated: 2025-07-19T23:45:23.363Z
+last_updated: 2025-07-20T03:09:18.074Z
 keywords: ["launching","universal","selection-and-input","system","branding","design","color","interface","layout","images"]
 has_code_examples: false
 has_images: false

@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/scroll-views
 quality_score: 0.49
 content_length: 8838
-last_updated: 2025-07-19T23:46:23.643Z
+last_updated: 2025-07-20T03:10:22.394Z
 keywords: ["scroll views","universal","visual-design","visual","feedback","gestures","interface","selection","controls","layout","input","system","design"]
 has_code_examples: false
 has_images: false

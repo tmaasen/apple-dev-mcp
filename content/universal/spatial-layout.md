@@ -5,7 +5,7 @@ category: layout
 url: https://developer.apple.com/design/human-interface-guidelines/spatial-layout
 quality_score: 0.49
 content_length: 10138
-last_updated: 2025-07-19T23:44:52.652Z
+last_updated: 2025-07-20T03:08:45.044Z
 keywords: ["spatial layout","universal","layout","system","motion","controls","animation","visual","color","interface","design","gestures","buttons"]
 has_code_examples: false
 has_images: false

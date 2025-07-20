@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/app-shortcuts
 quality_score: 0.39
 content_length: 6454
-last_updated: 2025-07-19T23:46:52.283Z
+last_updated: 2025-07-20T03:10:59.124Z
 keywords: ["app shortcuts","universal","technologies","system","presentation"]
 has_code_examples: false
 has_images: false

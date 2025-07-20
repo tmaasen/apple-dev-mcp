@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/privacy
 quality_score: 0.49
 content_length: 14597
-last_updated: 2025-07-19T23:44:45.106Z
+last_updated: 2025-07-20T03:08:35.180Z
 keywords: ["privacy","universal","foundations","system","navigation","buttons","visual","status","color","accessibility","input","design","feedback","gestures"]
 has_code_examples: false
 has_images: false

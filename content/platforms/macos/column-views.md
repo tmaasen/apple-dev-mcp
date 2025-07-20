@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/column-views
 quality_score: 0.36
 content_length: 1593
-last_updated: 2025-07-19T23:48:29.430Z
+last_updated: 2025-07-20T03:12:35.104Z
 keywords: ["column views","macos","foundations","presentation"]
 has_code_examples: false
 has_images: false

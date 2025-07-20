@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/designing-for-ios
 quality_score: 0.46
 content_length: 3072
-last_updated: 2025-07-19T23:47:53.709Z
+last_updated: 2025-07-20T03:12:00.870Z
 keywords: ["designing for ios","ios","foundations","design","gestures","input","system","controls"]
 has_code_examples: false
 has_images: false

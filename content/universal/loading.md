@@ -5,7 +5,7 @@ category: selection-and-input
 url: https://developer.apple.com/design/human-interface-guidelines/loading
 quality_score: 0.4
 content_length: 2834
-last_updated: 2025-07-19T23:45:21.152Z
+last_updated: 2025-07-20T03:09:15.802Z
 keywords: ["loading","universal","selection-and-input","design","system"]
 has_code_examples: false
 has_images: false

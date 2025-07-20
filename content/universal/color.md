@@ -5,7 +5,7 @@ category: layout
 url: https://developer.apple.com/design/human-interface-guidelines/color
 quality_score: 0.49
 content_length: 17403
-last_updated: 2025-07-19T23:45:00.368Z
+last_updated: 2025-07-20T03:08:53.591Z
 keywords: ["color","universal","layout","system","visual","status","feedback","accessibility","interface","controls","icons","design","buttons","images","navigation","selection","animation"]
 has_code_examples: false
 has_images: false

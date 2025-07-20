@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/icloud
 quality_score: 0.37
 content_length: 4242
-last_updated: 2025-07-19T23:47:02.204Z
+last_updated: 2025-07-20T03:11:10.787Z
 keywords: ["icloud","universal","technologies","design","feedback"]
 has_code_examples: false
 has_images: false

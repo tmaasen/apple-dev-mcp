@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/boxes
 quality_score: 0.42
 content_length: 1535
-last_updated: 2025-07-19T23:46:31.267Z
+last_updated: 2025-07-20T03:10:30.130Z
 keywords: ["boxes","universal","visual-design","color","interface","visual","voiceover"]
 has_code_examples: false
 has_images: false

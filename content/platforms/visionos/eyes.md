@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/eyes
 quality_score: 0.49
 content_length: 9221
-last_updated: 2025-07-19T23:49:39.476Z
+last_updated: 2025-07-20T03:13:47.942Z
 keywords: ["eyes","visionos","foundations","visual","feedback","controls","system","input","selection","design","accessibility","layout","motion","color","animation"]
 has_code_examples: false
 has_images: false

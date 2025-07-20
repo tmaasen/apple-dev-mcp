@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/wallet
 quality_score: 0.49
 content_length: 30835
-last_updated: 2025-07-19T23:47:17.469Z
+last_updated: 2025-07-20T03:11:27.519Z
 keywords: ["wallet","universal","technologies","system","design","images","color","layout","visual","buttons","interface","status"]
 has_code_examples: false
 has_images: false

@@ -5,7 +5,7 @@ category: presentation
 url: https://developer.apple.com/design/human-interface-guidelines/sheets
 quality_score: 0.49
 content_length: 9212
-last_updated: 2025-07-19T23:45:44.099Z
+last_updated: 2025-07-20T03:09:40.688Z
 keywords: ["sheets","universal","presentation","selection","interface","system","visual","voiceover","buttons","layout","input","controls","navigation"]
 has_code_examples: false
 has_images: false

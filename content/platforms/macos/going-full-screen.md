@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/going-full-screen
 quality_score: 0.44
 content_length: 5224
-last_updated: 2025-07-19T23:48:59.472Z
+last_updated: 2025-07-20T03:13:04.319Z
 keywords: ["going full screen","macos","foundations","navigation","controls","gestures","system","layout","interface"]
 has_code_examples: false
 has_images: false

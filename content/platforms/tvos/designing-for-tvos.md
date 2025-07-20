@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/designing-for-tvos
 quality_score: 0.42
 content_length: 2159
-last_updated: 2025-07-19T23:49:25.567Z
+last_updated: 2025-07-20T03:13:30.068Z
 keywords: ["designing for tvos","tvos","foundations","design","system","gestures"]
 has_code_examples: false
 has_images: false

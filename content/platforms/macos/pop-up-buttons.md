@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/pop-up-buttons
 quality_score: 0.4
 content_length: 1988
-last_updated: 2025-07-19T23:48:45.758Z
+last_updated: 2025-07-20T03:12:50.544Z
 keywords: ["pop up buttons","macos","foundations","selection","buttons","interface","controls"]
 has_code_examples: false
 has_images: false

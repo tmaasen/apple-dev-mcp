@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/outline-views
 quality_score: 0.37
 content_length: 3729
-last_updated: 2025-07-19T23:48:29.543Z
+last_updated: 2025-07-20T03:12:35.182Z
 keywords: ["outline views","macos","foundations","system"]
 has_code_examples: false
 has_images: false

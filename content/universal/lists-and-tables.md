@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/lists-and-tables
 quality_score: 0.43
 content_length: 7071
-last_updated: 2025-07-19T23:46:21.257Z
+last_updated: 2025-07-20T03:10:20.034Z
 keywords: ["lists and tables","universal","visual-design","images","feedback","visual","navigation","controls"]
 has_code_examples: false
 has_images: false

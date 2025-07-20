@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/sf-symbols
 quality_score: 0.49
 content_length: 22494
-last_updated: 2025-07-19T23:47:51.588Z
+last_updated: 2025-07-20T03:11:58.977Z
 keywords: ["sf symbols","universal","technologies","system","interface","icons","images","color","visual","accessibility","design","selection","feedback","status","animation","controls","branding","motion","voiceover","navigation"]
 has_code_examples: false
 has_images: false

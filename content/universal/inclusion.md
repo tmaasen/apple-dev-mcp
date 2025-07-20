@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/inclusion
 quality_score: 0.48
 content_length: 14204
-last_updated: 2025-07-19T23:44:45.111Z
+last_updated: 2025-07-20T03:08:34.478Z
 keywords: ["inclusion","universal","foundations","design","images","interface","materials","accessibility","voiceover","visual","color"]
 has_code_examples: false
 has_images: false

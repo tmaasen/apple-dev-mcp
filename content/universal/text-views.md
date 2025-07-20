@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/text-views
 quality_score: 0.44
 content_length: 1828
-last_updated: 2025-07-19T23:46:15.919Z
+last_updated: 2025-07-20T03:10:14.474Z
 keywords: ["text views","universal","visual-design","system","color","input","accessibility","typography","design"]
 has_code_examples: false
 has_images: false

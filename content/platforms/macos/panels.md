@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/panels
 quality_score: 0.46
 content_length: 4879
-last_updated: 2025-07-19T23:48:53.796Z
+last_updated: 2025-07-20T03:12:58.872Z
 keywords: ["panels","macos","foundations","controls","selection","layout","interface","visual","system","color"]
 has_code_examples: false
 has_images: false

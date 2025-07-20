@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/pickers
 quality_score: 0.44
 content_length: 5191
-last_updated: 2025-07-19T23:46:08.366Z
+last_updated: 2025-07-20T03:10:06.939Z
 keywords: ["pickers","universal","visual-design","system","visual","interface","color","navigation"]
 has_code_examples: false
 has_images: false

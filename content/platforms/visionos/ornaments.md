@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/ornaments
 quality_score: 0.4
 content_length: 2701
-last_updated: 2025-07-19T23:49:51.126Z
+last_updated: 2025-07-20T03:13:55.330Z
 keywords: ["ornaments","visionos","foundations","controls","buttons","system","visual"]
 has_code_examples: false
 has_images: false

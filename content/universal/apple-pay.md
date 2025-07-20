@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/apple-pay
 quality_score: 0.49
 content_length: 28166
-last_updated: 2025-07-19T23:46:54.446Z
+last_updated: 2025-07-20T03:11:02.458Z
 keywords: ["apple pay","universal","technologies","buttons","color","design","branding","input","status","visual","system","voiceover","layout","interface","selection","typography"]
 has_code_examples: false
 has_images: false

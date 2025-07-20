@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/token-fields
 quality_score: 0.36
 content_length: 1760
-last_updated: 2025-07-19T23:48:51.267Z
+last_updated: 2025-07-20T03:12:56.357Z
 keywords: ["token fields","macos","foundations","system"]
 has_code_examples: false
 has_images: false

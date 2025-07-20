@@ -5,7 +5,7 @@ category: layout
 url: https://developer.apple.com/design/human-interface-guidelines/typography
 quality_score: 0.49
 content_length: 27376
-last_updated: 2025-07-19T23:44:58.447Z
+last_updated: 2025-07-20T03:08:51.289Z
 keywords: ["typography","universal","layout","system","color","visual","interface","design","accessibility","input","icons","controls","materials"]
 has_code_examples: false
 has_images: false

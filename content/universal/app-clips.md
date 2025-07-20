@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/app-clips
 quality_score: 0.49
 content_length: 27816
-last_updated: 2025-07-19T23:46:46.919Z
+last_updated: 2025-07-20T03:10:53.033Z
 keywords: ["app clips","universal","technologies","design","interface","navigation","system","branding","images","color","materials","selection"]
 has_code_examples: false
 has_images: false

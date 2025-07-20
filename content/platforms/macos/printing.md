@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/printing
 quality_score: 0.39
 content_length: 3040
-last_updated: 2025-07-19T23:49:01.516Z
+last_updated: 2025-07-20T03:13:06.409Z
 keywords: ["printing","macos","foundations","system","layout","presentation"]
 has_code_examples: false
 has_images: false

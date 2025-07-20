@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/the-menu-bar
 quality_score: 0.49
 content_length: 24975
-last_updated: 2025-07-19T23:48:21.595Z
+last_updated: 2025-07-20T03:12:27.604Z
 keywords: ["the menu bar","macos","foundations","system","icons","interface","input","selection","color","feedback","status","navigation"]
 has_code_examples: false
 has_images: false

@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/accessibility
 quality_score: 0.49
 content_length: 16709
-last_updated: 2025-07-19T23:44:44.460Z
+last_updated: 2025-07-20T03:08:36.275Z
 keywords: ["accessibility","universal","foundations","design","interface","system","color","icons","typography","visual","voiceover","presentation","haptics","feedback","controls","gestures","images","motion","animation","layout"]
 has_code_examples: false
 has_images: false

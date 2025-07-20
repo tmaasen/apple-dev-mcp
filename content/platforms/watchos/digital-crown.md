@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/digital-crown
 quality_score: 0.49
 content_length: 4150
-last_updated: 2025-07-19T23:49:15.655Z
+last_updated: 2025-07-20T03:13:20.255Z
 keywords: ["digital crown","watchos","foundations","input","system","accessibility","controls","navigation","widgets","feedback","interface","visual","animation"]
 has_code_examples: false
 has_images: false

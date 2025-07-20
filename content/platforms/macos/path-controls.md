@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/path-controls
 quality_score: 0.39
 content_length: 1358
-last_updated: 2025-07-19T23:48:43.071Z
+last_updated: 2025-07-20T03:12:48.508Z
 keywords: ["path controls","macos","foundations","system","controls","status"]
 has_code_examples: false
 has_images: false

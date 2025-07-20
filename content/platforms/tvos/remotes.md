@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/remotes
 quality_score: 0.46
 content_length: 5753
-last_updated: 2025-07-19T23:49:31.280Z
+last_updated: 2025-07-20T03:13:35.519Z
 keywords: ["remotes","tvos","foundations","input","buttons","gestures","feedback","selection","navigation","design","system"]
 has_code_examples: false
 has_images: false

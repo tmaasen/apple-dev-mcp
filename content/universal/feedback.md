@@ -5,7 +5,7 @@ category: selection-and-input
 url: https://developer.apple.com/design/human-interface-guidelines/feedback
 quality_score: 0.49
 content_length: 3566
-last_updated: 2025-07-19T23:45:15.806Z
+last_updated: 2025-07-20T03:09:09.984Z
 keywords: ["feedback","universal","selection-and-input","status","color","haptics","voiceover","interface","design"]
 has_code_examples: false
 has_images: false

@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/navigation-bars
 quality_score: 0.49
 content_length: 14389
-last_updated: 2025-07-19T23:45:59.015Z
+last_updated: 2025-07-20T03:09:57.107Z
 keywords: ["navigation bars","universal","visual-design","navigation","controls","buttons","system","color","interface","icons","selection","presentation","layout","input"]
 has_code_examples: false
 has_images: false

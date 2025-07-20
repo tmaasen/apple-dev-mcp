@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/workouts
 quality_score: 0.48
 content_length: 4435
-last_updated: 2025-07-19T23:49:23.315Z
+last_updated: 2025-07-20T03:13:27.851Z
 keywords: ["workouts","watchos","foundations","controls","buttons","visual","layout","feedback","system","motion"]
 has_code_examples: false
 has_images: false

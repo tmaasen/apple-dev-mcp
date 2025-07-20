@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/complications
 quality_score: 0.49
 content_length: 18308
-last_updated: 2025-07-19T23:49:09.668Z
+last_updated: 2025-07-20T03:13:14.349Z
 keywords: ["complications","watchos","foundations","system","color","images","visual","layout","motion","design","interface","presentation","widgets","icons"]
 has_code_examples: false
 has_images: false

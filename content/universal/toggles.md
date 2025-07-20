@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/toggles
 quality_score: 0.44
 content_length: 7204
-last_updated: 2025-07-19T23:46:06.455Z
+last_updated: 2025-07-20T03:10:04.716Z
 keywords: ["toggles","universal","visual-design","buttons","controls","interface","visual","color","status"]
 has_code_examples: false
 has_images: false

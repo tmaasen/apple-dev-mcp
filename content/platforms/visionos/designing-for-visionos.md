@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/designing-for-visionos
 quality_score: 0.48
 content_length: 5859
-last_updated: 2025-07-19T23:49:33.764Z
+last_updated: 2025-07-20T03:13:37.970Z
 keywords: ["designing for visionos","visionos","foundations","design","visual","system","accessibility","voiceover","input","controls","motion","gestures"]
 has_code_examples: false
 has_images: false

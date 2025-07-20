@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/menus
 quality_score: 0.49
 content_length: 10798
-last_updated: 2025-07-19T23:45:51.483Z
+last_updated: 2025-07-20T03:09:47.998Z
 keywords: ["menus","universal","visual-design","system","selection","input","layout","icons","interface","gestures","typography","controls"]
 has_code_examples: false
 has_images: false

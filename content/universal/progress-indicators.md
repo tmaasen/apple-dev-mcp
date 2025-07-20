@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/progress-indicators
 quality_score: 0.44
 content_length: 6589
-last_updated: 2025-07-19T23:46:08.634Z
+last_updated: 2025-07-20T03:10:06.884Z
 keywords: ["progress indicators","universal","visual-design","feedback","interface","status","animation","system","color"]
 has_code_examples: false
 has_images: false

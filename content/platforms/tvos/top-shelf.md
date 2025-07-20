@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/top-shelf
 quality_score: 0.46
 content_length: 7863
-last_updated: 2025-07-19T23:49:33.433Z
+last_updated: 2025-07-20T03:13:37.882Z
 keywords: ["top shelf","tvos","foundations","system","layout","design","buttons","images","controls","accessibility","voiceover"]
 has_code_examples: false
 has_images: false

@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/steppers
 quality_score: 0.34
 content_length: 1257
-last_updated: 2025-07-19T23:46:00.932Z
+last_updated: 2025-07-20T03:09:59.017Z
 keywords: ["steppers","universal","visual-design"]
 has_code_examples: false
 has_images: false

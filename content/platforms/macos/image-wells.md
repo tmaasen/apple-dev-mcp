@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/image-wells
 quality_score: 0.31
 content_length: 697
-last_updated: 2025-07-19T23:48:37.521Z
+last_updated: 2025-07-20T03:12:42.742Z
 keywords: ["image wells","macos","foundations"]
 has_code_examples: false
 has_images: false

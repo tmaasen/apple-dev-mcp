@@ -5,7 +5,7 @@ category: layout
 url: https://developer.apple.com/design/human-interface-guidelines/layout
 quality_score: 0.49
 content_length: 24197
-last_updated: 2025-07-19T23:44:52.762Z
+last_updated: 2025-07-20T03:08:44.835Z
 keywords: ["layout","universal","controls","design","materials","navigation","visual","buttons","system","interface","color","accessibility","typography","status","presentation","motion"]
 has_code_examples: false
 has_images: false

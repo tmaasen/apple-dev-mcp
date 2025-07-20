@@ -5,7 +5,7 @@ category: navigation
 url: https://developer.apple.com/design/human-interface-guidelines/searching
 quality_score: 0.39
 content_length: 4221
-last_updated: 2025-07-19T23:45:30.964Z
+last_updated: 2025-07-20T03:09:26.050Z
 keywords: ["searching","universal","navigation","controls","system","selection"]
 has_code_examples: false
 has_images: false

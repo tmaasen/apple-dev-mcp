@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/color-wells
 quality_score: 0.43
 content_length: 1181
-last_updated: 2025-07-19T23:48:53.544Z
+last_updated: 2025-07-20T03:12:58.341Z
 keywords: ["color wells","macos","foundations","color","system","interface","design","visual","selection"]
 has_code_examples: false
 has_images: false

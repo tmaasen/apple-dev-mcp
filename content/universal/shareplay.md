@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/shareplay
 quality_score: 0.49
 content_length: 13573
-last_updated: 2025-07-19T23:47:37.494Z
+last_updated: 2025-07-20T03:11:44.564Z
 keywords: ["shareplay","universal","technologies","system","interface","visual","gestures","design","layout","input","controls","accessibility"]
 has_code_examples: false
 has_images: false

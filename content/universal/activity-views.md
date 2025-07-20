@@ -5,7 +5,7 @@ category: presentation
 url: https://developer.apple.com/design/human-interface-guidelines/activity-views
 quality_score: 0.42
 content_length: 6182
-last_updated: 2025-07-19T23:45:38.502Z
+last_updated: 2025-07-20T03:09:34.471Z
 keywords: ["activity views","universal","presentation","system","interface","icons","status","design"]
 has_code_examples: false
 has_images: false

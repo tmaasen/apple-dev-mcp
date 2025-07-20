@@ -5,7 +5,7 @@ category: presentation
 url: https://developer.apple.com/design/human-interface-guidelines/alerts
 quality_score: 0.42
 content_length: 9454
-last_updated: 2025-07-19T23:45:36.556Z
+last_updated: 2025-07-20T03:09:32.436Z
 keywords: ["alerts","universal","presentation","design","buttons","input","controls","system"]
 has_code_examples: false
 has_images: false

@@ -5,7 +5,7 @@ category: selection-and-input
 url: https://developer.apple.com/design/human-interface-guidelines/onboarding
 quality_score: 0.39
 content_length: 4190
-last_updated: 2025-07-19T23:45:23.361Z
+last_updated: 2025-07-20T03:09:18.123Z
 keywords: ["onboarding","universal","selection-and-input","design","interface","system"]
 has_code_examples: false
 has_images: false

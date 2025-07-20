@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/digit-entry-views
 quality_score: 0.27
 content_length: 526
-last_updated: 2025-07-19T23:49:17.378Z
+last_updated: 2025-07-20T03:13:22.171Z
 keywords: ["digit entry views","watchos","foundations"]
 has_code_examples: false
 has_images: false

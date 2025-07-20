@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/multitasking
 quality_score: 0.44
 content_length: 6812
-last_updated: 2025-07-19T23:48:04.001Z
+last_updated: 2025-07-20T03:12:09.315Z
 keywords: ["multitasking","ios","foundations","system","input","controls","layout","visual","feedback"]
 has_code_examples: false
 has_images: false

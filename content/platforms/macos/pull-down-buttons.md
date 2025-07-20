@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons
 quality_score: 0.42
 content_length: 3597
-last_updated: 2025-07-19T23:48:45.544Z
+last_updated: 2025-07-20T03:12:50.592Z
 keywords: ["pull down buttons","macos","foundations","buttons","interface","system","design"]
 has_code_examples: false
 has_images: false

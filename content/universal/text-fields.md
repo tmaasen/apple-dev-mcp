@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/text-fields
 quality_score: 0.46
 content_length: 4544
-last_updated: 2025-07-19T23:46:15.987Z
+last_updated: 2025-07-20T03:10:14.608Z
 keywords: ["text fields","universal","visual-design","input","layout","system","presentation","buttons","images"]
 has_code_examples: false
 has_images: false

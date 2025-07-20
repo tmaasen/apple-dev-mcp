@@ -5,7 +5,7 @@ category: technologies
 url: https://developer.apple.com/design/human-interface-guidelines/live-photos
 quality_score: 0.44
 content_length: 3228
-last_updated: 2025-07-19T23:47:31.357Z
+last_updated: 2025-07-20T03:11:42.275Z
 keywords: ["live photos","universal","technologies","motion","controls","visual","system","color"]
 has_code_examples: false
 has_images: false

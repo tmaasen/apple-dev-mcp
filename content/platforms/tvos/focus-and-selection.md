@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/focus-and-selection
 quality_score: 0.49
 content_length: 9555
-last_updated: 2025-07-19T23:49:25.856Z
+last_updated: 2025-07-20T03:13:30.061Z
 keywords: ["focus and selection","tvos","foundations","navigation","selection","system","input","controls","buttons","gestures","visual","color","interface","design","animation","feedback"]
 has_code_examples: false
 has_images: false

@@ -211,7 +211,13 @@ export class SearchIndexerService {
   }
 
   private generateSnippet(content: string): string {
-    // Find first substantial paragraph
+    // First, try to find actionable guidance sections
+    const actionableSnippet = this.extractActionableGuidance(content);
+    if (actionableSnippet) {
+      return actionableSnippet;
+    }
+    
+    // Fall back to first substantial paragraph
     const paragraphs = content.split('\n\n').filter(p => p.trim().length > 50);
     const firstParagraph = paragraphs[0] || content.slice(0, 200);
     
@@ -224,6 +230,106 @@ export class SearchIndexerService {
       .trim();
     
     return cleaned.length > 200 ? cleaned.slice(0, 200) + '...' : cleaned;
+  }
+
+  /**
+   * Extract actionable guidance from content (best practices, guidelines, etc.)
+   */
+  private extractActionableGuidance(content: string): string | null {
+    const lines = content.split('\n');
+    const actionableSections = [
+      'best practices',
+      'guidelines', 
+      'considerations',
+      'recommendations',
+      'do',
+      'don\'t',
+      'avoid',
+      'ensure',
+      'when to use',
+      'how to use'
+    ];
+    
+    // Look for section headers that indicate actionable content
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].toLowerCase();
+      const isHeader = line.startsWith('#') || line.startsWith('##') || line.startsWith('###');
+      
+      if (isHeader && actionableSections.some(section => line.includes(section))) {
+        // Found an actionable section, extract content from it
+        const sectionContent = this.extractSectionContent(lines, i);
+        if (sectionContent && sectionContent.length > 100) {
+          return this.cleanAndTruncateText(sectionContent);
+        }
+      }
+    }
+    
+    // Look for actionable sentences in the content
+    const sentences = content.split(/[.!?]+/).filter(s => s.trim().length > 30);
+    for (const sentence of sentences) {
+      const sentenceLower = sentence.toLowerCase();
+      if (sentenceLower.includes('use ') && (
+          sentenceLower.includes('to ') || 
+          sentenceLower.includes('for ') ||
+          sentenceLower.includes('when ')
+        )) {
+        return this.cleanAndTruncateText(sentence.trim()) + '.';
+      }
+      
+      if (sentenceLower.includes('avoid ') || 
+          sentenceLower.includes('don\'t ') ||
+          sentenceLower.includes('ensure ') ||
+          sentenceLower.includes('consider ')) {
+        return this.cleanAndTruncateText(sentence.trim()) + '.';
+      }
+    }
+    
+    return null;
+  }
+  
+  /**
+   * Extract content from a section starting at the given line index
+   */
+  private extractSectionContent(lines: string[], startIndex: number): string {
+    const headerLevel = (lines[startIndex].match(/^#+/) || [''])[0].length;
+    let content = '';
+    
+    // Skip the header line and collect content until next header of same or higher level
+    for (let i = startIndex + 1; i < lines.length; i++) {
+      const line = lines[i];
+      const currentHeaderLevel = (line.match(/^#+/) || [''])[0].length;
+      
+      // Stop if we hit a header of same or higher level
+      if (currentHeaderLevel > 0 && currentHeaderLevel <= headerLevel) {
+        break;
+      }
+      
+      // Add non-empty lines to content
+      if (line.trim()) {
+        content += line + ' ';
+      }
+      
+      // Stop if we have enough content
+      if (content.length > 300) {
+        break;
+      }
+    }
+    
+    return content.trim();
+  }
+  
+  /**
+   * Clean markdown and truncate text to appropriate length
+   */
+  private cleanAndTruncateText(text: string): string {
+    const cleaned = text
+      .replace(/^#+\s*/, '') // Remove headers
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Convert links to text
+      .replace(/[*_]{1,2}([^*_]+)[*_]{1,2}/g, '$1') // Remove emphasis
+      .replace(/`([^`]+)`/g, '$1') // Remove code formatting
+      .trim();
+    
+    return cleaned.length > 250 ? cleaned.slice(0, 250) + '...' : cleaned;
   }
 
   private hasStructuredContent(content: string): boolean {

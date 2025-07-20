@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/split-views
 quality_score: 0.43
 content_length: 6085
-last_updated: 2025-07-19T23:46:29.691Z
+last_updated: 2025-07-20T03:10:27.816Z
 keywords: ["split views","universal","visual-design","presentation","images","navigation","selection","design","layout"]
 has_code_examples: false
 has_images: false

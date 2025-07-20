@@ -5,7 +5,7 @@ category: presentation
 url: https://developer.apple.com/design/human-interface-guidelines/action-sheets
 quality_score: 0.42
 content_length: 3695
-last_updated: 2025-07-19T23:45:38.458Z
+last_updated: 2025-07-20T03:09:34.198Z
 keywords: ["action sheets","universal","presentation","buttons","system","interface"]
 has_code_examples: false
 has_images: false

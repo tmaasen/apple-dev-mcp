@@ -5,7 +5,7 @@ category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/settings
 quality_score: 0.42
 content_length: 6101
-last_updated: 2025-07-19T23:48:19.158Z
+last_updated: 2025-07-20T03:12:25.483Z
 keywords: ["settings","ios","foundations","system","accessibility","interface","buttons"]
 has_code_examples: false
 has_images: false

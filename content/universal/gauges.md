@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/gauges
 quality_score: 0.4
 content_length: 3229
-last_updated: 2025-07-19T23:46:31.672Z
+last_updated: 2025-07-20T03:10:30.080Z
 keywords: ["gauges","universal","visual-design","widgets","visual","voiceover","color"]
 has_code_examples: false
 has_images: false

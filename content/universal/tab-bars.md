@@ -5,7 +5,7 @@ category: visual-design
 url: https://developer.apple.com/design/human-interface-guidelines/tab-bars
 quality_score: 0.49
 content_length: 8656
-last_updated: 2025-07-19T23:45:53.539Z
+last_updated: 2025-07-20T03:09:51.171Z
 keywords: ["tab bars","universal","visual-design","navigation","controls","buttons","interface","icons","system","color"]
 has_code_examples: false
 has_images: false

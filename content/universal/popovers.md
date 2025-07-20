@@ -5,7 +5,7 @@ category: presentation
 url: https://developer.apple.com/design/human-interface-guidelines/popovers
 quality_score: 0.44
 content_length: 4211
-last_updated: 2025-07-19T23:45:46.007Z
+last_updated: 2025-07-20T03:09:42.434Z
 keywords: ["popovers","universal","presentation","interface","gestures","buttons","system","selection","layout"]
 has_code_examples: false
 has_images: false
