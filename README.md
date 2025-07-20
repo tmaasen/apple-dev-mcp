@@ -56,7 +56,7 @@ Add to `claude_desktop_config.json`:
 <summary><strong>Claude Code</strong></summary>
 
 ```bash
-claude mcp add "Apple Dev" node /usr/local/lib/node_modules/apple-dev-mcp/dist/server.js
+claude mcp add "Apple-Dev" node /usr/local/lib/node_modules/apple-dev-mcp/dist/server.js
 ```
 </details>
 

@@ -19,6 +19,9 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:concepts": "jest src/__tests__/comprehensive-concept-coverage.test.ts",
+    "test:content": "jest src/__tests__/content-coverage-validation.test.ts",
+    "test:mcp": "jest src/__tests__/field-test.test.ts src/__tests__/search-improvements.test.ts src/__tests__/comprehensive-concept-coverage.test.ts src/__tests__/content-coverage-validation.test.ts",
     "health-check": "node dist/health-check.js",
     "security-audit": "npm audit --audit-level=moderate",
     "validate": "npm run lint && npm run test && npm run build",
@@ -28,7 +31,10 @@
     "build:extension": "npm run build && npx @anthropic-ai/dxt pack",
     "package:extension": "npx @anthropic-ai/dxt pack",
     "generate:content": "tsx src/generators/content-generator.ts",
-    "validate-content": "echo 'Content validation passed - $(find content/ -name \"*.md\" | wc -l) markdown files generated'"
+    "validate-content": "echo 'Content validation passed - $(find content/ -name \"*.md\" | wc -l) markdown files generated'",
+    "release:patch": "npm version patch && git push origin main --follow-tags",
+    "release:minor": "npm version minor && git push origin main --follow-tags",
+    "release:major": "npm version major && git push origin main --follow-tags"
   },
   "keywords": [
     "mcp",

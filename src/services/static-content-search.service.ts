@@ -15,9 +15,139 @@ export class StaticContentSearchService {
   private searchIndex: SearchIndexEntry[] = [];
   private contentCache = new Map<string, string>();
   private indexLoaded = false;
+  private synonymMap = new Map<string, string[]>();
 
   constructor(private contentDirectory: string = 'content') {
     this.fileSystem = new FileSystemService();
+    this.initializeSynonymMap();
+  }
+
+  /**
+   * Initialize synonym mappings for better search relevance
+   */
+  private initializeSynonymMap(): void {
+    // Basic search and guidelines
+    this.synonymMap.set('search', ['searching', 'search field', 'search bar', 'find', 'lookup']);
+    this.synonymMap.set('searching', ['search', 'search field', 'search bar', 'find', 'lookup']);
+    this.synonymMap.set('guidelines', ['best practices', 'recommendations', 'guidance', 'standards']);
+    this.synonymMap.set('best practices', ['guidelines', 'recommendations', 'guidance', 'standards']);
+    
+    // Interactive elements
+    this.synonymMap.set('button', ['btn', 'tap', 'click', 'press', 'action', 'buttons']);
+    this.synonymMap.set('toggle', ['switch', 'toggles', 'on off', 'binary control']);
+    this.synonymMap.set('switch', ['toggle', 'toggles', 'on off', 'binary control']);
+    this.synonymMap.set('picker', ['pickers', 'selection', 'chooser', 'selector', 'segmented picker']);
+    this.synonymMap.set('slider', ['sliders', 'range', 'continuous control', 'scrubber']);
+    
+    // Navigation and layout
+    this.synonymMap.set('navigation', ['nav', 'navigate', 'menu', 'hierarchy', 'navigation bar']);
+    this.synonymMap.set('tab', ['tabs', 'tab bar', 'tabbed', 'bottom navigation']);
+    this.synonymMap.set('stack', ['stacks', 'layout', 'zstack', 'vstack', 'hstack', 'lazy stack']);
+    
+    // Data presentation
+    this.synonymMap.set('progress', ['progress indicator', 'loading', 'spinner', 'activity indicator']);
+    this.synonymMap.set('loading', ['progress', 'spinner', 'activity', 'progress indicator']);
+    this.synonymMap.set('chart', ['charts', 'graph', 'data visualization', 'charting']);
+    this.synonymMap.set('gauge', ['gauges', 'meter', 'measurement', 'dial']);
+    
+    // Modal and overlays
+    this.synonymMap.set('alert', ['alerts', 'dialog', 'modal alert', 'system alert']);
+    this.synonymMap.set('action sheet', ['action sheets', 'bottom sheet', 'modal choices']);
+    this.synonymMap.set('popover', ['popovers', 'popup', 'contextual menu', 'callout']);
+    this.synonymMap.set('sheet', ['sheets', 'modal', 'presentation']);
+    
+    // Text and input
+    this.synonymMap.set('text field', ['text fields', 'input', 'text input', 'form field']);
+    this.synonymMap.set('text', ['text field', 'text view', 'label', 'typography']);
+    
+    // Platform concepts  
+    this.synonymMap.set('notification', ['notifications', 'push notification', 'alerts', 'system notification']);
+    this.synonymMap.set('onboarding', ['welcome', 'introduction', 'getting started', 'first run']);
+    this.synonymMap.set('rating', ['ratings', 'review', 'stars', 'feedback']);
+    
+    // Technical concepts
+    this.synonymMap.set('swiftui', ['swift ui', 'declarative ui', 'view', 'modifier']);
+    this.synonymMap.set('uikit', ['ui kit', 'imperative ui', 'view controller']);
+    this.synonymMap.set('view', ['views', 'interface', 'ui element', 'component']);
+    this.synonymMap.set('task', ['async', 'concurrency', 'background', 'operation']);
+    
+    // General design
+    this.synonymMap.set('interface', ['ui', 'user interface', 'design', 'component']);
+    this.synonymMap.set('component', ['element', 'control', 'widget', 'interface']);
+    this.synonymMap.set('pattern', ['patterns', 'design pattern', 'interaction']);
+    this.synonymMap.set('accessibility', ['a11y', 'voiceover', 'accessible', 'inclusive']);
+    this.synonymMap.set('design', ['interface', 'ui', 'visual', 'aesthetic']);
+  }
+
+  /**
+   * Expand query terms with synonyms for better matching
+   */
+  private expandQueryWithSynonyms(query: string): string[] {
+    const terms = query.split(/\s+/).filter(term => term.length > 1);
+    const expanded = new Set([query]); // Always include original query
+    
+    for (const term of terms) {
+      const synonyms = this.synonymMap.get(term);
+      if (synonyms) {
+        synonyms.forEach(synonym => expanded.add(synonym));
+      }
+    }
+    
+    return Array.from(expanded);
+  }
+
+  /**
+   * Get concept boost for direct concept matches
+   */
+  private getConceptBoost(query: string, title: string): number {
+    // Define concept mappings for direct matches
+    const conceptMappings = new Map([
+      // Exact plurals and variations
+      ['alert', 'alerts'],
+      ['alerts', 'alerts'],
+      ['action sheet', 'action sheets'],
+      ['action sheets', 'action sheets'],
+      ['picker', 'pickers'],
+      ['pickers', 'pickers'], 
+      ['progress indicator', 'progress indicators'],
+      ['progress indicators', 'progress indicators'],
+      ['notification', 'notifications'],
+      ['notifications', 'notifications'],
+      ['button', 'buttons'],
+      ['buttons', 'buttons'],
+      ['tab', 'tab bars'],
+      ['tab bar', 'tab bars'],
+      ['tabs', 'tab bars'],
+      ['search field', 'search fields'],
+      ['search fields', 'search fields'],
+      
+      // Concept variations
+      ['progress', 'progress indicators'],
+      ['loading', 'progress indicators'],
+      ['spinner', 'progress indicators'],
+      ['activity indicator', 'progress indicators'],
+      ['dialog', 'alerts'],
+      ['modal alert', 'alerts'],
+      ['bottom sheet', 'action sheets'],
+      ['selection', 'pickers'],
+      ['chooser', 'pickers'],
+      ['push notification', 'notifications'],
+      ['system notification', 'notifications']
+    ]);
+
+    const expectedTitle = conceptMappings.get(query);
+    if (expectedTitle && title.includes(expectedTitle)) {
+      return 0.8; // Strong boost for concept matches
+    }
+
+    // Check for partial concept matches
+    for (const [queryPattern, titlePattern] of conceptMappings) {
+      if (query.includes(queryPattern) && title.includes(titlePattern)) {
+        return 0.4; // Moderate boost for partial matches
+      }
+    }
+
+    return 0;
   }
 
   /**
@@ -46,7 +176,7 @@ export class StaticContentSearchService {
   }
 
   /**
-   * Search static content with snippet extraction
+   * Search static content with enhanced relevance scoring
    */
   async searchContent(
     query: string, 
@@ -61,6 +191,7 @@ export class StaticContentSearchService {
     }
 
     const queryLower = query.toLowerCase();
+    const queryTerms = queryLower.split(/\s+/).filter(term => term.length > 1);
     const results: SearchResult[] = [];
 
     // Search through index entries
@@ -68,36 +199,70 @@ export class StaticContentSearchService {
       let relevanceScore = 0;
       const highlights: string[] = [];
 
-      // Title matching (highest weight with exact vs partial bonuses)
+      // Enhanced title matching with multi-term support and concept detection
       const titleLower = entry.title.toLowerCase();
       if (titleLower === queryLower) {
-        // Exact title match
         relevanceScore += 1.0;
         highlights.push(entry.title);
       } else if (titleLower.includes(queryLower)) {
-        // Partial title match
         relevanceScore += 0.6;
         highlights.push(entry.title);
-      }
-
-      // Keyword matching with exact match bonuses
-      const keywordMatches = entry.keywords.filter(k => 
-        k.toLowerCase().includes(queryLower) || queryLower.includes(k.toLowerCase())
-      );
-      if (keywordMatches.length > 0) {
-        // Check for exact keyword matches (higher score)
-        const exactKeywordMatches = entry.keywords.filter(k => k.toLowerCase() === queryLower);
-        if (exactKeywordMatches.length > 0) {
-          relevanceScore += exactKeywordMatches.length * 0.4;
-        } else {
-          relevanceScore += keywordMatches.length * 0.25;
+      } else {
+        // Check individual query terms in title
+        let titleTermMatches = 0;
+        for (const term of queryTerms) {
+          if (titleLower.includes(term)) {
+            titleTermMatches++;
+          }
         }
-        highlights.push(...keywordMatches);
+        if (titleTermMatches > 0) {
+          relevanceScore += (titleTermMatches / queryTerms.length) * 0.4;
+          highlights.push(entry.title);
+        }
+        
+        // Boost exact concept matches (e.g., "alerts" query should strongly match "Alerts" title)
+        const conceptBoost = this.getConceptBoost(queryLower, titleLower);
+        if (conceptBoost > 0) {
+          relevanceScore += conceptBoost;
+          highlights.push(entry.title);
+        }
       }
 
-      // Snippet matching
-      if (entry.snippet.toLowerCase().includes(queryLower)) {
-        relevanceScore += 0.3;
+      // Enhanced keyword matching with synonym expansion
+      const synonymExpansion = this.expandQueryWithSynonyms(queryLower);
+      let keywordScore = 0;
+      for (const expandedQuery of synonymExpansion) {
+        const keywordMatches = entry.keywords.filter(k => {
+          const keywordLower = k.toLowerCase();
+          return keywordLower.includes(expandedQuery) || expandedQuery.includes(keywordLower);
+        });
+        if (keywordMatches.length > 0) {
+          const exactMatches = entry.keywords.filter(k => k.toLowerCase() === expandedQuery);
+          if (exactMatches.length > 0) {
+            keywordScore += exactMatches.length * 0.5;
+          } else {
+            keywordScore += keywordMatches.length * 0.3;
+          }
+          highlights.push(...keywordMatches);
+        }
+      }
+      relevanceScore += Math.min(keywordScore, 0.8); // Cap keyword score
+
+      // Enhanced snippet matching with term-based scoring
+      const snippetLower = entry.snippet.toLowerCase();
+      if (snippetLower.includes(queryLower)) {
+        relevanceScore += 0.4;
+      } else {
+        // Score based on individual term matches in snippet
+        let snippetTermMatches = 0;
+        for (const term of queryTerms) {
+          if (snippetLower.includes(term)) {
+            snippetTermMatches++;
+          }
+        }
+        if (snippetTermMatches > 0) {
+          relevanceScore += (snippetTermMatches / queryTerms.length) * 0.3;
+        }
       }
 
       // Content quality bonuses (prioritize actionable guidance)
@@ -131,8 +296,8 @@ export class StaticContentSearchService {
         continue;
       }
 
-      // Only include relevant results (higher threshold due to quality bonuses)
-      if (relevanceScore > 0.15) {
+      // Only include relevant results (lowered threshold for better recall)
+      if (relevanceScore > 0.08) {
         // Get full content instead of snippet
         const fullContent = await this.getFullContent(entry);
         
