@@ -81,34 +81,54 @@ Create `.cursor/mcp.json`, windsurf config, or `.vscode/mcp.json`:
 
 ## 📖 Usage
 
-### Resources
+### Available Tools (3 core tools)
+
+**Design Guidelines Search**
+- `search_human_interface_guidelines` - Search Apple HIG with platform filters
+  - Returns full content (not snippets) for AI-friendly responses
+  - Covers all Apple platforms: iOS, macOS, watchOS, tvOS, visionOS
+
+**Technical Documentation Search**
+- `search_technical_documentation` - Search Apple API documentation
+  - Framework-specific searches (SwiftUI, UIKit, AppKit, etc.)
+  - Symbol and method lookups with code examples
+
+**Unified Search**
+- `search_unified` - Combined design + technical documentation search
+  - Cross-references design guidelines with implementation details
+  - Perfect for end-to-end development guidance
+
+### Examples
+
+**Search Design Guidelines:**
+```json
+{
+  "name": "search_human_interface_guidelines",
+  "arguments": {
+    "query": "Tab Bars",
+    "platform": "iOS"
+  }
+}
 ```
-hig://ios              # Complete iOS guidelines
-hig://macos            # Complete macOS guidelines  
-hig://buttons          # Button design guidelines
-hig://accessibility    # Accessibility requirements
-hig://ios/foundations  # iOS-specific foundations
-```
 
-### Key Tools (4 available)
-
-**Search & Discovery**
-- `search_human_interface_guidelines` - Search HIG with platform/category filters
-- `search_unified` - Search both design and technical content
-
-**Design Guidance**
-- `get_accessibility_requirements` - Accessibility guidelines
-
-**Technical Documentation**
-- `search_technical_documentation` - Search frameworks and symbols
-
-### Example
+**Search Technical Documentation:**
 ```json
 {
   "name": "search_technical_documentation",
   "arguments": {
     "query": "Button",
     "framework": "SwiftUI"
+  }
+}
+```
+
+**Unified Search:**
+```json
+{
+  "name": "search_unified",
+  "arguments": {
+    "query": "navigation",
+    "platform": "iOS"
   }
 }
 ```

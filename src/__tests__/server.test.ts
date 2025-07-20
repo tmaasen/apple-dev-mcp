@@ -7,20 +7,17 @@
 
 import { HIGCache } from '../cache.js';
 import { CrawleeHIGService } from '../services/crawlee-hig.service.js';
-import { HIGResourceProvider } from '../resources.js';
 import { HIGToolProvider } from '../tools.js';
 
 describe('Server Component Integration', () => {
   let cache: HIGCache;
   let crawleeService: CrawleeHIGService;
-  let resourceProvider: HIGResourceProvider;
   let toolProvider: HIGToolProvider;
 
   beforeEach(() => {
     cache = new HIGCache(60);
     crawleeService = new CrawleeHIGService(cache);
-    resourceProvider = new HIGResourceProvider(crawleeService, cache);
-    toolProvider = new HIGToolProvider(crawleeService, cache, resourceProvider);
+    toolProvider = new HIGToolProvider(crawleeService, cache);
   });
 
   afterEach(async () => {
@@ -31,14 +28,12 @@ describe('Server Component Integration', () => {
   test('should initialize all server components', () => {
     expect(cache).toBeInstanceOf(HIGCache);
     expect(crawleeService).toBeInstanceOf(CrawleeHIGService);
-    expect(resourceProvider).toBeInstanceOf(HIGResourceProvider);
     expect(toolProvider).toBeInstanceOf(HIGToolProvider);
   });
 
   test('should have proper component dependencies', () => {
     // Test that components are properly connected
     expect(crawleeService).toBeDefined();
-    expect(resourceProvider).toBeDefined();
     expect(toolProvider).toBeDefined();
     
     // Verify cache is shared
@@ -58,24 +53,21 @@ describe('Server Component Integration', () => {
     };
     
     const capabilities = {
-      resources: {},
       tools: {},
     };
     
     expect(serverConfig.name).toBe('apple-dev-mcp');
     expect(serverConfig.version).toBe('1.0.0');
     expect(serverConfig.description).toContain('Apple Human Interface Guidelines');
-    expect(capabilities).toHaveProperty('resources');
     expect(capabilities).toHaveProperty('tools');
   });
 
   test('should provide expected tool names', () => {
     // Test that the tools the server exposes match expectations
     const expectedTools = [
-      'search_guidelines',
-      'get_component_spec', 
-      'compare_platforms',
-      'get_latest_updates'
+      'search_human_interface_guidelines',
+      'search_technical_documentation',
+      'search_unified'
     ];
     
     // These would be the tools registered in the actual server
@@ -85,19 +77,11 @@ describe('Server Component Integration', () => {
     });
   });
 
-  test('should provide expected resource patterns', () => {
-    // Test that the resource URI patterns match expectations
-    const expectedResourcePatterns = [
-      /^hig:\/\/ios$/,
-      /^hig:\/\/macos$/,
-      /^hig:\/\/watchos$/,
-      /^hig:\/\/tvos$/,
-      /^hig:\/\/visionos$/,
-      /^hig:\/\/updates\/latest$/
-    ];
-    
-    expectedResourcePatterns.forEach(pattern => {
-      expect(pattern).toBeInstanceOf(RegExp);
-    });
+  test('should focus on tool-based architecture', () => {
+    // Test that the server focuses on tools rather than resources
+    expect(toolProvider).toBeDefined();
+    expect(typeof toolProvider.searchHumanInterfaceGuidelines).toBe('function');
+    expect(typeof toolProvider.searchTechnicalDocumentation).toBe('function');
+    expect(typeof toolProvider.searchUnified).toBe('function');
   });
 });

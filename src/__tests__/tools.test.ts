@@ -1,19 +1,16 @@
 import { HIGToolProvider } from '../tools.js';
 import { CrawleeHIGService } from '../services/crawlee-hig.service.js';
 import { HIGCache } from '../cache.js';
-import { HIGResourceProvider } from '../resources.js';
 
 describe('HIGToolProvider', () => {
   let cache: HIGCache;
   let crawleeService: CrawleeHIGService;
-  let resourceProvider: HIGResourceProvider;
   let toolProvider: HIGToolProvider;
 
   beforeEach(() => {
     cache = new HIGCache(60);
     crawleeService = new CrawleeHIGService(cache);
-    resourceProvider = new HIGResourceProvider(crawleeService, cache);
-    toolProvider = new HIGToolProvider(crawleeService, cache, resourceProvider);
+    toolProvider = new HIGToolProvider(crawleeService, cache);
   });
 
   afterEach(async () => {

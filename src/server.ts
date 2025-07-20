@@ -42,8 +42,6 @@ process.stderr.write = function(chunk: any, encoding?: any, callback?: any) {
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {
-  ListResourcesRequestSchema,
-  ReadResourceRequestSchema,
   ListToolsRequestSchema,
   CallToolRequestSchema,
   ErrorCode,
@@ -52,7 +50,6 @@ import {
 
 import { HIGCache } from './cache.js';
 import { CrawleeHIGService } from './services/crawlee-hig.service.js';
-import { HIGResourceProvider } from './resources.js';
 import { HIGToolProvider } from './tools.js';
 import { AppleContentAPIClient } from './services/apple-content-api-client.service.js';
 
@@ -60,7 +57,6 @@ class AppleHIGMCPServer {
   private server: Server;
   private cache: HIGCache;
   private crawleeService: CrawleeHIGService;
-  private resourceProvider: HIGResourceProvider;
   private toolProvider: HIGToolProvider;
   private appleContentAPIClient: AppleContentAPIClient;
 
@@ -73,7 +69,6 @@ class AppleHIGMCPServer {
       },
       {
         capabilities: {
-          resources: {},
           tools: {},
         },
       }
@@ -98,8 +93,7 @@ class AppleHIGMCPServer {
       this.cache = new HIGCache(3600);
       this.crawleeService = new CrawleeHIGService(this.cache);
       this.appleContentAPIClient = new AppleContentAPIClient(this.cache);
-      this.resourceProvider = new HIGResourceProvider(this.crawleeService, this.cache);
-      this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.resourceProvider, this.appleContentAPIClient);
+      this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.appleContentAPIClient);
 
       this.setupHandlers();
   }
@@ -126,69 +120,6 @@ class AppleHIGMCPServer {
    * Set up MCP request handlers with comprehensive error handling
    */
   private setupHandlers(): void {
-    // Resource handlers
-    this.server.setRequestHandler(ListResourcesRequestSchema, async () => {
-      try {
-        const resources = await this.resourceProvider.listResources();
-        
-        return {
-          resources: resources.map(resource => ({
-            uri: resource.uri,
-            name: resource.name,
-            description: resource.description,
-            mimeType: resource.mimeType,
-          }))
-        };
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-
-        throw new McpError(
-          ErrorCode.InternalError,
-          `Failed to list resources: ${errorMessage}`
-        );
-      }
-    });
-
-    this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-      try {
-        const { uri } = request.params;
-        
-        // Validate URI format
-        if (!uri || typeof uri !== 'string') {
-          throw new McpError(ErrorCode.InvalidRequest, 'Invalid or missing URI parameter');
-        }
-        
-        if (!uri.startsWith('hig://')) {
-          throw new McpError(ErrorCode.InvalidRequest, `Unsupported URI scheme. Expected 'hig://', got: ${uri}`);
-        }
-        
-        const resource = await this.resourceProvider.getResource(uri);
-        
-        if (!resource) {
-          throw new McpError(ErrorCode.InvalidRequest, `Resource not found: ${uri}`);
-        }
-
-        return {
-          contents: [{
-            uri: resource.uri,
-            mimeType: resource.mimeType,
-            text: resource.content,
-          }]
-        };
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-
-        if (error instanceof McpError) {
-          throw error;
-        }
-        
-        throw new McpError(
-          ErrorCode.InternalError,
-          `Failed to read resource: ${errorMessage}`
-        );
-      }
-    });
-
     // Tool handlers
     this.server.setRequestHandler(ListToolsRequestSchema, async () => {
       return {
