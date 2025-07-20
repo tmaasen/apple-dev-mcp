@@ -531,11 +531,15 @@ export class HIGToolProvider {
 
         // Only include cross-references with meaningful relevance
         if (relevance >= 0.4) {
-          crossReferences.push({
-            designSection: designResult.title,
-            technicalSymbol: technicalResult.title,
-            relevance: Math.round(relevance * 100) / 100
-          });
+          const crossRefKey = `${designResult.title}:${technicalResult.title}`;
+          // Avoid duplicate cross-references
+          if (!crossReferences.some(ref => `${ref.designSection}:${ref.technicalSymbol}` === crossRefKey)) {
+            crossReferences.push({
+              designSection: designResult.title,
+              technicalSymbol: technicalResult.title,
+              relevance: Math.round(relevance * 100) / 100
+            });
+          }
         }
       }
     }
@@ -603,37 +607,47 @@ export class HIGToolProvider {
     }
 
     // Create combined results for high-confidence cross-references
-    for (const crossRef of crossReferences.slice(0, 3)) { // Top 3 cross-references
-      if (crossRef.relevance >= 0.7) {
+    const processedCombinations = new Set<string>();
+    for (const crossRef of crossReferences.slice(0, 5)) { // Top 5 cross-references
+      if (crossRef.relevance >= 0.6) { // Lower threshold for more combinations
         const designResult = designResults.find(r => r.title === crossRef.designSection);
         const technicalResult = technicalResults.find(r => r.title === crossRef.technicalSymbol);
         
         if (designResult && technicalResult) {
-          unifiedResults.push({
-            id: `combined-${designResult.url}-${technicalResult.path}`,
-            title: `${designResult.title} + ${technicalResult.title}`,
-            type: 'combined',
-            url: designResult.url,
-            relevanceScore: (designResult.relevanceScore + technicalResult.relevanceScore) / 2 + 0.3,
-            snippet: `Design: ${designResult.content || ''} | Implementation: ${technicalResult.description}`,
-            designContent: {
-              platform: designResult.platform,
-              category: designResult.category
-            },
-            technicalContent: {
-              framework: technicalResult.framework,
-              symbolKind: technicalResult.symbolKind || '',
-              platforms: technicalResult.platforms ? [technicalResult.platforms] : [],
-              abstract: technicalResult.description,
-              codeExamples: []
-            },
-            combinedGuidance: {
-              designPrinciples: [designResult.content || ''],
-              implementationSteps: [technicalResult.description],
-              crossPlatformConsiderations: technicalResult.platforms ? [technicalResult.platforms] : [],
-              accessibilityNotes: [`Ensure ${designResult.title} follows accessibility guidelines`]
-            }
-          });
+          const combinationKey = `${designResult.title}:${technicalResult.title}`;
+          if (!processedCombinations.has(combinationKey)) {
+            processedCombinations.add(combinationKey);
+            
+            // Create more concise snippet for combined results
+            const designSnippet = (designResult.content || '').slice(0, 200);
+            const techSnippet = technicalResult.description.slice(0, 200);
+            
+            unifiedResults.push({
+              id: `combined-${designResult.url.split('/').pop()}-${technicalResult.path.split('/').pop()}`,
+              title: `${designResult.title} + ${technicalResult.title}`,
+              type: 'combined',
+              url: designResult.url,
+              relevanceScore: (designResult.relevanceScore + technicalResult.relevanceScore) / 2 + (crossRef.relevance * 0.2),
+              snippet: `Design: ${designSnippet}... | Implementation: ${techSnippet}...`,
+              designContent: {
+                platform: designResult.platform,
+                category: designResult.category
+              },
+              technicalContent: {
+                framework: technicalResult.framework,
+                symbolKind: technicalResult.symbolKind || '',
+                platforms: technicalResult.platforms ? [technicalResult.platforms] : [],
+                abstract: technicalResult.description,
+                codeExamples: []
+              },
+              combinedGuidance: {
+                designPrinciples: [designSnippet],
+                implementationSteps: [techSnippet],
+                crossPlatformConsiderations: technicalResult.platforms ? [technicalResult.platforms] : [],
+                accessibilityNotes: [`Ensure ${designResult.title} follows accessibility guidelines`]
+              }
+            });
+          }
         }
       }
     }

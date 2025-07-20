@@ -94,13 +94,7 @@ class HealthChecker {
     // Test 3: Static Content Availability
     console.log('\n3️⃣  Testing static content availability...');
     try {
-      // Check if static content directory exists and has content
-      const staticContentExamples = [
-        'Static content system provides pre-generated HIG content',
-        'Content is optimized for fast MCP responses',
-        'No dynamic scraping required for production use'
-      ];
-      
+      // Static content system provides optimized HIG content
       results.push({ test: 'Static Content Availability', status: 'PASS', details: 'Using static content system' });
       console.log('   ✅ Static content system available');
       console.log('   📋 Benefits: Fast responses, reliable content, no scraping overhead');
@@ -118,11 +112,6 @@ class HealthChecker {
     console.log('\n4️⃣  Testing tool-based content access...');
     try {
       // Test basic search functionality which accesses static content
-      const searchExample = {
-        query: 'button',
-        expectedResults: 'Button design guidelines and implementation details'
-      };
-      
       results.push({ test: 'Tool-based Content Access', status: 'PASS', details: 'Tools can access static content' });
       console.log('   ✅ Tool-based content access functional');
       console.log('   📋 Tools provide: HIG search, technical docs, unified search');
