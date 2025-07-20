@@ -36,28 +36,36 @@ export class StaticContentSearchService {
     // Determine current directory based on environment
     let currentDir: string;
     
-    try {
-      // ES Module environment (runtime) - use dynamic import.meta access
-      const importMeta = (globalThis as any).import?.meta || (typeof eval !== 'undefined' ? eval('import.meta') : null);
-      if (importMeta?.url) {
-        const currentFilePath = fileURLToPath(importMeta.url);
-        currentDir = path.dirname(currentFilePath);
-      } else {
+    // Check if we're in CommonJS environment (tests use ts-node with CommonJS)
+    if (typeof __dirname !== 'undefined') {
+      // CommonJS environment (Jest tests)
+      currentDir = __dirname;
+    } else {
+      try {
+        // ES Module environment (runtime) - use dynamic evaluation to avoid Jest parsing issues
+        const importMetaUrl = (globalThis as any).eval?.('import.meta.url') || '';
+        if (importMetaUrl) {
+          const currentFilePath = fileURLToPath(importMetaUrl);
+          currentDir = path.dirname(currentFilePath);
+        } else {
+          currentDir = process.cwd();
+        }
+      } catch {
+        // Fallback
         currentDir = process.cwd();
       }
-    } catch {
-      // CommonJS environment (tests) or other fallback
-      currentDir = process.cwd();
     }
 
     // Try different possible locations for content directory
     const possiblePaths = [
+      // When installed as npm package globally: /usr/local/lib/node_modules/apple-dev-mcp/dist/services -> /usr/local/lib/node_modules/apple-dev-mcp/content
+      path.resolve(currentDir, '../../content'),
+      // When installed as npm package locally: ./node_modules/apple-dev-mcp/dist/services -> ./node_modules/apple-dev-mcp/content  
+      path.resolve(currentDir, '../content'),
       // Test environment - relative to project root
       path.resolve(process.cwd(), 'content'),
-      // When running from source in dist
-      path.resolve(currentDir, '../../content'),
-      // When installed as npm package
-      path.resolve(currentDir, '../content'),
+      // Development environment - when running from dist
+      path.resolve(currentDir, '../../../content'),
       // Last resort - relative path
       'content'
     ];
