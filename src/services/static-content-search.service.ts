@@ -6,6 +6,7 @@
  */
 
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { FileSystemService } from './content/file-system.service.js';
 import type { SearchIndexEntry } from './content/search-indexer.service.js';
 import type { SearchResult, ApplePlatform, HIGCategory } from '../types.js';
@@ -16,10 +17,70 @@ export class StaticContentSearchService {
   private contentCache = new Map<string, string>();
   private indexLoaded = false;
   private synonymMap = new Map<string, string[]>();
+  private contentDirectory: string;
 
-  constructor(private contentDirectory: string = 'content') {
+  constructor(contentDirectory?: string) {
     this.fileSystem = new FileSystemService();
+    this.contentDirectory = this.resolveContentDirectory(contentDirectory);
     this.initializeSynonymMap();
+  }
+
+  /**
+   * Resolve content directory path for different installation scenarios
+   */
+  private resolveContentDirectory(providedPath?: string): string {
+    if (providedPath) {
+      return path.resolve(providedPath);
+    }
+
+    // Determine current directory based on environment
+    let currentDir: string;
+    
+    try {
+      // ES Module environment (runtime) - use dynamic import.meta access
+      const importMeta = (globalThis as any).import?.meta || (typeof eval !== 'undefined' ? eval('import.meta') : null);
+      if (importMeta?.url) {
+        const currentFilePath = fileURLToPath(importMeta.url);
+        currentDir = path.dirname(currentFilePath);
+      } else {
+        currentDir = process.cwd();
+      }
+    } catch {
+      // CommonJS environment (tests) or other fallback
+      currentDir = process.cwd();
+    }
+
+    // Try different possible locations for content directory
+    const possiblePaths = [
+      // Test environment - relative to project root
+      path.resolve(process.cwd(), 'content'),
+      // When running from source in dist
+      path.resolve(currentDir, '../../content'),
+      // When installed as npm package
+      path.resolve(currentDir, '../content'),
+      // Last resort - relative path
+      'content'
+    ];
+
+    // Return the first path that exists
+    for (const contentPath of possiblePaths) {
+      try {
+        // Check if this path has the expected structure
+        const metadataPath = path.join(contentPath, 'metadata', 'search-index.json');
+        if (this.fileSystem.existsSync(metadataPath)) {
+          console.log(`📁 Found content directory: ${contentPath}`);
+          return contentPath;
+        }
+      } catch (error) {
+        console.log(`❌ Content path failed: ${contentPath} - ${error}`);
+        continue;
+      }
+    }
+
+    // Log all attempted paths for debugging
+    console.log('⚠️ No content directory found. Tried:', possiblePaths);
+    // Default fallback
+    return possiblePaths[0];
   }
 
   /**

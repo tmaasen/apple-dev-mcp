@@ -4,6 +4,7 @@
  */
 
 import { promises as fs } from 'fs';
+import { existsSync } from 'fs';
 import path from 'path';
 
 export class FileSystemService {
@@ -34,6 +35,10 @@ export class FileSystemService {
     } catch {
       return false;
     }
+  }
+
+  existsSync(filePath: string): boolean {
+    return existsSync(filePath);
   }
 
   async stat(filePath: string): Promise<{ size: number; isDirectory(): boolean }> {
