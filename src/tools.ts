@@ -6,6 +6,7 @@ import type { CrawleeHIGService } from './services/crawlee-hig.service.js';
 import type { HIGCache } from './cache.js';
 import type { HIGResourceProvider } from './resources.js';
 import { AppleContentAPIClient } from './services/apple-content-api-client.service.js';
+import { StaticContentSearchService } from './services/static-content-search.service.js';
 import type { 
   SearchGuidelinesArgs, 
   SearchResult,
@@ -19,12 +20,14 @@ export class HIGToolProvider {
   private _cache: HIGCache;
   private resourceProvider: HIGResourceProvider;
   private appleContentAPIClient: AppleContentAPIClient;
+  private staticContentSearch: StaticContentSearchService;
 
   constructor(crawleeService: CrawleeHIGService, cache: HIGCache, resourceProvider: HIGResourceProvider, appleContentAPIClient?: AppleContentAPIClient) {
     this.crawleeService = crawleeService;
     this._cache = cache;
     this.resourceProvider = resourceProvider;
     this.appleContentAPIClient = appleContentAPIClient || new AppleContentAPIClient(cache);
+    this.staticContentSearch = new StaticContentSearchService();
   }
 
   /**
@@ -76,9 +79,14 @@ export class HIGToolProvider {
     try {
       let results: SearchResult[] = [];
       
-      // Use live search via crawlee service as primary source
+      // Use static content search as primary source (fast and reliable)
       try {
-        results = await this.crawleeService.searchContent(query.trim(), args.platform, undefined, limit);
+        results = await this.staticContentSearch.searchContent(query.trim(), args.platform, undefined, limit);
+        
+        // If static content search returns no results, fall back to minimal results
+        if (results.length === 0) {
+          results = this.getMinimalFallbackResults(query.trim(), platform, limit);
+        }
       } catch {
         // Fall back to minimal hardcoded results
         results = this.getMinimalFallbackResults(query.trim(), platform, limit);

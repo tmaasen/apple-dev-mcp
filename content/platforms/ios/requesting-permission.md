@@ -3,9 +3,9 @@ title: Requesting Permission
 platform: iOS
 category: foundations
 url: https://developer.apple.com/design/human-interface-guidelines/requesting-permission
-quality_score: 0.13
+quality_score: 0.21
 content_length: 174
-last_updated: 2025-07-19T23:19:46.385Z
+last_updated: 2025-07-19T23:48:13.369Z
 keywords: ["requesting permission","ios","foundations","design","interface"]
 has_code_examples: false
 has_images: false

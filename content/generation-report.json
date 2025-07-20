@@ -1,12 +1,12 @@
 {
-  "timestamp": "2025-07-19T23:21:16.985Z",
-  "duration": 304410,
+  "timestamp": "2025-07-19T23:49:51.171Z",
+  "duration": 312878,
   "statistics": {
     "totalSections": 113,
     "successful": 113,
     "failed": 0,
     "successRate": 100,
-    "averageQuality": 10
+    "averageQuality": 44
   },
   "config": {
     "outputDirectory": "content",

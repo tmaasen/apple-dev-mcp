@@ -295,7 +295,10 @@ export class SearchIndexerService {
       if (!categoryGroups.has(section.category)) {
         categoryGroups.set(section.category, []);
       }
-      categoryGroups.get(section.category)!.push(section);
+      const categoryList = categoryGroups.get(section.category);
+      if (categoryList) {
+        categoryList.push(section);
+      }
     }
     
     // Add relationships within categories
