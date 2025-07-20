@@ -1,7 +1,7 @@
 {
   "dxt_version": "0.1",
   "name": "apple-dev-mcp",
-  "version": "2.1.0",
+  "version": "2.1.2",
   "display_name": "Apple Dev MCP",
   "description": "Complete Apple development guidance: Human Interface Guidelines (design) + Technical Documentation (API) for iOS, macOS, watchOS, tvOS, and visionOS",
   "author": {
@@ -16,20 +16,7 @@
     "entry_point": "dist/server.js",
     "mcp_config": {
       "command": "node",
-      "args": ["${__dirname}/dist/server.js"],
-      "platforms": {
-        "win32": {
-          "command": "node.exe",
-          "env": {
-            "TEMP_DIR": "${TEMP}"
-          }
-        },
-        "darwin": {
-          "env": {
-            "TEMP_DIR": "${TMPDIR}"
-          }
-        }
-      }
+      "args": ["${__dirname}/dist/server.js"]
     }
   },
   "tools": [
