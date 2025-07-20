@@ -85,13 +85,13 @@ export class ContentProcessorService {
       replacement: () => ''
     });
 
-    // Clean navigation and footer elements
+    // Clean navigation and footer elements with proper spacing
     this.turndown.addRule('removeNavigation', {
       filter: ['nav', 'footer', 'header'],
-      replacement: () => ''
+      replacement: () => '\n\n' // Add spacing to prevent word concatenation
     });
 
-    // Remove elements by class name
+    // Remove elements by class name with spacing
     this.turndown.addRule('removeByClass', {
       filter: (node) => {
         if (node.nodeType === 1) { // Element node
@@ -101,7 +101,28 @@ export class ContentProcessorService {
         }
         return false;
       },
-      replacement: () => ''
+      replacement: () => '\n' // Add line break to prevent concatenation
+    });
+
+    // Ensure proper spacing for block elements
+    this.turndown.addRule('blockElementSpacing', {
+      filter: ['div', 'section', 'article', 'aside', 'main'],
+      replacement: (content, node) => {
+        // Only add spacing if the element actually contains content
+        const trimmedContent = content.trim();
+        if (!trimmedContent) return '';
+        
+        // Check if this is likely a content container
+        const element = node as Element;
+        const hasContentClass = element.className && (
+          element.className.includes('content') ||
+          element.className.includes('section') ||
+          element.className.includes('main')
+        );
+        
+        // Add spacing around content blocks
+        return hasContentClass ? `\n\n${trimmedContent}\n\n` : trimmedContent;
+      }
     });
 
     // Preserve code blocks
@@ -110,10 +131,31 @@ export class ContentProcessorService {
       replacement: (content) => `\`${content}\``
     });
 
-    // Clean up extra whitespace
-    this.turndown.addRule('cleanWhitespace', {
+    // Smarter whitespace handling - preserve line breaks but clean up excess spaces
+    this.turndown.addRule('smartWhitespace', {
       filter: (node) => node.nodeType === 3, // Text nodes
-      replacement: (content) => content.replace(/\s+/g, ' ')
+      replacement: (content) => {
+        // Preserve single line breaks, collapse multiple spaces
+        return content
+          .replace(/[ \t]+/g, ' ') // Collapse horizontal whitespace
+          .replace(/\n[ \t]+/g, '\n') // Clean up indented lines
+          .replace(/[ \t]+\n/g, '\n'); // Clean up trailing spaces
+      }
+    });
+
+    // Ensure headers have proper spacing
+    this.turndown.addRule('headerSpacing', {
+      filter: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+      replacement: (content, node) => {
+        const level = parseInt(node.nodeName.charAt(1));
+        const headerPrefix = '#'.repeat(level);
+        const trimmedContent = content.trim();
+        
+        if (!trimmedContent) return '';
+        
+        // Add spacing around headers
+        return `\n\n${headerPrefix} ${trimmedContent}\n\n`;
+      }
     });
   }
 
@@ -155,17 +197,20 @@ export class ContentProcessorService {
     let cleaned = html;
     
     // Remove script and style tags
-    cleaned = cleaned.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-    cleaned = cleaned.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '');
+    cleaned = cleaned.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ' ');
+    cleaned = cleaned.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, ' ');
     
-    // Remove navigation elements
-    cleaned = cleaned.replace(/<nav\b[^>]*>.*?<\/nav>/gi, '');
-    cleaned = cleaned.replace(/<footer\b[^>]*>.*?<\/footer>/gi, '');
-    cleaned = cleaned.replace(/<header\b[^>]*>.*?<\/header>/gi, '');
+    // Remove navigation elements with spacing to prevent word concatenation
+    cleaned = cleaned.replace(/<nav\b[^>]*>.*?<\/nav>/gi, ' ');
+    cleaned = cleaned.replace(/<footer\b[^>]*>.*?<\/footer>/gi, ' ');
+    cleaned = cleaned.replace(/<header\b[^>]*>.*?<\/header>/gi, ' ');
     
     // Remove common UI elements that aren't content
     cleaned = cleaned.replace(/class="[^"]*breadcrumb[^"]*"/gi, '');
     cleaned = cleaned.replace(/class="[^"]*navigation[^"]*"/gi, '');
+    
+    // Clean up multiple spaces that might have been introduced
+    cleaned = cleaned.replace(/\s+/g, ' ');
     
     return cleaned;
   }
@@ -192,9 +237,14 @@ export class ContentProcessorService {
     // Clean up repeated section titles (common in Apple's SPA output)
     cleaned = this.removeRepeatedTitles(cleaned);
     
-    // Remove excessive whitespace
-    cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
-    cleaned = cleaned.replace(/[ \t]+$/gm, '');
+    // Clean up spacing while preserving word boundaries
+    cleaned = cleaned.replace(/\n{3,}/g, '\n\n'); // Limit to double line breaks
+    cleaned = cleaned.replace(/[ \t]+$/gm, ''); // Remove trailing spaces
+    cleaned = cleaned.replace(/[ \t]+/g, ' '); // Collapse multiple spaces to single space
+    
+    // Ensure spacing around headers
+    cleaned = cleaned.replace(/([^\n])(#+\s)/g, '$1\n\n$2'); // Space before headers
+    cleaned = cleaned.replace(/(#+\s[^\n]+)([^\n])/g, '$1\n\n$2'); // Space after headers
     
     // Clean up malformed links
     cleaned = cleaned.replace(/\[([^\]]*)\]\(\)/g, '$1');
@@ -204,6 +254,9 @@ export class ContentProcessorService {
     
     // Standardize list formatting
     cleaned = cleaned.replace(/^\s*[*+]\s/gm, '- ');
+    
+    // Fix common word concatenation issues from Apple's SPA
+    cleaned = this.fixWordConcatenation(cleaned);
     
     // Remove trailing metadata sections
     cleaned = this.removeTrailingMetadata(cleaned);
@@ -243,6 +296,60 @@ export class ContentProcessorService {
       }
       return true;
     }).join('\n');
+  }
+
+  /**
+   * Fix common word concatenation issues from HTML to Markdown conversion
+   */
+  private fixWordConcatenation(content: string): string {
+    let fixed = content;
+    
+    // Fix concatenated sentences (lowercase letter followed by uppercase letter)
+    fixed = fixed.replace(/([a-z])([A-Z])/g, '$1 $2');
+    
+    // Fix concatenated words with common Apple HIG terms
+    const higTerms = [
+      'Best practices', 'Guidelines', 'When to use', 'How to use',
+      'iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS',
+      'Tab bar', 'Navigation bar', 'Button', 'Picker', 'Slider',
+      'Action sheet', 'Alert', 'Popover', 'Sheet',
+      'Accessibility', 'VoiceOver', 'Dynamic Type',
+      'SF Symbols', 'App Store'
+    ];
+    
+    for (const term of higTerms) {
+      // Only fix clear concatenation cases to avoid false positives
+      const termNoSpaces = term.replace(/\s+/g, '');
+      
+      // Fix cases where lowercase word is concatenated before the term
+      const regex = new RegExp(`([a-z]{2,})${termNoSpaces}`, 'gi');
+      fixed = fixed.replace(regex, (match, prefix) => {
+        // Avoid splitting compound words that should stay together
+        if (prefix.length < 3) return match;
+        return `${prefix} ${term}`;
+      });
+      
+      // Fix cases where the term is concatenated before an uppercase word
+      const reverseRegex = new RegExp(`${termNoSpaces}([A-Z][a-z]{2,})`, 'gi');
+      fixed = fixed.replace(reverseRegex, (match) => {
+        const suffixMatch = match.match(new RegExp(`${termNoSpaces}(.+)`, 'i'));
+        if (suffixMatch && suffixMatch[1].length > 2) {
+          return `${term} ${suffixMatch[1]}`;
+        }
+        return match;
+      });
+    }
+    
+    // Fix common concatenation patterns
+    fixed = fixed.replace(/([a-z])\.([A-Z])/g, '$1. $2'); // Period followed by capital
+    fixed = fixed.replace(/([a-z])!([A-Z])/g, '$1! $2'); // Exclamation followed by capital
+    fixed = fixed.replace(/([a-z])\?([A-Z])/g, '$1? $2'); // Question mark followed by capital
+    
+    // Fix number concatenations
+    fixed = fixed.replace(/([0-9])([A-Za-z])/g, '$1 $2'); // Number followed by letter
+    fixed = fixed.replace(/([A-Za-z])([0-9])/g, '$1 $2'); // Letter followed by number
+    
+    return fixed;
   }
 
   private removeTrailingMetadata(content: string): string {

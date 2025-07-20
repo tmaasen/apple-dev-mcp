@@ -99,7 +99,7 @@ export interface SearchResult {
   platform: ApplePlatform;
   category?: HIGCategory;
   relevanceScore: number;
-  snippet: string;
+  content: string;
   type: 'section' | 'component' | 'guideline';
   highlights?: string[];
 }

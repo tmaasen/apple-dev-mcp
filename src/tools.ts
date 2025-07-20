@@ -48,7 +48,7 @@ export class HIGToolProvider {
     }
     
     const { query, platform } = args;
-    const limit = 10; // Use sensible default internally
+    const limit = 3; // Return top 3 results with full content
     
     // Validate required parameters
     if (typeof query !== 'string') {
@@ -110,7 +110,7 @@ export class HIGToolProvider {
   /**
    * Minimal fallback search with hardcoded results (last resort only)
    */
-  private getMinimalFallbackResults(query: string, platform?: ApplePlatform, limit: number = 10): SearchResult[] {
+  private getMinimalFallbackResults(query: string, platform?: ApplePlatform, limit: number = 3): SearchResult[] {
     const queryLower = query.toLowerCase();
     const fallbackData = [
       // Buttons & Touch Targets
@@ -175,7 +175,7 @@ export class HIGToolProvider {
           url: item.url,
           platform: item.platform as ApplePlatform,
           relevanceScore,
-          snippet: item.snippet,
+          content: item.snippet,
           type: 'guideline' as const
         });
       }
@@ -196,29 +196,31 @@ export class HIGToolProvider {
 
   /**
    * Get accessibility requirements for specific components
+   * TODO: Future release - integrate with static content parsing
+   * For now, users should search "accessibility" + component through regular HIG search
    */
-  async getAccessibilityRequirements(args: { component: string; platform: string }): Promise<{
-    component: string;
-    platform: string;
-    requirements: {
-      minimumTouchTarget: string;
-      contrastRatio: string;
-      voiceOverSupport: string[];
-      keyboardNavigation: string[];
-      wcagCompliance: string;
-      additionalGuidelines: string[];
-    };
-  }> {
-    const { component, platform } = args;
-    const componentLower = component.toLowerCase();
-    const a11yRequirements = this.getAccessibilityDatabase(componentLower, platform);
+  // async getAccessibilityRequirements(args: { component: string; platform: string }): Promise<{
+  //   component: string;
+  //   platform: string;
+  //   requirements: {
+  //     minimumTouchTarget: string;
+  //     contrastRatio: string;
+  //     voiceOverSupport: string[];
+  //     keyboardNavigation: string[];
+  //     wcagCompliance: string;
+  //     additionalGuidelines: string[];
+  //   };
+  // }> {
+  //   const { component, platform } = args;
+  //   const componentLower = component.toLowerCase();
+  //   const a11yRequirements = this.getAccessibilityDatabase(componentLower, platform);
 
-    return {
-      component,
-      platform,
-      requirements: a11yRequirements
-    };
-  }
+  //   return {
+  //     component,
+  //     platform,
+  //     requirements: a11yRequirements
+  //   };
+  // }
 
 
 
@@ -573,7 +575,7 @@ export class HIGToolProvider {
         type: 'design',
         url: result.url,
         relevanceScore: result.relevanceScore + crossRefBoost,
-        snippet: result.snippet || '',
+        snippet: result.content || '',
         designContent: {
           platform: result.platform,
           category: result.category
@@ -616,7 +618,7 @@ export class HIGToolProvider {
             type: 'combined',
             url: designResult.url,
             relevanceScore: (designResult.relevanceScore + technicalResult.relevanceScore) / 2 + 0.3,
-            snippet: `Design: ${designResult.snippet || ''} | Implementation: ${technicalResult.description}`,
+            snippet: `Design: ${designResult.content || ''} | Implementation: ${technicalResult.description}`,
             designContent: {
               platform: designResult.platform,
               category: designResult.category
@@ -629,7 +631,7 @@ export class HIGToolProvider {
               codeExamples: []
             },
             combinedGuidance: {
-              designPrinciples: [designResult.snippet || ''],
+              designPrinciples: [designResult.content || ''],
               implementationSteps: [technicalResult.description],
               crossPlatformConsiderations: technicalResult.platforms ? [technicalResult.platforms] : [],
               accessibilityNotes: [`Ensure ${designResult.title} follows accessibility guidelines`]
@@ -647,90 +649,91 @@ export class HIGToolProvider {
 
   /**
    * Get accessibility requirements database
+   * TODO: Future release - replace with static content integration
    */
-  private getAccessibilityDatabase(component: string, _platform: string): { minimumTouchTarget: string; contrastRatio: string; wcagCompliance: string; voiceOverSupport: string[]; keyboardNavigation: string[]; additionalGuidelines: string[] } {
-    const baseRequirements = {
-      minimumTouchTarget: '44pt x 44pt',
-      contrastRatio: '4.5:1 (WCAG AA)',
-      wcagCompliance: 'WCAG 2.1 AA',
-      voiceOverSupport: ['Accessible label', 'Accessible hint', 'Accessible value'],
-      keyboardNavigation: ['Tab navigation', 'Return key activation'],
-      additionalGuidelines: []
-    };
+  // private getAccessibilityDatabase(component: string, _platform: string): { minimumTouchTarget: string; contrastRatio: string; wcagCompliance: string; voiceOverSupport: string[]; keyboardNavigation: string[]; additionalGuidelines: string[] } {
+  //   const baseRequirements = {
+  //     minimumTouchTarget: '44pt x 44pt',
+  //     contrastRatio: '4.5:1 (WCAG AA)',
+  //     wcagCompliance: 'WCAG 2.1 AA',
+  //     voiceOverSupport: ['Accessible label', 'Accessible hint', 'Accessible value'],
+  //     keyboardNavigation: ['Tab navigation', 'Return key activation'],
+  //     additionalGuidelines: []
+  //   };
 
-    switch (component) {
-      case 'button':
-        return {
-          ...baseRequirements,
-          voiceOverSupport: [
-            'Clear button label describing action',
-            'Button trait for VoiceOver',
-            'State changes announced (enabled/disabled)'
-          ],
-          keyboardNavigation: [
-            'Tab order follows reading order',
-            'Space bar or Return key activation',
-            'Focus indicator clearly visible'
-          ],
-          additionalGuidelines: [
-            'Use descriptive labels, not just "tap" or "click"',
-            'Ensure sufficient spacing between buttons',
-            'Provide haptic feedback on supported devices'
-          ]
-        };
+  //   switch (component) {
+  //     case 'button':
+  //       return {
+  //         ...baseRequirements,
+  //         voiceOverSupport: [
+  //           'Clear button label describing action',
+  //           'Button trait for VoiceOver',
+  //           'State changes announced (enabled/disabled)'
+  //         ],
+  //         keyboardNavigation: [
+  //           'Tab order follows reading order',
+  //           'Space bar or Return key activation',
+  //           'Focus indicator clearly visible'
+  //         ],
+  //         additionalGuidelines: [
+  //           'Use descriptive labels, not just "tap" or "click"',
+  //           'Ensure sufficient spacing between buttons',
+  //           'Provide haptic feedback on supported devices'
+  //         ]
+  //       };
         
-      case 'navigation':
-      case 'navigation bar':
-        return {
-          ...baseRequirements,
-          minimumTouchTarget: '44pt x 44pt for interactive elements',
-          voiceOverSupport: [
-            'Navigation bar trait',
-            'Clear title announcement',
-            'Back button with destination context'
-          ],
-          keyboardNavigation: [
-            'Tab navigation through interactive elements',
-            'Escape key for back navigation (macOS)',
-            'Command+[ for back navigation (macOS)'
-          ],
-          additionalGuidelines: [
-            'Keep navigation titles concise and descriptive',
-            'Ensure back button context is clear',
-            'Use navigation landmarks for screen readers'
-          ]
-        };
+  //     case 'navigation':
+  //     case 'navigation bar':
+  //       return {
+  //         ...baseRequirements,
+  //         minimumTouchTarget: '44pt x 44pt for interactive elements',
+  //         voiceOverSupport: [
+  //           'Navigation bar trait',
+  //           'Clear title announcement',
+  //           'Back button with destination context'
+  //         ],
+  //         keyboardNavigation: [
+  //           'Tab navigation through interactive elements',
+  //           'Escape key for back navigation (macOS)',
+  //           'Command+[ for back navigation (macOS)'
+  //         ],
+  //         additionalGuidelines: [
+  //           'Keep navigation titles concise and descriptive',
+  //           'Ensure back button context is clear',
+  //           'Use navigation landmarks for screen readers'
+  //         ]
+  //       };
         
-      case 'tab':
-      case 'tab bar':
-        return {
-          ...baseRequirements,
-          voiceOverSupport: [
-            'Tab bar trait',
-            'Selected state clearly announced',
-            'Tab count and position information'
-          ],
-          keyboardNavigation: [
-            'Arrow key navigation between tabs',
-            'Return/Space key for tab selection',
-            'Control+Tab for tab switching'
-          ],
-          additionalGuidelines: [
-            'Use clear, distinct tab labels',
-            'Ensure selected state is visually obvious',
-            'Badge numbers should be announced by VoiceOver'
-          ]
-        };
+  //     case 'tab':
+  //     case 'tab bar':
+  //       return {
+  //         ...baseRequirements,
+  //         voiceOverSupport: [
+  //           'Tab bar trait',
+  //           'Selected state clearly announced',
+  //           'Tab count and position information'
+  //         ],
+  //         keyboardNavigation: [
+  //           'Arrow key navigation between tabs',
+  //           'Return/Space key for tab selection',
+  //           'Control+Tab for tab switching'
+  //         ],
+  //         additionalGuidelines: [
+  //           'Use clear, distinct tab labels',
+  //           'Ensure selected state is visually obvious',
+  //           'Badge numbers should be announced by VoiceOver'
+  //         ]
+  //       };
         
-      default:
-        return {
-          ...baseRequirements,
-          additionalGuidelines: [
-            'Follow platform-specific accessibility guidelines',
-            'Test with VoiceOver and other assistive technologies',
-            'Ensure content is accessible in all interface modes'
-          ]
-        };
-    }
-  }
+  //     default:
+  //       return {
+  //         ...baseRequirements,
+  //         additionalGuidelines: [
+  //           'Follow platform-specific accessibility guidelines',
+  //           'Test with VoiceOver and other assistive technologies',
+  //           'Ensure content is accessible in all interface modes'
+  //         ]
+  //       };
+  //   }
+  // }
 }

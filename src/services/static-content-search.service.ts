@@ -52,7 +52,7 @@ export class StaticContentSearchService {
     query: string, 
     platform?: ApplePlatform, 
     category?: HIGCategory, 
-    limit: number = 10
+    limit: number = 3
   ): Promise<SearchResult[]> {
     await this.loadSearchIndex();
 
@@ -133,8 +133,8 @@ export class StaticContentSearchService {
 
       // Only include relevant results (higher threshold due to quality bonuses)
       if (relevanceScore > 0.15) {
-        // Get enhanced snippet with query context
-        const enhancedSnippet = await this.getEnhancedSnippet(entry, query);
+        // Get full content instead of snippet
+        const fullContent = await this.getFullContent(entry);
         
         results.push({
           id: entry.id,
@@ -143,7 +143,7 @@ export class StaticContentSearchService {
           platform: entry.platform as ApplePlatform,
           category: entry.category as HIGCategory,
           relevanceScore,
-          snippet: enhancedSnippet,
+          content: fullContent,
           type: this.determineType(entry),
           highlights: highlights.slice(0, 3) // Limit highlights
         });
@@ -157,218 +157,21 @@ export class StaticContentSearchService {
   }
 
   /**
-   * Get enhanced snippet with query context
+   * Get full content for an entry
    */
-  private async getEnhancedSnippet(entry: SearchIndexEntry, query: string): Promise<string> {
+  private async getFullContent(entry: SearchIndexEntry): Promise<string> {
     try {
-      // Use cached snippet first
-      if (entry.snippet && entry.snippet.length > 100) {
-        return this.highlightQueryInSnippet(entry.snippet, query);
-      }
-
-      // Try to load full content for better snippet extraction
       const contentPath = this.getContentPath(entry);
       if (await this.fileSystem.exists(contentPath)) {
-        const fullContent = await this.loadContent(contentPath);
-        const contextSnippet = this.extractContextualSnippet(fullContent, query);
-        return this.highlightQueryInSnippet(contextSnippet, query);
+        return await this.loadContent(contentPath);
       }
 
-      return entry.snippet || `${entry.title} - No preview available`;
+      return entry.snippet || `# ${entry.title}\n\nContent not available.`;
     } catch {
-      return entry.snippet || `${entry.title} - Preview unavailable`;
+      return entry.snippet || `# ${entry.title}\n\nContent unavailable.`;
     }
   }
 
-  /**
-   * Extract contextual snippet around query matches
-   */
-  private extractContextualSnippet(content: string, query: string): string {
-    const queryLower = query.toLowerCase();
-    const contentLower = content.toLowerCase();
-    
-    // First, try to find actionable guidance regardless of query location
-    const actionableSnippet = this.extractActionableGuidance(content, query);
-    if (actionableSnippet) {
-      return actionableSnippet;
-    }
-    
-    // Find first occurrence of query
-    const index = contentLower.indexOf(queryLower);
-    if (index === -1) {
-      // If query not found, return first paragraph with guidelines
-      const lines = content.split('\n').filter(line => line.trim().length > 50);
-      for (const line of lines) {
-        if (line.toLowerCase().includes('best practices') || 
-            line.toLowerCase().includes('guideline') ||
-            line.toLowerCase().includes('consider') ||
-            line.toLowerCase().includes('ensure')) {
-          return line.trim().slice(0, 300);
-        }
-      }
-      return lines[0]?.slice(0, 300) || 'No preview available';
-    }
-
-    // Extract context around the match
-    const start = Math.max(0, index - 150);
-    const end = Math.min(content.length, index + 300);
-    let snippet = content.slice(start, end);
-
-    // Try to start and end at word boundaries
-    if (start > 0) {
-      const firstSpace = snippet.indexOf(' ');
-      if (firstSpace > 0 && firstSpace < 50) {
-        snippet = snippet.slice(firstSpace + 1);
-      }
-    }
-
-    const lastSpace = snippet.lastIndexOf(' ');
-    if (lastSpace > snippet.length - 50) {
-      snippet = snippet.slice(0, lastSpace);
-    }
-
-    return snippet.trim();
-  }
-
-  /**
-   * Extract actionable guidance from content, prioritizing query-relevant guidance
-   */
-  private extractActionableGuidance(content: string, query: string): string | null {
-    const queryLower = query.toLowerCase();
-    const lines = content.split('\n');
-    const actionableSections = [
-      'best practices',
-      'guidelines',
-      'considerations',
-      'recommendations',
-      'do',
-      'don\'t',
-      'avoid',
-      'ensure',
-      'when to use',
-      'how to use'
-    ];
-    
-    // Look for actionable sections that contain the query term
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].toLowerCase();
-      const isHeader = line.startsWith('#') || line.startsWith('##') || line.startsWith('###');
-      
-      if (isHeader && actionableSections.some(section => line.includes(section))) {
-        // Found an actionable section, extract content from it
-        const sectionContent = this.extractSectionContent(lines, i);
-        if (sectionContent && sectionContent.length > 100) {
-          // Prefer sections that mention the query term
-          if (sectionContent.toLowerCase().includes(queryLower)) {
-            return this.cleanAndTruncateText(sectionContent, queryLower);
-          }
-        }
-      }
-    }
-    
-    // Look for any actionable section as fallback
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].toLowerCase();
-      const isHeader = line.startsWith('#') || line.startsWith('##') || line.startsWith('###');
-      
-      if (isHeader && actionableSections.some(section => line.includes(section))) {
-        const sectionContent = this.extractSectionContent(lines, i);
-        if (sectionContent && sectionContent.length > 100) {
-          return this.cleanAndTruncateText(sectionContent, queryLower);
-        }
-      }
-    }
-    
-    // Look for individual actionable sentences
-    const sentences = content.split(/[.!?]+/).filter(s => s.trim().length > 30);
-    for (const sentence of sentences) {
-      const sentenceLower = sentence.toLowerCase();
-      
-      // Prioritize sentences that contain the query and actionable guidance
-      if (sentenceLower.includes(queryLower) && (
-          sentenceLower.includes('use ') ||
-          sentenceLower.includes('avoid ') ||
-          sentenceLower.includes('ensure ') ||
-          sentenceLower.includes('consider ')
-        )) {
-        return this.cleanAndTruncateText(sentence.trim(), queryLower) + '.';
-      }
-    }
-    
-    return null;
-  }
-  
-  /**
-   * Extract content from a section starting at the given line index
-   */
-  private extractSectionContent(lines: string[], startIndex: number): string {
-    const headerLevel = (lines[startIndex].match(/^#+/) || [''])[0].length;
-    let content = '';
-    
-    // Skip the header line and collect content until next header of same or higher level
-    for (let i = startIndex + 1; i < lines.length; i++) {
-      const line = lines[i];
-      const currentHeaderLevel = (line.match(/^#+/) || [''])[0].length;
-      
-      // Stop if we hit a header of same or higher level
-      if (currentHeaderLevel > 0 && currentHeaderLevel <= headerLevel) {
-        break;
-      }
-      
-      // Add non-empty lines to content
-      if (line.trim()) {
-        content += line + ' ';
-      }
-      
-      // Stop if we have enough content
-      if (content.length > 350) {
-        break;
-      }
-    }
-    
-    return content.trim();
-  }
-  
-  /**
-   * Clean markdown and truncate text, prioritizing content around query terms
-   */
-  private cleanAndTruncateText(text: string, queryTerm?: string): string {
-    let cleaned = text
-      .replace(/^#+\s*/, '') // Remove headers
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Convert links to text
-      .replace(/[*_]{1,2}([^*_]+)[*_]{1,2}/g, '$1') // Remove emphasis
-      .replace(/`([^`]+)`/g, '$1') // Remove code formatting
-      .trim();
-    
-    // If we have a query term and the text is long, try to center around the query
-    if (queryTerm && cleaned.length > 300) {
-      const queryIndex = cleaned.toLowerCase().indexOf(queryTerm.toLowerCase());
-      if (queryIndex !== -1) {
-        const start = Math.max(0, queryIndex - 100);
-        const end = Math.min(cleaned.length, queryIndex + 200);
-        cleaned = cleaned.slice(start, end);
-        
-        // Clean up word boundaries
-        if (start > 0) {
-          const firstSpace = cleaned.indexOf(' ');
-          if (firstSpace > 0 && firstSpace < 50) {
-            cleaned = cleaned.slice(firstSpace + 1);
-          }
-        }
-      }
-    }
-    
-    return cleaned.length > 300 ? cleaned.slice(0, 300) + '...' : cleaned;
-  }
-
-  /**
-   * Highlight query terms in snippet
-   */
-  private highlightQueryInSnippet(snippet: string, _query: string): string {
-    // For now, just return the snippet - highlighting can be added later
-    // In a real implementation, you might wrap query terms with **bold** or similar
-    return snippet;
-  }
 
   /**
    * Load content from file with caching
@@ -420,7 +223,7 @@ export class StaticContentSearchService {
   /**
    * Fallback results when no search index is available
    */
-  private getFallbackResults(query: string, platform?: ApplePlatform, limit: number = 10): SearchResult[] {
+  private getFallbackResults(query: string, platform?: ApplePlatform, limit: number = 3): SearchResult[] {
     const queryLower = query.toLowerCase();
     const fallbackItems = [
       {
@@ -465,7 +268,7 @@ export class StaticContentSearchService {
           url: item.url,
           platform: item.platform as ApplePlatform,
           relevanceScore,
-          snippet: item.snippet,
+          content: item.snippet, // Use snippet as basic content for fallback
           type: 'guideline'
         });
       }

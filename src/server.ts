@@ -213,26 +213,28 @@ class AppleHIGMCPServer {
               required: ['query'],
             },
           },
-          {
-            name: 'get_accessibility_requirements',
-            title: 'Get Accessibility Requirements',
-            description: 'Get accessibility requirements and guidelines for specific components',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                component: {
-                  type: 'string',
-                  description: 'Component name (e.g., "Button", "Navigation Bar", "Tab Bar")',
-                },
-                platform: {
-                  type: 'string',
-                  enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
-                  description: 'Target platform',
-                },
-              },
-              required: ['component', 'platform'],
-            },
-          },
+          // TODO: Future release - re-enable with static content integration
+          // For now, users should search "accessibility" + component through regular HIG search
+          // {
+          //   name: 'get_accessibility_requirements',
+          //   title: 'Get Accessibility Requirements',
+          //   description: 'Get accessibility requirements and guidelines for specific components',
+          //   inputSchema: {
+          //     type: 'object',
+          //     properties: {
+          //       component: {
+          //         type: 'string',
+          //         description: 'Component name (e.g., "Button", "Navigation Bar", "Tab Bar")',
+          //       },
+          //       platform: {
+          //         type: 'string',
+          //         enum: ['iOS', 'macOS', 'watchOS', 'tvOS', 'visionOS'],
+          //         description: 'Target platform',
+          //       },
+          //     },
+          //     required: ['component', 'platform'],
+          //   },
+          // },
           {
             name: 'search_technical_documentation',
             title: 'Search Technical Documentation',
@@ -302,10 +304,11 @@ class AppleHIGMCPServer {
             result = await this.toolProvider.searchHumanInterfaceGuidelines(args as any);
             break;
           }
-          case 'get_accessibility_requirements': {
-            result = await this.toolProvider.getAccessibilityRequirements(args as any);
-            break;
-          }
+          // TODO: Future release - re-enable with static content integration
+          // case 'get_accessibility_requirements': {
+          //   result = await this.toolProvider.getAccessibilityRequirements(args as any);
+          //   break;
+          // }
           case 'search_technical_documentation': {
             result = await this.toolProvider.searchTechnicalDocumentation(args as any);
             break;

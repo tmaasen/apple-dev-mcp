@@ -17,7 +17,6 @@
       "icons",
       "typography",
       "visual",
-      "voiceover",
       "presentation",
       "haptics",
       "feedback",
@@ -28,10 +27,10 @@
       "animation",
       "layout"
     ],
-    "snippet": "An accessible interface allows people to experience your app or game regardless of their capabilities or how they use their devices.",
+    "snippet": "June 9, 2025 Added guidance and links for Assistive Access, Switch Control, and Accessibility Nutrition Labels. Accessibility Accessible user interfaces empower everyone to have a great experience wit...",
     "quality": {
       "score": 0.49,
-      "length": 16709,
+      "length": 16876,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -41,7 +40,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -64,24 +63,23 @@
       "interface",
       "materials",
       "accessibility",
-      "voiceover",
       "visual",
       "color"
     ],
-    "snippet": "To help you design an inclusive app or game, consider the following goals as you review the words and images you use and the experiences you offer.",
+    "snippet": "Inclusion Inclusive apps and games put people first by prioritizing respectful communication and presenting content and functionality in ways that everyone can access and understand. To help you desig...",
     "quality": {
-      "score": 0.475,
-      "length": 14204,
+      "score": 0.45999999999999996,
+      "length": 14284,
       "structureScore": 0,
-      "appleTermsScore": 0.9,
+      "appleTermsScore": 0.8,
       "codeExamplesCount": 0,
       "imageReferencesCount": 0,
       "headingCount": 0,
       "isFallbackContent": false,
       "extractionMethod": "turndown-enhanced",
-      "confidence": 0.575
+      "confidence": 0.5599999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -111,10 +109,10 @@
       "feedback",
       "gestures"
     ],
-    "snippet": "People use their devices in very personal ways and they expect apps to help them preserve their privacy.",
+    "snippet": "Privacy Privacy is paramount: it’s critical to be transparent about the privacy-related data and resources you require and essential to protect the data people allow you to access. People use their de...",
     "quality": {
       "score": 0.49,
-      "length": 14597,
+      "length": 14689,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -124,7 +122,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -152,10 +150,10 @@
       "controls",
       "images"
     ],
-    "snippet": "Consider choosing an accent color.",
+    "snippet": "Branding Apps and games express their unique brand identity in ways that make them instantly recognizable while feeling at home on the platform and giving people a consistent experience. In addition t...",
     "quality": {
       "score": 0.49,
-      "length": 2934,
+      "length": 2951,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -165,7 +163,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -197,10 +195,10 @@
       "presentation",
       "motion"
     ],
-    "snippet": "People expect familiar relationships between controls and content to help them use and discover your app’s features, and designing the layout to take advantage of this makes your app feel at home on the platform.",
+    "snippet": "June 9, 2025 Added guidance for Liquid Glass. Layout A consistent layout that adapts to various contexts makes your experience more approachable and helps people enjoy their favorite apps and games on...",
     "quality": {
       "score": 0.49,
-      "length": 24197,
+      "length": 24930,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -210,7 +208,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -239,10 +237,10 @@
       "gestures",
       "buttons"
     ],
-    "snippet": "Play Avoid anchoring content to the wearer’s head.",
+    "snippet": "Spatial layout Spatial layout techniques help you take advantage of the infinite canvas of Apple Vision Pro and present your content in engaging, comfortable ways. Field of view A person’s field of vi...",
     "quality": {
       "score": 0.49,
-      "length": 10138,
+      "length": 10194,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -252,7 +250,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -281,10 +279,10 @@
       "controls",
       "materials"
     ],
-    "snippet": "Follow the recommended default and minimum text sizes for each platform — for both custom and system fonts — to ensure your text is legible on all devices.",
+    "snippet": "Typography Your typographic choices can help you display legible text, convey an information hierarchy, communicate important content, and express your brand or style. Ensuring legibility Use font siz...",
     "quality": {
       "score": 0.49,
-      "length": 27376,
+      "length": 28437,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -294,7 +292,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -327,10 +325,10 @@
       "selection",
       "animation"
     ],
-    "snippet": "You may also want to use custom colors to enhance the visual experience of your app or game and express its unique personality.",
+    "snippet": "June 9, 2025 Updated system color values, and added guidance for Liquid Glass. Color Judicious use of color can enhance communication, evoke your brand, provide visual continuity, communicate status a...",
     "quality": {
       "score": 0.49,
-      "length": 17403,
+      "length": 17715,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -340,7 +338,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -366,14 +364,13 @@
       "buttons",
       "images",
       "accessibility",
-      "voiceover",
       "navigation",
       "selection"
     ],
-    "snippet": "Apps and games use a variety of simple icons to help people understand the items, actions, and modes they can choose.",
+    "snippet": "June 9, 2025 Added a table of SF Symbols that represent common actions. Icons An effective icon is a graphic asset that expresses a single concept in ways people instantly understand. Apps and games u...",
     "quality": {
       "score": 0.49,
-      "length": 11338,
+      "length": 11560,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -383,7 +380,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -411,10 +408,10 @@
       "controls",
       "animation"
     ],
-    "snippet": "Use the following values for guidance; for additional scale factors, see Layout.",
+    "snippet": "Images To make sure your artwork looks great on all devices you support, learn how the system displays content and how to deliver art at the appropriate scale factors. Resolution Different devices can...",
     "quality": {
       "score": 0.49,
-      "length": 8889,
+      "length": 9006,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -424,7 +421,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -452,10 +449,10 @@
       "haptics",
       "gestures"
     ],
-    "snippet": "Not everyone can or wants to experience the motion in your app or game, so it’s essential to avoid using it as the only way to communicate important information.",
+    "snippet": "Motion Beautiful, fluid motions bring the interface to life, conveying status, providing feedback and instruction, and enriching the visual experience of your app or game. Many system components autom...",
     "quality": {
       "score": 0.49,
-      "length": 6562,
+      "length": 6594,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -465,7 +462,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -492,10 +489,10 @@
       "system",
       "buttons"
     ],
-    "snippet": "Instead, use standard materials for elements in the content layer, such as app backgrounds.",
+    "snippet": "June 9, 2025 Added guidance for Liquid Glass. Materials A material is a visual effect that creates a sense of depth, layering, and hierarchy between foreground and background elements. Materials help ...",
     "quality": {
       "score": 0.49,
-      "length": 8972,
+      "length": 9074,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -505,7 +502,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -527,10 +524,10 @@
       "controls",
       "gestures"
     ],
-    "snippet": "InputsLearn about the various methods people use to control your app or game and enter data.",
+    "snippet": "Inputs Learn about the various methods people use to control your app or game and enter data. Action button Apple Pencil and Scribble Camera Control Digital Crown Eyes Focus and selection Game control...",
     "quality": {
       "score": 0.1,
-      "length": 292,
+      "length": 293,
       "structureScore": 0,
       "appleTermsScore": 0.4,
       "codeExamplesCount": 0,
@@ -540,7 +537,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.1
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": false,
     "hasExamples": false,
@@ -569,10 +566,10 @@
       "buttons",
       "status"
     ],
-    "snippet": "Although the precise movements that make up basic gestures can vary per platform and input device, people are familiar with the underlying functionality of these gestures and expect to use them everywhere.",
+    "snippet": "Gestures A gesture is a physical motion that a person uses to directly affect an object in an app or game on their device. Depending on the device they’re using, people can make gestures on a touchscr...",
     "quality": {
       "score": 0.49,
-      "length": 14724,
+      "length": 14892,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -582,7 +579,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -603,24 +600,25 @@
       "status",
       "color",
       "haptics",
-      "voiceover",
       "interface",
-      "design"
+      "design",
+      "motion",
+      "animation"
     ],
-    "snippet": "FeedbackFeedback helps people know what’s happening, discover what they can do next, understand the results of actions, and avoid mistakes.",
+    "snippet": "Feedback Feedback helps people know what’s happening, discover what they can do next, understand the results of actions, and avoid mistakes. Providing clear, consistent feedback as people interact wit...",
     "quality": {
-      "score": 0.49,
-      "length": 3566,
+      "score": 0.475,
+      "length": 3592,
       "structureScore": 0,
-      "appleTermsScore": 1,
+      "appleTermsScore": 0.9,
       "codeExamplesCount": 0,
       "imageReferencesCount": 0,
       "headingCount": 0,
       "isFallbackContent": false,
       "extractionMethod": "turndown-enhanced",
-      "confidence": 0.59
+      "confidence": 0.575
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -641,10 +639,10 @@
       "design",
       "system"
     ],
-    "snippet": "Instead, consider showing placeholder text, graphics, or animations as content loads, replacing these elements as content becomes available.",
+    "snippet": "June 9, 2025 Revised guidance for storing downloads to reflect downloading large assets in the background. Loading The best content-loading experience finishes before people become aware of it. If you...",
     "quality": {
       "score": 0.4,
-      "length": 2834,
+      "length": 2847,
       "structureScore": 0,
       "appleTermsScore": 0.4,
       "codeExamplesCount": 0,
@@ -654,7 +652,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -676,10 +674,10 @@
       "interface",
       "system"
     ],
-    "snippet": "Consider providing a collection of context-specific tips instead of a single onboarding flow.",
+    "snippet": "Onboarding Onboarding can help people get a quick start using your app or game. Ideally, people can understand your app or game simply by experiencing it, but if onboarding is necessary, design a flow...",
     "quality": {
       "score": 0.385,
-      "length": 4190,
+      "length": 4207,
       "structureScore": 0,
       "appleTermsScore": 0.3,
       "codeExamplesCount": 0,
@@ -689,7 +687,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.485
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -715,10 +713,10 @@
       "layout",
       "images"
     ],
-    "snippet": "If you need a splash screen, consider displaying it at the beginning of your onboarding flow.",
+    "snippet": "Launching A streamlined launch experience helps people start using your app or game immediately. Launching begins when someone opens your app or game, includes an initial download, and ends when the f...",
     "quality": {
       "score": 0.44499999999999995,
-      "length": 4229,
+      "length": 4261,
       "structureScore": 0,
       "appleTermsScore": 0.7,
       "codeExamplesCount": 0,
@@ -728,7 +726,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5449999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -748,7 +746,7 @@
       "navigation",
       "controls"
     ],
-    "snippet": "Navigation and search Path controls Search fields Sidebars Tab bars Token fields and search",
+    "snippet": "Navigation and search Path controls Search fields Sidebars Tab bars Token fields and search...",
     "quality": {
       "score": 0.1,
       "length": 91,
@@ -761,7 +759,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.1
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": false,
     "hasExamples": false,
@@ -783,10 +781,10 @@
       "system",
       "selection"
     ],
-    "snippet": "SearchingPeople use various search techniques to find content on their device, within an app, and within a document or file.",
+    "snippet": "June 9, 2025 Updated best practices with general guidance from Search fields, and reorganized guidance for systemwide search. Searching People use various search techniques to find content on their de...",
     "quality": {
       "score": 0.385,
-      "length": 4221,
+      "length": 4249,
       "structureScore": 0,
       "appleTermsScore": 0.3,
       "codeExamplesCount": 0,
@@ -796,7 +794,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.485
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -819,10 +817,10 @@
       "presentation",
       "visual"
     ],
-    "snippet": "Presenting content modally can:Ensure that people receive critical information and, if necessary, act on itProvide options that let people confirm or modify their most recent actionHelp people perform a distinct, narrowly scoped task without losing t....",
+    "snippet": "Modality Modality is a design technique that presents content in a separate, dedicated mode that prevents interaction with the parent view and requires an explicit action to dismiss. Presenting conten...",
     "quality": {
       "score": 0.4,
-      "length": 4628,
+      "length": 4661,
       "structureScore": 0,
       "appleTermsScore": 0.4,
       "codeExamplesCount": 0,
@@ -832,7 +830,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -856,10 +854,10 @@
       "controls",
       "system"
     ],
-    "snippet": "Avoid using an alert merely to provide information.",
+    "snippet": "Alerts An alert gives people critical information they need right away. For example, an alert can tell people about a problem, warn them when their action might destroy data, and give them an opportun...",
     "quality": {
       "score": 0.41500000000000004,
-      "length": 9454,
+      "length": 9512,
       "structureScore": 0,
       "appleTermsScore": 0.5,
       "codeExamplesCount": 0,
@@ -869,7 +867,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.515
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -891,10 +889,10 @@
       "system",
       "interface"
     ],
-    "snippet": "Developer noteWhen you use SwiftUI, you can offer action sheet functionality in all platforms by specifying a presentation modifier for a confirmation dialog.",
+    "snippet": "Action sheets An action sheet is a modal view that presents choices related to an action people initiate. Developer note When you use Swift UI, you can offer action sheet functionality in all platform...",
     "quality": {
       "score": 0.41500000000000004,
-      "length": 3695,
+      "length": 3746,
       "structureScore": 0,
       "appleTermsScore": 0.5,
       "codeExamplesCount": 0,
@@ -904,7 +902,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.515
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -928,10 +926,10 @@
       "status",
       "design"
     ],
-    "snippet": "People can edit the list of actions to ensure that it displays the ones they use most and to add new ones.",
+    "snippet": "Activity views An activity view — often called a share sheet — presents a range of tasks that people can perform in the current context. Activity views present sharing activities like messaging and ac...",
     "quality": {
       "score": 0.41500000000000004,
-      "length": 6182,
+      "length": 6221,
       "structureScore": 0,
       "appleTermsScore": 0.5,
       "codeExamplesCount": 0,
@@ -941,7 +939,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.515
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -963,17 +961,16 @@
       "interface",
       "system",
       "visual",
-      "voiceover",
       "buttons",
       "layout",
       "input",
       "controls",
       "navigation"
     ],
-    "snippet": "When a nonmodal sheet is onscreen, people use its functionality to directly affect the current task in the parent view without dismissing the sheet.",
+    "snippet": "Sheets A sheet helps people perform a scoped task that’s closely related to their current context. By default, a sheet is modal, presenting a targeted experience that prevents people from interacting ...",
     "quality": {
       "score": 0.49,
-      "length": 9212,
+      "length": 9282,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -983,7 +980,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1008,10 +1005,10 @@
       "selection",
       "layout"
     ],
-    "snippet": "Best practicesUse a popover to expose a small amount of information or functionality.",
+    "snippet": "Popovers A popover is a transient view that appears above other content when people click or tap a control or interactive area. Best practices Use a popover to expose a small amount of information or ...",
     "quality": {
       "score": 0.44499999999999995,
-      "length": 4211,
+      "length": 4250,
       "structureScore": 0,
       "appleTermsScore": 0.7,
       "codeExamplesCount": 0,
@@ -1021,7 +1018,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5449999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1054,10 +1051,10 @@
       "images",
       "navigation"
     ],
-    "snippet": "There are also many button-like components that have distinct appearances and behaviors for specific use cases, like toggles, pop-up buttons, and segmented controls.",
+    "snippet": "June 9, 2025 Updated guidance for button styles and content. Buttons A button initiates an instantaneous action. Versatile and highly customizable, buttons give people simple, familiar ways to do task...",
     "quality": {
       "score": 0.49,
-      "length": 15435,
+      "length": 15549,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -1067,7 +1064,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1095,10 +1092,10 @@
       "typography",
       "controls"
     ],
-    "snippet": "Menus are ubiquitous in apps and games, so most people already know how to use them.",
+    "snippet": "Menus A menu reveals its options when people interact with it, making it a space-efficient way to present commands in your app or game. Menus are ubiquitous in apps and games, so most people already k...",
     "quality": {
       "score": 0.49,
-      "length": 10798,
+      "length": 10869,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -1108,7 +1105,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1138,10 +1135,10 @@
       "layout",
       "input"
     ],
-    "snippet": "Best practicesChoose items deliberately to avoid overcrowding.",
+    "snippet": "June 9, 2025 Added guidance for grouping bar items, updated guidance for using symbols, and incorporated navigation bar guidance. Toolbars A toolbar provides convenient access to frequently used comma...",
     "quality": {
       "score": 0.49,
-      "length": 14389,
+      "length": 14492,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -1151,7 +1148,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1177,10 +1174,10 @@
       "system",
       "color"
     ],
-    "snippet": "Best practicesUse a tab bar to support navigation, not to provide actions.",
+    "snippet": "Tab bars A tab bar lets people navigate between top-level sections of your app. Tab bars help people understand the different types of information or functionality that an app provides. They also let ...",
     "quality": {
       "score": 0.49,
-      "length": 8656,
+      "length": 8780,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -1190,7 +1187,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1220,10 +1217,10 @@
       "layout",
       "input"
     ],
-    "snippet": "Best practicesChoose items deliberately to avoid overcrowding.",
+    "snippet": "June 9, 2025 Added guidance for grouping bar items, updated guidance for using symbols, and incorporated navigation bar guidance. Toolbars A toolbar provides convenient access to frequently used comma...",
     "quality": {
       "score": 0.49,
-      "length": 14389,
+      "length": 14492,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -1233,7 +1230,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1259,10 +1256,10 @@
       "buttons",
       "system"
     ],
-    "snippet": "Consider supplementing a slider with a corresponding text field and stepper.",
+    "snippet": "Sliders A slider is a horizontal track with a control, called a thumb, that people can adjust between a minimum and maximum value. As a slider’s value changes, the portion of track between the minimum...",
     "quality": {
       "score": 0.44499999999999995,
-      "length": 4793,
+      "length": 4820,
       "structureScore": 0,
       "appleTermsScore": 0.7,
       "codeExamplesCount": 0,
@@ -1272,7 +1269,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5449999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1291,10 +1288,10 @@
       "universal",
       "visual-design"
     ],
-    "snippet": "SteppersA stepper is a two-segment control that people use to increase or decrease an incremental value.",
+    "snippet": "Steppers A stepper is a two-segment control that people use to increase or decrease an incremental value. A stepper sits next to a field that displays its current value, because the stepper itself doe...",
     "quality": {
       "score": 0.33999999999999997,
-      "length": 1257,
+      "length": 1272,
       "structureScore": 0,
       "appleTermsScore": 0,
       "codeExamplesCount": 0,
@@ -1304,7 +1301,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.43999999999999995
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1327,12 +1324,13 @@
       "interface",
       "visual",
       "color",
+      "selection",
       "status"
     ],
-    "snippet": "Best practicesUse a toggle to help people choose between two opposing values that affect the state of content or a view.",
+    "snippet": "Toggles A toggle lets people choose between a pair of opposing states, like on and off, using a different appearance to indicate each state. A toggle can have various styles, such as switch and checkb...",
     "quality": {
       "score": 0.44499999999999995,
-      "length": 7204,
+      "length": 7254,
       "structureScore": 0,
       "appleTermsScore": 0.7,
       "codeExamplesCount": 0,
@@ -1342,7 +1340,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5449999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1366,10 +1364,10 @@
       "color",
       "navigation"
     ],
-    "snippet": "Best practicesConsider using a picker to offer medium-to-long lists of items.",
+    "snippet": "Pickers A picker displays one or more scrollable lists of distinct values that people can choose from. The system provides several styles of pickers, each of which offers different types of selectable...",
     "quality": {
       "score": 0.44499999999999995,
-      "length": 5191,
+      "length": 5232,
       "structureScore": 0,
       "appleTermsScore": 0.7,
       "codeExamplesCount": 0,
@@ -1379,7 +1377,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5449999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1400,14 +1398,15 @@
       "feedback",
       "interface",
       "status",
+      "controls",
       "animation",
       "system",
       "color"
     ],
-    "snippet": "Because the duration of an operation is either known or unknown, there are two types of progress indicators:Determinate, for a task with a well-defined duration, such as a file conversionIndeterminate, for unquantifiable tasks, such as loading or syn....",
+    "snippet": "Progress indicators Progress indicators let people know that your app isn’t stalled while it loads content or performs lengthy operations. Some progress indicators also give people a way to estimate h...",
     "quality": {
       "score": 0.44499999999999995,
-      "length": 6589,
+      "length": 6644,
       "structureScore": 0,
       "appleTermsScore": 0.7,
       "codeExamplesCount": 0,
@@ -1417,7 +1416,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5449999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1444,10 +1443,10 @@
       "input",
       "design"
     ],
-    "snippet": "The guidance below can help you use a label to display text.",
+    "snippet": "Labels A label is a static piece of text that people can read and often copy, but not edit. Labels display text throughout the interface, in buttons, menu items, and views, helping people understand t...",
     "quality": {
       "score": 0.475,
-      "length": 3117,
+      "length": 3166,
       "structureScore": 0,
       "appleTermsScore": 0.9,
       "codeExamplesCount": 0,
@@ -1457,7 +1456,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.575
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1482,10 +1481,10 @@
       "buttons",
       "images"
     ],
-    "snippet": "Best practicesUse a text field to request a small amount of information, such as a name or an email address.",
+    "snippet": "Text fields A text field is a rectangular area in which people enter or edit small, specific pieces of text. Best practices Use a text field to request a small amount of information, such as a name or...",
     "quality": {
       "score": 0.45999999999999996,
-      "length": 4544,
+      "length": 4576,
       "structureScore": 0,
       "appleTermsScore": 0.8,
       "codeExamplesCount": 0,
@@ -1495,7 +1494,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5599999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1520,10 +1519,10 @@
       "typography",
       "design"
     ],
-    "snippet": "Best practicesUse a text view when you need to display text that’s long, editable, or in a special format.",
+    "snippet": "Text views A text view displays multiline, styled text content, which can optionally be editable. Text views can be any height and allow scrolling when the content extends outside of the view. By defa...",
     "quality": {
       "score": 0.44499999999999995,
-      "length": 1828,
+      "length": 1845,
       "structureScore": 0,
       "appleTermsScore": 0.7,
       "codeExamplesCount": 0,
@@ -1533,7 +1532,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5449999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": false,
@@ -1557,10 +1556,10 @@
       "navigation",
       "controls"
     ],
-    "snippet": "Apps and games in all platforms can use tables to present content and options; many apps use lists to express an overall information hierarchy and help people navigate it.",
+    "snippet": "Lists and tables Lists and tables present data in one or more columns of rows. A table or list can represent data that’s organized in groups or hierarchies, and it can support user interactions like s...",
     "quality": {
       "score": 0.43000000000000005,
-      "length": 7071,
+      "length": 7124,
       "structureScore": 0,
       "appleTermsScore": 0.6,
       "codeExamplesCount": 0,
@@ -1570,7 +1569,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.53
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1594,10 +1593,10 @@
       "gestures",
       "feedback"
     ],
-    "snippet": "Avoid creating a custom layout that might confuse people or draw undue attention to itself.",
+    "snippet": "Collections A collection manages an ordered set of content and presents it in a customizable and highly visual layout. Generally speaking, collections are ideal for showing image-based content. Best p...",
     "quality": {
       "score": 0.43000000000000005,
-      "length": 1798,
+      "length": 1821,
       "structureScore": 0,
       "appleTermsScore": 0.6,
       "codeExamplesCount": 0,
@@ -1607,7 +1606,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.53
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": false,
@@ -1636,10 +1635,10 @@
       "system",
       "design"
     ],
-    "snippet": "If you build custom scrolling for a view, make sure your scroll indicators use the elastic behavior that people expect.",
+    "snippet": "Scroll views A scroll view lets people view content that’s larger than the view’s boundaries by moving the content vertically or horizontally. The scroll view itself has no appearance, but it can disp...",
     "quality": {
       "score": 0.49,
-      "length": 8838,
+      "length": 8881,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -1649,7 +1648,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1674,10 +1673,10 @@
       "design",
       "layout"
     ],
-    "snippet": "Typically, you use a split view to show multiple levels of your app’s hierarchy at once and support navigation between them.",
+    "snippet": "June 9, 2025 Added i OS and i Pad OS platform considerations. Split views A split view manages the presentation of multiple adjacent panes of content, each of which can contain a variety of components...",
     "quality": {
       "score": 0.43000000000000005,
-      "length": 6085,
+      "length": 6130,
       "structureScore": 0,
       "appleTermsScore": 0.6,
       "codeExamplesCount": 0,
@@ -1687,7 +1686,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.53
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1708,22 +1707,22 @@
       "color",
       "interface",
       "visual",
-      "voiceover"
+      "layout"
     ],
-    "snippet": "Consider using padding and alignment to communicate additional grouping within a box.",
+    "snippet": "Boxes A box creates a visually distinct group of logically related information and components. By default, a box uses a visible border or background color to separate its contents from the rest of the...",
     "quality": {
-      "score": 0.41500000000000004,
-      "length": 1535,
+      "score": 0.4,
+      "length": 1562,
       "structureScore": 0,
-      "appleTermsScore": 0.5,
+      "appleTermsScore": 0.4,
       "codeExamplesCount": 0,
       "imageReferencesCount": 0,
       "headingCount": 0,
       "isFallbackContent": false,
       "extractionMethod": "turndown-enhanced",
-      "confidence": 0.515
+      "confidence": 0.5
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": false,
@@ -1743,23 +1742,22 @@
       "visual-design",
       "widgets",
       "visual",
-      "voiceover",
       "color"
     ],
-    "snippet": "For example, a temperature gauge can use text to identify the highest and lowest temperatures in the range and display a spectrum of colors that visually reinforce the changing values.",
+    "snippet": "Gauges A gauge displays a specific numerical value within a range of values. In addition to indicating the current value in a range, a gauge can provide more context about the range itself. For exampl...",
     "quality": {
-      "score": 0.4,
-      "length": 3229,
+      "score": 0.385,
+      "length": 3254,
       "structureScore": 0,
-      "appleTermsScore": 0.4,
+      "appleTermsScore": 0.3,
       "codeExamplesCount": 0,
       "imageReferencesCount": 0,
       "headingCount": 0,
       "isFallbackContent": false,
       "extractionMethod": "turndown-enhanced",
-      "confidence": 0.5
+      "confidence": 0.485
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1781,25 +1779,24 @@
       "color",
       "accessibility",
       "interface",
-      "voiceover",
       "input",
       "navigation",
       "design"
     ],
-    "snippet": "For example, people might use a chart to:Learn how upcoming weather conditions might affect their plans.",
+    "snippet": "Charts Organize data in a chart to communicate information with clarity and visual appeal. An effective chart highlights a few key pieces of information in a dataset, helping people gain insights and ...",
     "quality": {
-      "score": 0.49,
-      "length": 18658,
+      "score": 0.475,
+      "length": 18733,
       "structureScore": 0,
-      "appleTermsScore": 1,
+      "appleTermsScore": 0.9,
       "codeExamplesCount": 0,
       "imageReferencesCount": 0,
       "headingCount": 0,
       "isFallbackContent": false,
       "extractionMethod": "turndown-enhanced",
-      "confidence": 0.59
+      "confidence": 0.575
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1818,10 +1815,10 @@
       "universal",
       "visual-design"
     ],
-    "snippet": "Rating indicatorsA rating indicator uses a series of horizontally arranged graphical symbols — by default, stars — to communicate a ranking level.A rating indicator doesn’t display partial symbols; it...",
+    "snippet": "Rating indicators A rating indicator uses a series of horizontally arranged graphical symbols — by default, stars — to communicate a ranking level. A rating indicator doesn’t display partial symbols; ...",
     "quality": {
       "score": 0.33999999999999997,
-      "length": 819,
+      "length": 830,
       "structureScore": 0,
       "appleTermsScore": 0,
       "codeExamplesCount": 0,
@@ -1831,7 +1828,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.43999999999999995
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": false,
@@ -1849,17 +1846,17 @@
       "segmented controls",
       "universal",
       "visual-design",
+      "controls",
       "buttons",
       "images",
       "interface",
-      "controls",
       "icons",
       "system"
     ],
-    "snippet": "Single choiceMultiple choicesUse a segmented control to provide closely related choices that affect an object, state, or view.",
+    "snippet": "Segmented controls A segmented control is a linear set of two or more segments, each of which functions as a button. Within a segmented control, all segments are usually equal in width. Like buttons, ...",
     "quality": {
       "score": 0.43000000000000005,
-      "length": 4303,
+      "length": 4355,
       "structureScore": 0,
       "appleTermsScore": 0.6,
       "codeExamplesCount": 0,
@@ -1869,7 +1866,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.53
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1896,10 +1893,10 @@
       "system",
       "input"
     ],
-    "snippet": "Search fields can use a scope control as well as tokens to help filter and refine the scope of their search.",
+    "snippet": "June 9, 2025 Updated guidance for search placement in i OS, consolidated i Pad OS and mac OS platform considerations, and added guidance for tokens. Search fields A search field lets people search a c...",
     "quality": {
       "score": 0.475,
-      "length": 10878,
+      "length": 10946,
       "structureScore": 0,
       "appleTermsScore": 0.9,
       "codeExamplesCount": 0,
@@ -1909,7 +1906,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.575
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -1928,10 +1925,10 @@
       "universal",
       "visual-design"
     ],
-    "snippet": "June 9, 2025 Added guidance for extending content beneath the sidebar, and updated iPadOS and macOS",
+    "snippet": "June 9, 2025 Added guidance for extending content beneath the sidebar, and updated i Pad OS and mac OS...",
     "quality": {
       "score": 0.1,
-      "length": 99,
+      "length": 102,
       "structureScore": 0,
       "appleTermsScore": 0,
       "codeExamplesCount": 0,
@@ -1941,7 +1938,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.1
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": false,
     "hasExamples": false,
@@ -1969,10 +1966,10 @@
       "materials",
       "selection"
     ],
-    "snippet": "An App Clip Code tends to be the best way for people to discover and launch your App Clip because its distinct design is immediately recognizable, and people trust it to offer a fast, secure way to launch an App Clip.",
+    "snippet": "June 9, 2025 Updated guidance to include demo App Clips. App Clips An App Clip is a lightweight version of your app or game that provides an on-the-go or demo experience that’s instantly available. Ap...",
     "quality": {
       "score": 0.49,
-      "length": 27816,
+      "length": 27954,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -1982,7 +1979,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2003,10 +2000,10 @@
       "system",
       "presentation"
     ],
-    "snippet": "Because App Shortcuts are part of your app, they are available immediately when installation finishes.",
+    "snippet": "App Shortcuts An App Shortcut gives people access to your app’s key functions or content throughout the system. People can initiate App Shortcuts using features like Siri, Spotlight, and the Shortcuts...",
     "quality": {
       "score": 0.385,
-      "length": 6454,
+      "length": 6496,
       "structureScore": 0,
       "appleTermsScore": 0.3,
       "codeExamplesCount": 0,
@@ -2016,7 +2013,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.485
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2042,16 +2039,15 @@
       "status",
       "visual",
       "system",
-      "voiceover",
       "layout",
       "interface",
       "selection",
       "typography"
     ],
-    "snippet": "Use Apple Pay in your app to sell physical goods like groceries, clothing, and appliances; for services such as club memberships, hotel reservations, and tickets for events; and for donations.",
+    "snippet": "Apple Pay Apple Pay is a secure, easy way to make payments for physical goods and services — as well as donations and subscriptions — in apps running on i Phone, i Pad, Mac, and Apple Watch, and on we...",
     "quality": {
       "score": 0.49,
-      "length": 28166,
+      "length": 28397,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2061,7 +2057,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2093,10 +2089,10 @@
       "color",
       "images"
     ],
-    "snippet": "CarPlay is designed for drivers to use while they’re driving.",
+    "snippet": "Car Play Car Play lets people get directions, make calls, send and receive messages, listen to music, and more from their car’s built-in display, all while staying focused on the road. People download...",
     "quality": {
       "score": 0.49,
-      "length": 7577,
+      "length": 7684,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2106,7 +2102,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2134,10 +2130,10 @@
       "icons",
       "images"
     ],
-    "snippet": "After you receive permission, it’s essential to maintain people’s trust by clearly showing them how you use their data.",
+    "snippet": "Health Kit Health Kit is the central repository for health and fitness data in i OS, i Pad OS, and watch OS.When you support Health Kit in your app, you can ask people for permission to access and upd...",
     "quality": {
       "score": 0.49,
-      "length": 8559,
+      "length": 8632,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2147,7 +2143,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2165,6 +2161,7 @@
       "homekit",
       "universal",
       "technologies",
+      "layout",
       "controls",
       "system",
       "input",
@@ -2172,13 +2169,12 @@
       "icons",
       "design",
       "color",
-      "buttons",
-      "layout"
+      "buttons"
     ],
-    "snippet": "It’s crucial for your app to use the terminology and object model that HomeKit defines, so that you can reinforce people’s understanding and make home automation feel approachable.",
+    "snippet": "Home Kit Home Kit lets people securely control connected accessories in their homes using Siri or the Home app on i Phone, i Pad, Apple Watch, and Mac. In i OS, the Home app also lets people manage an...",
     "quality": {
       "score": 0.49,
-      "length": 20326,
+      "length": 20538,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2188,7 +2184,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2209,10 +2205,10 @@
       "design",
       "feedback"
     ],
-    "snippet": "Best practicesMake it easy to use your app with iCloud.",
+    "snippet": "June 9, 2025 Added guidance for synchronizing game data through i Cloud. i Cloudi Cloud is a service that lets people seamlessly access the content they care about — photos, videos, documents, and mor...",
     "quality": {
       "score": 0.37,
-      "length": 4242,
+      "length": 4292,
       "structureScore": 0,
       "appleTermsScore": 0.2,
       "codeExamplesCount": 0,
@@ -2222,7 +2218,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.47
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2247,10 +2243,10 @@
       "materials",
       "status"
     ],
-    "snippet": "In-app purchasePeople can use in-app purchase to pay for virtual goods — like premium content, digital goods, and subscriptions — securely within your app.",
+    "snippet": "In-app purchase People can use in-app purchase to pay for virtual goods — like premium content, digital goods, and subscriptions — securely within your app. You can also promote and offer in-app purch...",
     "quality": {
       "score": 0.44499999999999995,
-      "length": 20024,
+      "length": 20130,
       "structureScore": 0,
       "appleTermsScore": 0.7,
       "codeExamplesCount": 0,
@@ -2260,7 +2256,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5449999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2278,8 +2274,8 @@
       "machine learning",
       "universal",
       "technologies",
-      "images",
       "design",
+      "images",
       "feedback",
       "icons",
       "controls",
@@ -2288,10 +2284,10 @@
       "presentation",
       "materials"
     ],
-    "snippet": "In addition to providing familiar features like image recognition and content recommendations, your app can use machine learning to forge deep connections with people and help them accomplish more with less effort.",
+    "snippet": "Machine learning Machine learning enables apps and games to learn from data and usage patterns, letting you improve existing experiences and create engaging new ones. In addition to providing familiar...",
     "quality": {
       "score": 0.49,
-      "length": 36661,
+      "length": 36800,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2301,7 +2297,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2330,10 +2326,10 @@
       "icons",
       "navigation"
     ],
-    "snippet": "A map can also include annotations and overlays and show routing information, and you can configure it to use a standard graphical view, a satellite image-based view, or a view that’s a hybrid of both.",
+    "snippet": "Maps A map displays outdoor or indoor geographical data in your app or on your website. A map uses a familiar interface that supports much of the same functionality as the system-provided Maps app, su...",
     "quality": {
       "score": 0.49,
-      "length": 13456,
+      "length": 13591,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2343,7 +2339,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2363,10 +2359,10 @@
       "technologies",
       "system"
     ],
-    "snippet": "iOS apps running on supported devices can use NFC scanning to read data from electronic tags attached to real-world objects.",
+    "snippet": "NFCNear-field communication (NFC) allows devices within a few centimeters of each other to exchange information wirelessly.i OS apps running on supported devices can use NFC scanning to read data from...",
     "quality": {
       "score": 0.355,
-      "length": 2663,
+      "length": 2689,
       "structureScore": 0,
       "appleTermsScore": 0.1,
       "codeExamplesCount": 0,
@@ -2376,7 +2372,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.45499999999999996
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2404,10 +2400,10 @@
       "selection",
       "images"
     ],
-    "snippet": "When you use SiriKit to define the tasks and actions that your app supports, people can use Siri to perform them even when your app isn’t running.",
+    "snippet": "Siri Siri makes it easy for people to accomplish everyday tasks quickly, using voice, touch, or automation. When you use Siri Kit to define the tasks and actions that your app supports, people can use...",
     "quality": {
       "score": 0.49,
-      "length": 49953,
+      "length": 50261,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2417,7 +2413,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2445,10 +2441,10 @@
       "interface",
       "status"
     ],
-    "snippet": "People use their cards and passes in Wallet to make Apple Pay purchases, track their orders, confirm their identity, and streamline activities like boarding a plane, attending a concert, or receiving a discount.",
+    "snippet": "Wallet Wallet helps people securely store their credit and debit cards, driver’s license or state ID, transit cards, event tickets, keys, and more on i Phone and Apple Watch. People use their cards an...",
     "quality": {
       "score": 0.49,
-      "length": 30835,
+      "length": 31092,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2458,7 +2454,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2489,10 +2485,10 @@
       "icons",
       "color"
     ],
-    "snippet": "If your app includes features that require specific AR capabilities, or if AR features are optional in your app, don’t show people an error if they try to use these features on a device that doesn’t support them; instead, simply avoid offering the fe....",
+    "snippet": "Augmented reality Augmented reality (or AR) lets you deliver immersive, engaging experiences that seamlessly blend virtual objects with the real world. Using the device’s camera to present the physica...",
     "quality": {
       "score": 0.49,
-      "length": 21454,
+      "length": 21593,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2502,7 +2498,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2530,10 +2526,10 @@
       "selection",
       "interface"
     ],
-    "snippet": "Alternatively, you can also use GameKit to present this data within your own custom UI.",
+    "snippet": "June 9, 2025 Added guidance for new challenges and multiplayer activities, and considerations for the Apple Games app and Game Overlay. Updated guidance and specifications for activity preview images....",
     "quality": {
       "score": 0.49,
-      "length": 15147,
+      "length": 15401,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2543,7 +2539,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2568,17 +2564,17 @@
       "presentation",
       "layout",
       "buttons",
-      "visual",
       "design",
+      "visual",
       "color",
       "animation",
       "icons",
       "typography"
     ],
-    "snippet": "For example, the Live Activity of a food delivery app might display the time remaining until your order arrives; a sports app could provide live in-game information for their Live Activity; and a workout app could show real time fitness metrics and o....",
+    "snippet": "Live Activities A Live Activity displays up-to-date information from your app, allowing people to view the progress of an activity, event, or task at a glance. Live Activities provide frequent informa...",
     "quality": {
       "score": 0.49,
-      "length": 27059,
+      "length": 27328,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2588,7 +2584,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2612,10 +2608,10 @@
       "system",
       "color"
     ],
-    "snippet": "Live PhotosLive Photos lets people capture favorite memories in a sound- and motion-rich interactive experience that adds vitality to traditional still photos.When Live Photos is available, the Camera...",
+    "snippet": "Live Photos Live Photos lets people capture favorite memories in a sound- and motion-rich interactive experience that adds vitality to traditional still photos. When Live Photos is available, the Came...",
     "quality": {
       "score": 0.44499999999999995,
-      "length": 3228,
+      "length": 3251,
       "structureScore": 0,
       "appleTermsScore": 0.7,
       "codeExamplesCount": 0,
@@ -2625,7 +2621,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5449999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": false,
@@ -2649,10 +2645,10 @@
       "buttons",
       "color"
     ],
-    "snippet": "Before you can send any notifications to people, you have to get their consent (for developer guidance, see Asking permission to use notifications).",
+    "snippet": "Notifications A notification gives people timely, high-value information they can understand at a glance. Before you can send any notifications to people, you have to get their consent (for developer ...",
     "quality": {
       "score": 0.45999999999999996,
-      "length": 13216,
+      "length": 13281,
       "structureScore": 0,
       "appleTermsScore": 0.8,
       "codeExamplesCount": 0,
@@ -2662,7 +2658,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5599999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2690,10 +2686,10 @@
       "controls",
       "accessibility"
     ],
-    "snippet": "For example, you can use the shareplay SF Symbol to identify the content or experiences in your app that support SharePlay.",
+    "snippet": "Share Play Share Play helps multiple people share activities — like viewing a movie, listening to music, playing a game, or sketching ideas on a whiteboard — while they’re in a Face Time call or Messa...",
     "quality": {
       "score": 0.49,
-      "length": 13573,
+      "length": 13653,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2703,7 +2699,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2724,25 +2720,24 @@
       "system",
       "interface",
       "buttons",
-      "voiceover",
       "color",
       "visual",
       "design"
     ],
-    "snippet": "Supporting Sign in with Apple lets people use the Apple Account they already have to sign in or sign up, and skip filling out forms, verifying email addresses, and choosing passwords.",
+    "snippet": "Sign in with Apple Sign in with Apple provides a fast, private way to sign into apps and websites, giving people a consistent experience they can trust and the convenience of not having to remember mu...",
     "quality": {
-      "score": 0.45999999999999996,
-      "length": 16546,
+      "score": 0.44499999999999995,
+      "length": 16681,
       "structureScore": 0,
-      "appleTermsScore": 0.8,
+      "appleTermsScore": 0.7,
       "codeExamplesCount": 0,
       "imageReferencesCount": 0,
       "headingCount": 0,
       "isFallbackContent": false,
       "extractionMethod": "turndown-enhanced",
-      "confidence": 0.5599999999999999
+      "confidence": 0.5449999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2772,10 +2767,10 @@
       "animation",
       "visual"
     ],
-    "snippet": "Before you can integrate Tap to Pay on iPhone into your iOS app, you need to work with a supported payment service provider (PSP), request the Tap to Pay on iPhone entitlement, and use ProximityReader APIs, either through the PSP’s SDK or by adopting....",
+    "snippet": "Tap to Pay on i Phone Tap to Pay on i Phone lets merchants accept contactless payments using an app on their i Phone, without having to connect external hardware. When you support Tap to Pay on i Phon...",
     "quality": {
       "score": 0.49,
-      "length": 13850,
+      "length": 14009,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2785,7 +2780,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2812,13 +2807,12 @@
       "images",
       "color",
       "typography",
-      "voiceover",
       "icons"
     ],
-    "snippet": "People can use widgets to organize and personalize their devices, quickly accessing the information and features they need.",
+    "snippet": "Widgets A widget elevates and displays a small amount of timely, relevant information from your app or game so people can see it at a glance in additional contexts. Widgets display content and offer s...",
     "quality": {
       "score": 0.49,
-      "length": 26682,
+      "length": 27314,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2828,7 +2822,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2861,13 +2855,12 @@
       "controls",
       "branding",
       "motion",
-      "voiceover",
       "navigation"
     ],
-    "snippet": "You can use a symbol to convey an object or concept wherever interface icons can appear, such as in toolbars, tab bars, context menus, and within text.",
+    "snippet": "SF Symbols SF Symbols provides thousands of consistent, highly configurable symbols that integrate seamlessly with the San Francisco system font, automatically aligning with text in all weights and si...",
     "quality": {
       "score": 0.49,
-      "length": 22494,
+      "length": 22579,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2877,7 +2870,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2899,12 +2892,13 @@
       "gestures",
       "input",
       "system",
+      "widgets",
       "controls"
     ],
-    "snippet": "In addition, people often want apps to use their personal data and input from the device’s gyroscope and accelerometer, and they may also want to participate in spatial interactions.",
+    "snippet": "Designing for i OSPeople depend on their i Phone to help them stay connected, play games, view media, accomplish tasks, and track personal data in any location and while on the go. As you begin design...",
     "quality": {
       "score": 0.45999999999999996,
-      "length": 3072,
+      "length": 3107,
       "structureScore": 0,
       "appleTermsScore": 0.8,
       "codeExamplesCount": 0,
@@ -2914,7 +2908,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5599999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2947,10 +2941,10 @@
       "motion",
       "layout"
     ],
-    "snippet": "Play iOS app icontvOS app icons use between two and five layers to create a sense of dynamism as people bring them into focus.",
+    "snippet": "June 9, 2025 Updated guidance to reflect layered icons, consistency across platforms, and best practices for Liquid Glass. App icons A unique, memorable icon expresses your app’s or game’s purpose and...",
     "quality": {
       "score": 0.49,
-      "length": 12769,
+      "length": 12905,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -2960,7 +2954,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -2982,10 +2976,10 @@
       "design",
       "color"
     ],
-    "snippet": "Avoid making unpredictable changes to quick actions.",
+    "snippet": "Home Screen quick actions Home Screen quick actions give people a way to perform app-specific actions from the Home Screen. People can get a menu of available quick actions when they touch and hold an...",
     "quality": {
       "score": 0.4,
-      "length": 3110,
+      "length": 3165,
       "structureScore": 0,
       "appleTermsScore": 0.4,
       "codeExamplesCount": 0,
@@ -2995,7 +2989,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3020,10 +3014,10 @@
       "visual",
       "feedback"
     ],
-    "snippet": "People expect to use multitasking on their devices, and they may think something is wrong if your app doesn’t allow it.",
+    "snippet": "June 9, 2025 Reorganized guidance in platform considerations, and added guidance for multitasking with multiple windows in i Pad OS. Multitasking Multitasking lets people switch quickly from one app t...",
     "quality": {
       "score": 0.44499999999999995,
-      "length": 6812,
+      "length": 6864,
       "structureScore": 0,
       "appleTermsScore": 0.7,
       "codeExamplesCount": 0,
@@ -3033,7 +3027,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5449999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3054,20 +3048,20 @@
       "design",
       "interface"
     ],
-    "snippet": "\\# https://developer.apple.com/design/human-interface-guidelines/requesting-permission Content extraction failed. Please refer to the original URL for the latest information.",
+    "snippet": "\\\n\n# https://developer.apple.com/design/human-interface-guidelines/requesting-permission Content extraction failed. Please refer to the original URL for the latest information\n\n....",
     "quality": {
-      "score": 0.2135,
-      "length": 174,
-      "structureScore": 0,
+      "score": 0.22949999999999998,
+      "length": 178,
+      "structureScore": 0.1,
       "appleTermsScore": 0.2,
       "codeExamplesCount": 0,
       "imageReferencesCount": 0,
-      "headingCount": 0,
+      "headingCount": 1,
       "isFallbackContent": false,
       "extractionMethod": "turndown-enhanced",
-      "confidence": 0.3135
+      "confidence": 0.3295
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": false,
@@ -3090,10 +3084,10 @@
       "interface",
       "buttons"
     ],
-    "snippet": "On some platforms, the system-provided Settings app can also include settings for specific apps and games, often letting people adjust whether the app or game can access location information, use device features like microphone or camera, and integra....",
+    "snippet": "Settings People expect apps and games to just work, but they also appreciate having ways to customize the experience to fit their needs. On all Apple platforms, the system-provided Settings app lets p...",
     "quality": {
       "score": 0.41500000000000004,
-      "length": 6101,
+      "length": 6126,
       "structureScore": 0,
       "appleTermsScore": 0.5,
       "codeExamplesCount": 0,
@@ -3103,7 +3097,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.515
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3127,10 +3121,10 @@
       "controls",
       "system"
     ],
-    "snippet": "In the typical use case, the viewing distance can range from about 1 to 3 feet.",
+    "snippet": "Designing for mac OSPeople rely on the power, spaciousness, and flexibility of a Mac as they perform in-depth productivity tasks, view media or content, and play games, often using several apps at onc...",
     "quality": {
       "score": 0.44499999999999995,
-      "length": 2830,
+      "length": 2863,
       "structureScore": 0,
       "appleTermsScore": 0.7,
       "codeExamplesCount": 0,
@@ -3140,7 +3134,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5449999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": false,
@@ -3166,12 +3160,13 @@
       "color",
       "feedback",
       "status",
+      "controls",
       "navigation"
     ],
-    "snippet": "Use the same system icons to represent actions such as Copy, Share, and Delete, wherever they appear.",
+    "snippet": "June 9, 2025 Added guidance for the menu bar in i Pad OS. The menu bar On a Mac or an i Pad, the menu bar at the top of the screen displays the top-level menus in your app or game. Mac users are very ...",
     "quality": {
       "score": 0.49,
-      "length": 24975,
+      "length": 25275,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -3181,7 +3176,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3202,10 +3197,10 @@
       "system",
       "interface"
     ],
-    "snippet": "Also consider listing a few of the actions that are most likely to be useful when your app isn’t frontmost or when there are no open windows.",
+    "snippet": "Dock menus On a Mac, people can secondary click an app’s or game’s icon in the Dock to reveal a Dock menu, which presents both system-provided and custom items. The system-provided Dock menu items can...",
     "quality": {
       "score": 0.37,
-      "length": 1422,
+      "length": 1433,
       "structureScore": 0,
       "appleTermsScore": 0.2,
       "codeExamplesCount": 0,
@@ -3215,7 +3210,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.47
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3235,10 +3230,10 @@
       "foundations",
       "presentation"
     ],
-    "snippet": "NoteIf you need to manage the presentation of hierarchical content in your iPadOS or visionOS app, consider using a split view.",
+    "snippet": "Column views A column view — also called a browser — lets people view and navigate a data hierarchy using a series of vertical columns. Each column represents one level of the hierarchy and contains h...",
     "quality": {
       "score": 0.355,
-      "length": 1593,
+      "length": 1605,
       "structureScore": 0,
       "appleTermsScore": 0.1,
       "codeExamplesCount": 0,
@@ -3248,7 +3243,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.45499999999999996
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3268,10 +3263,10 @@
       "foundations",
       "system"
     ],
-    "snippet": "Use a table instead of an outline view to present data that’s not hierarchical.",
+    "snippet": "Outline views An outline view presents hierarchical data in a scrolling list of cells that are organized into columns and rows. An outline view includes at least one column that contains primary hiera...",
     "quality": {
       "score": 0.37,
-      "length": 3729,
+      "length": 3745,
       "structureScore": 0,
       "appleTermsScore": 0.2,
       "codeExamplesCount": 0,
@@ -3281,7 +3276,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.47
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3301,10 +3296,10 @@
       "foundations",
       "buttons"
     ],
-    "snippet": "Use an introductory label to let people know what types of items to expect.",
+    "snippet": "Combo boxes A combo box combines a text field with a pull-down button in a single control. People can enter a custom value into the field or click the button to choose from a list of predefined values...",
     "quality": {
       "score": 0.355,
-      "length": 1069,
+      "length": 1077,
       "structureScore": 0,
       "appleTermsScore": 0.1,
       "codeExamplesCount": 0,
@@ -3314,7 +3309,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.45499999999999996
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": false,
@@ -3334,13 +3329,13 @@
       "foundations",
       "controls",
       "presentation",
-      "navigation",
-      "buttons"
+      "buttons",
+      "navigation"
     ],
-    "snippet": "Best practicesUse a disclosure control to hide details until they’re relevant.",
+    "snippet": "Disclosure controls Disclosure controls reveal and hide information and functionality related to specific controls or views. Best practices Use a disclosure control to hide details until they’re relev...",
     "quality": {
       "score": 0.4,
-      "length": 2701,
+      "length": 2752,
       "structureScore": 0,
       "appleTermsScore": 0.4,
       "codeExamplesCount": 0,
@@ -3350,7 +3345,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3369,10 +3364,10 @@
       "macos",
       "foundations"
     ],
-    "snippet": "People generally expect to choose these menu items — or use the standard keyboard shortcuts — to interact with an image well.",
+    "snippet": "Image wells An image well is an editable version of an image view. After selecting an image well, people can copy and paste its image or delete it. People can also drag a new image into an image well ...",
     "quality": {
-      "score": 0.31425000000000003,
-      "length": 697,
+      "score": 0.31575,
+      "length": 703,
       "structureScore": 0,
       "appleTermsScore": 0,
       "codeExamplesCount": 0,
@@ -3380,9 +3375,9 @@
       "headingCount": 0,
       "isFallbackContent": false,
       "extractionMethod": "turndown-enhanced",
-      "confidence": 0.41425
+      "confidence": 0.41574999999999995
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": false,
@@ -3400,14 +3395,14 @@
       "path controls",
       "macos",
       "foundations",
-      "system",
       "controls",
+      "system",
       "status"
     ],
-    "snippet": "If you make the control editable, the menu contains an additional Choose command that people can use to select an item and display it in the control.",
+    "snippet": "Path controls A path control shows the file system path of a selected file or folder. For example, choosing View > Show Path Bar in the Finder displays a path bar at the bottom of the window. It shows...",
     "quality": {
       "score": 0.385,
-      "length": 1358,
+      "length": 1365,
       "structureScore": 0,
       "appleTermsScore": 0.3,
       "codeExamplesCount": 0,
@@ -3417,7 +3412,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.485
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3435,15 +3430,15 @@
       "pop up buttons",
       "macos",
       "foundations",
-      "selection",
       "buttons",
+      "selection",
       "interface",
       "controls"
     ],
-    "snippet": "Best practicesUse a pop-up button to present a flat list of mutually exclusive options or states.",
+    "snippet": "Pop-up buttons A pop-up button displays a menu of mutually exclusive options. After people choose an item from a pop-up button’s menu, the menu closes, and the button can update its content to indicat...",
     "quality": {
       "score": 0.4,
-      "length": 1988,
+      "length": 2002,
       "structureScore": 0,
       "appleTermsScore": 0.4,
       "codeExamplesCount": 0,
@@ -3453,7 +3448,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3476,10 +3471,10 @@
       "system",
       "design"
     ],
-    "snippet": "Best practicesUse a pull-down button to present commands or items that are directly related to the button’s action.",
+    "snippet": "Pull-down buttons A pull-down button displays a menu of items or actions that directly relate to the button’s purpose. After people choose an item in a pull-down button’s menu, the menu closes, and th...",
     "quality": {
       "score": 0.41500000000000004,
-      "length": 3597,
+      "length": 3620,
       "structureScore": 0,
       "appleTermsScore": 0.5,
       "codeExamplesCount": 0,
@@ -3489,7 +3484,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.515
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3509,10 +3504,10 @@
       "foundations",
       "system"
     ],
-    "snippet": "Consider providing additional ways to convert text into tokens.",
+    "snippet": "Token fields A token field is a type of text field that can convert text into tokens that are easy to select and manipulate. For example, Mail uses token fields for the address fields in the compose w...",
     "quality": {
       "score": 0.355,
-      "length": 1760,
+      "length": 1769,
       "structureScore": 0,
       "appleTermsScore": 0.1,
       "codeExamplesCount": 0,
@@ -3522,7 +3517,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.45499999999999996
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3547,10 +3542,10 @@
       "visual",
       "selection"
     ],
-    "snippet": "Best practicesConsider the system-provided color picker for a familiar experience.",
+    "snippet": "Color wells A color well lets people adjust the color of text, shapes, guides, and other onscreen elements. A color well displays a color picker when people tap or click it. This color picker can be t...",
     "quality": {
       "score": 0.43000000000000005,
-      "length": 1181,
+      "length": 1207,
       "structureScore": 0,
       "appleTermsScore": 0.6,
       "codeExamplesCount": 0,
@@ -3560,7 +3555,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.53
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": false,
@@ -3586,10 +3581,10 @@
       "system",
       "color"
     ],
-    "snippet": "When the situation calls for it, a panel can also use a dark, translucent style to support a heads-up display (or HUD) experience.",
+    "snippet": "Panels In a mac OS app, a panel typically floats above other open windows providing supplementary controls, options, or information related to the active window or current selection. In general, a pan...",
     "quality": {
       "score": 0.45999999999999996,
-      "length": 4879,
+      "length": 4901,
       "structureScore": 0,
       "appleTermsScore": 0.8,
       "codeExamplesCount": 0,
@@ -3599,7 +3594,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5599999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3624,10 +3619,10 @@
       "layout",
       "interface"
     ],
-    "snippet": "Apple Vision Pro doesn’t offer a full-screen mode because people can expand a window to fill more of their view or use the Digital Crown to hide passthrough and transition to a more immersive experience (for guidance, see Immersive experiences).",
+    "snippet": "June 9, 2025 Updated guidance for hiding toolbars and navigation controls, and deferring Home Screen indicator gestures in full-screen i OS and i Pad OS apps and games. Going full screeni Phone, i Pad...",
     "quality": {
       "score": 0.44499999999999995,
-      "length": 5224,
+      "length": 5276,
       "structureScore": 0,
       "appleTermsScore": 0.7,
       "codeExamplesCount": 0,
@@ -3637,7 +3632,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5449999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3659,10 +3654,10 @@
       "layout",
       "presentation"
     ],
-    "snippet": "If your macOS app has a toolbar, you might want to put a Print button there, too, but consider making it an optional button that people can add when they customize the toolbar.",
+    "snippet": "Printing An i OS, i Pad OS, mac OS, or vision OS app can integrate system-provided print functionality when it makes sense, presenting custom printer- and document-specific options if necessary. Best ...",
     "quality": {
       "score": 0.385,
-      "length": 3040,
+      "length": 3078,
       "structureScore": 0,
       "appleTermsScore": 0.3,
       "codeExamplesCount": 0,
@@ -3672,7 +3667,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.485
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3702,10 +3697,10 @@
       "color",
       "status"
     ],
-    "snippet": "Conceptually, apps use two types of windows to display content:A primary window presents the main navigation and content of an app, and actions associated with them.",
+    "snippet": "June 9, 2025 Added best practices, and updated with guidance for resizable windows in i Pad OS. Windows A window presents UI views and components in your app or game. In i Pad OS, mac OS, and vision O...",
     "quality": {
       "score": 0.49,
-      "length": 14194,
+      "length": 14309,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -3715,7 +3710,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3742,10 +3737,10 @@
       "color",
       "materials"
     ],
-    "snippet": "Because people wear Apple Watch, they’re usually no more than a foot away from the display as they raise their wrist to view it and use their opposite hand to interact with the device.",
+    "snippet": "Designing for watch OSWhen people glance at their Apple Watch, they know they can access essential information and perform simple, timely tasks whether they’re stationary or in motion. As you begin de...",
     "quality": {
       "score": 0.45999999999999996,
-      "length": 3481,
+      "length": 3506,
       "structureScore": 0,
       "appleTermsScore": 0.8,
       "codeExamplesCount": 0,
@@ -3755,7 +3750,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5599999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": false,
@@ -3777,18 +3772,18 @@
       "color",
       "images",
       "visual",
+      "design",
       "layout",
       "motion",
-      "design",
       "interface",
       "presentation",
       "widgets",
       "icons"
     ],
-    "snippet": "People often prefer apps that provide multiple, powerful complications, because it gives them quick ways to view the data they care about, even when they don’t open the app.",
+    "snippet": "Complications A complication displays timely, relevant information on the watch face, where people can view it each time they raise their wrist. People often prefer apps that provide multiple, powerfu...",
     "quality": {
       "score": 0.49,
-      "length": 18308,
+      "length": 19508,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -3798,7 +3793,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3821,10 +3816,10 @@
       "images",
       "design"
     ],
-    "snippet": "If you use one of these faces in your configuration, consider offering a similar configuration using a face that’s available on Series 3 and earlier.",
+    "snippet": "Watch faces A watch face is a view that people choose as their primary view in watch OS.The watch face is at the heart of the watch OS experience. People choose a watch face they want to see every tim...",
     "quality": {
       "score": 0.41500000000000004,
-      "length": 3186,
+      "length": 3201,
       "structureScore": 0,
       "appleTermsScore": 0.5,
       "codeExamplesCount": 0,
@@ -3834,7 +3829,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.515
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3863,10 +3858,10 @@
       "visual",
       "animation"
     ],
-    "snippet": "On both Apple Vision Pro and Apple Watch, people can use the Digital Crown to interact with the system; on Apple Watch, people can also use the Digital Crown to interact with apps.",
+    "snippet": "Digital Crown The Digital Crown is an important hardware input for Apple Vision Pro and Apple Watch. On both Apple Vision Pro and Apple Watch, people can use the Digital Crown to interact with the sys...",
     "quality": {
       "score": 0.49,
-      "length": 4150,
+      "length": 4181,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -3876,7 +3871,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3895,10 +3890,10 @@
       "watchos",
       "foundations"
     ],
-    "snippet": "Always use a secure digit field when your app asks for sensitive data.",
+    "snippet": "Digit entry views A digit entry view fills the entire screen and prompts people to enter a series of digits, like a PIN, using a digit-specific keyboard. You can add an optional title and prompt above...",
     "quality": {
-      "score": 0.27149999999999996,
-      "length": 526,
+      "score": 0.27275,
+      "length": 531,
       "structureScore": 0,
       "appleTermsScore": 0,
       "codeExamplesCount": 0,
@@ -3906,9 +3901,9 @@
       "headingCount": 0,
       "isFallbackContent": false,
       "extractionMethod": "turndown-enhanced",
-      "confidence": 0.37149999999999994
+      "confidence": 0.37275
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": false,
@@ -3934,10 +3929,10 @@
       "color",
       "layout"
     ],
-    "snippet": "Also, if you display rich images or large areas of color, consider removing the images and using dimmed colors.",
+    "snippet": "Always On On devices that include the Always On display, the system can continue to display an app’s interface when people suspend their interactions with the device. In the Always On state, a device ...",
     "quality": {
       "score": 0.44499999999999995,
-      "length": 3045,
+      "length": 3065,
       "structureScore": 0,
       "appleTermsScore": 0.7,
       "codeExamplesCount": 0,
@@ -3947,7 +3942,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5449999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -3973,10 +3968,10 @@
       "system",
       "motion"
     ],
-    "snippet": "In contrast, people tend to use their larger or more stationary devices like iPad Pro, Mac, and Apple TV to participate in live or recorded workout sessions by themselves or with others.",
+    "snippet": "Workouts A great workout or fitness experience encourages people to engage with their current activity and helps them track their progress on their devices. People can wear their Apple Watch during ma...",
     "quality": {
       "score": 0.475,
-      "length": 4435,
+      "length": 4477,
       "structureScore": 0,
       "appleTermsScore": 0.9,
       "codeExamplesCount": 0,
@@ -3986,7 +3981,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.575
     },
-    "lastUpdated": "2025-07-20T03:08:26.380Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -4008,10 +4003,10 @@
       "system",
       "gestures"
     ],
-    "snippet": "People can use a remote, a game controller, their voice, and apps running on their other devices to interact with Apple TV.",
+    "snippet": "Designing for tv OSPeople enjoy the vibrant content, immersive experiences, and streamlined interactions that tv OS delivers in media and games, as well as in fitness, education, and home utility apps...",
     "quality": {
       "score": 0.41500000000000004,
-      "length": 2159,
+      "length": 2183,
       "structureScore": 0,
       "appleTermsScore": 0.5,
       "codeExamplesCount": 0,
@@ -4021,7 +4016,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.515
     },
-    "lastUpdated": "2025-07-20T03:08:26.381Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": false,
@@ -4039,8 +4034,8 @@
       "focus and selection",
       "tvos",
       "foundations",
-      "navigation",
       "selection",
+      "navigation",
       "system",
       "input",
       "controls",
@@ -4053,10 +4048,10 @@
       "animation",
       "feedback"
     ],
-    "snippet": "The exception is when automatic selection might cause a distracting context shift, like opening a new view.",
+    "snippet": "Focus and selection Focus helps people visually confirm the object that their interaction targets. Focus supports simplified, component-based navigation. Using inputs like a remote, game controller, o...",
     "quality": {
       "score": 0.49,
-      "length": 9555,
+      "length": 9632,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -4066,7 +4061,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.381Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -4093,10 +4088,10 @@
       "design",
       "system"
     ],
-    "snippet": "In addition to several specific buttons, the Siri Remote combines a clickpad and touch surface to support familiar gestures like swipe and press that people use to navigate tvOS apps, browse channels and content, play and pause media, and make select....",
+    "snippet": "Remotes The Siri Remote is the primary input method for Apple TV, helping people feel connected to onscreen content from across the room. In addition to several specific buttons, the Siri Remote combi...",
     "quality": {
       "score": 0.45999999999999996,
-      "length": 5753,
+      "length": 5789,
       "structureScore": 0,
       "appleTermsScore": 0.8,
       "codeExamplesCount": 0,
@@ -4106,7 +4101,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5599999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.381Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -4130,23 +4125,22 @@
       "buttons",
       "images",
       "controls",
-      "accessibility",
-      "voiceover"
+      "accessibility"
     ],
-    "snippet": "The system defines several layout templates that you can use to give people a compelling Top Shelf experience when they select your app in the Dock.",
+    "snippet": "Top Shelf The Apple TV Home Screen provides an area called Top Shelf, which showcases your content in a rich, engaging way while also giving people access to their favorite apps in the Dock. When you ...",
     "quality": {
-      "score": 0.45999999999999996,
-      "length": 7863,
+      "score": 0.44499999999999995,
+      "length": 8024,
       "structureScore": 0,
-      "appleTermsScore": 0.8,
+      "appleTermsScore": 0.7,
       "codeExamplesCount": 0,
       "imageReferencesCount": 0,
       "headingCount": 0,
       "isFallbackContent": false,
       "extractionMethod": "turndown-enhanced",
-      "confidence": 0.5599999999999999
+      "confidence": 0.5449999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.381Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -4168,26 +4162,25 @@
       "visual",
       "system",
       "accessibility",
-      "voiceover",
       "input",
       "controls",
       "motion",
       "gestures"
     ],
-    "snippet": "Use these characteristics and patterns to inform your design decisions and help you create immersive and engaging experiences.",
+    "snippet": "Designing for vision OSWhen people wear Apple Vision Pro, they enter an infinite 3 D space where they can engage with your app or game while staying connected to their surroundings. As you begin desig...",
     "quality": {
-      "score": 0.475,
-      "length": 5859,
+      "score": 0.45999999999999996,
+      "length": 5893,
       "structureScore": 0,
-      "appleTermsScore": 0.9,
+      "appleTermsScore": 0.8,
       "codeExamplesCount": 0,
       "imageReferencesCount": 0,
       "headingCount": 0,
       "isFallbackContent": false,
       "extractionMethod": "turndown-enhanced",
-      "confidence": 0.575
+      "confidence": 0.5599999999999999
     },
-    "lastUpdated": "2025-07-20T03:08:26.381Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -4218,10 +4211,10 @@
       "color",
       "animation"
     ],
-    "snippet": "The visual feedback, or hover effect, shows people that they can use an indirect gesture like tap to interact with the element.",
+    "snippet": "Eyes In vision OS, people look at a virtual object to identify it as a target they can interact with. When people look at an interactive element, vision OS highlights it, providing visual feedback tha...",
     "quality": {
       "score": 0.49,
-      "length": 9221,
+      "length": 9266,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -4231,7 +4224,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.381Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -4260,10 +4253,10 @@
       "gestures",
       "animation"
     ],
-    "snippet": "Immersion and passthroughIn visionOS, people use passthrough to see their physical surroundings.",
+    "snippet": "June 9, 2025 Clarified guidance and noted the availability of portrait-oriented progressive immersion. Immersive experiences In vision OS, you can design apps and games that extend beyond windows and ...",
     "quality": {
       "score": 0.49,
-      "length": 15295,
+      "length": 15364,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -4273,7 +4266,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.381Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -4303,10 +4296,10 @@
       "gestures",
       "buttons"
     ],
-    "snippet": "Play Avoid anchoring content to the wearer’s head.",
+    "snippet": "Spatial layout Spatial layout techniques help you take advantage of the infinite canvas of Apple Vision Pro and present your content in engaging, comfortable ways. Field of view A person’s field of vi...",
     "quality": {
       "score": 0.49,
-      "length": 10138,
+      "length": 10194,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -4316,7 +4309,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.381Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -4343,10 +4336,10 @@
       "system",
       "buttons"
     ],
-    "snippet": "Instead, use standard materials for elements in the content layer, such as app backgrounds.",
+    "snippet": "June 9, 2025 Added guidance for Liquid Glass. Materials A material is a visual effect that creates a sense of depth, layering, and hierarchy between foreground and background elements. Materials help ...",
     "quality": {
       "score": 0.49,
-      "length": 8972,
+      "length": 9074,
       "structureScore": 0,
       "appleTermsScore": 1,
       "codeExamplesCount": 0,
@@ -4356,7 +4349,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.59
     },
-    "lastUpdated": "2025-07-20T03:08:26.381Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,
@@ -4379,10 +4372,10 @@
       "system",
       "visual"
     ],
-    "snippet": "The system uses ornaments to create and manage components like toolbars, tab bars, and video playback controls; you can use an ornament to create a custom component.",
+    "snippet": "Ornaments In vision OS, an ornament presents controls and information related to a window, without crowding or obscuring the window’s contents. An ornament floats in a plane that’s parallel to its ass...",
     "quality": {
       "score": 0.4,
-      "length": 2701,
+      "length": 2721,
       "structureScore": 0,
       "appleTermsScore": 0.4,
       "codeExamplesCount": 0,
@@ -4392,7 +4385,7 @@
       "extractionMethod": "turndown-enhanced",
       "confidence": 0.5
     },
-    "lastUpdated": "2025-07-20T03:08:26.381Z",
+    "lastUpdated": "2025-07-20T03:42:42.843Z",
     "hasStructuredContent": false,
     "hasGuidelines": true,
     "hasExamples": true,

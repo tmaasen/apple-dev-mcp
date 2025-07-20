@@ -84,33 +84,34 @@ describe('HIGToolProvider', () => {
   });
 
 
-  describe('Get Accessibility Requirements', () => {
-    test('should get accessibility requirements for button', async () => {
-      const result = await toolProvider.getAccessibilityRequirements({
-        component: 'Button',
-        platform: 'iOS'
-      });
+  // TODO: Future release - re-enable when accessibility tool is reimplemented
+  // describe('Get Accessibility Requirements', () => {
+  //   test('should get accessibility requirements for button', async () => {
+  //     const result = await toolProvider.getAccessibilityRequirements({
+  //       component: 'Button',
+  //       platform: 'iOS'
+  //     });
 
-      expect(result.component).toBe('Button');
-      expect(result.platform).toBe('iOS');
-      expect(result.requirements).toBeDefined();
-      expect(result.requirements.minimumTouchTarget).toBeDefined();
-      expect(result.requirements.contrastRatio).toBeDefined();
-      expect(result.requirements.voiceOverSupport).toBeDefined();
-      expect(result.requirements.keyboardNavigation).toBeDefined();
-      expect(result.requirements.wcagCompliance).toBeDefined();
-    });
+  //     expect(result.component).toBe('Button');
+  //     expect(result.platform).toBe('iOS');
+  //     expect(result.requirements).toBeDefined();
+  //     expect(result.requirements.minimumTouchTarget).toBeDefined();
+  //     expect(result.requirements.contrastRatio).toBeDefined();
+  //     expect(result.requirements.voiceOverSupport).toBeDefined();
+  //     expect(result.requirements.keyboardNavigation).toBeDefined();
+  //     expect(result.requirements.wcagCompliance).toBeDefined();
+  //   });
 
-    test('should get accessibility requirements for navigation', async () => {
-      const result = await toolProvider.getAccessibilityRequirements({
-        component: 'Navigation Bar',
-        platform: 'iOS'
-      });
+  //   test('should get accessibility requirements for navigation', async () => {
+  //     const result = await toolProvider.getAccessibilityRequirements({
+  //       component: 'Navigation Bar',
+  //       platform: 'iOS'
+  //     });
 
-      expect(result.requirements.voiceOverSupport).toContain('Navigation bar trait');
-      expect(result.requirements.keyboardNavigation).toContain('Tab navigation through interactive elements');
-    });
-  });
+  //     expect(result.requirements.voiceOverSupport).toContain('Navigation bar trait');
+  //     expect(result.requirements.keyboardNavigation).toContain('Tab navigation through interactive elements');
+  //   });
+  // });
 
   describe('Helper Methods', () => {
     test('should extract specifications from content', () => {
@@ -124,7 +125,7 @@ describe('HIGToolProvider', () => {
       // This test is no longer valid since extractGuidelines was removed
       // Instead, test that the tool provider can handle content processing
       expect(toolProvider).toBeDefined();
-      expect(typeof toolProvider.getAccessibilityRequirements).toBe('function');
+      expect(typeof toolProvider.searchHumanInterfaceGuidelines).toBe('function');
     });
 
     test('should extract examples from content', () => {

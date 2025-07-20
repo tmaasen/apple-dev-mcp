@@ -657,7 +657,7 @@ export class CrawleeHIGService {
           url: section.url,
           platform: section.platform,
           relevanceScore,
-          snippet: `${section.title} - ${matchReason}`,
+          content: `${section.title} - ${matchReason}`,
           type: 'section'
         });
       }
