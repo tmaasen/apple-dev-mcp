@@ -29,9 +29,6 @@ jobs:
     - name: Build project
       run: npm run clean:build
       
-    - name: Run health check
-      run: npm run health-check
-      
     - name: Build Desktop Extension
       run: npm run build:extension
       

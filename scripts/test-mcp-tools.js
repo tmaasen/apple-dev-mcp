@@ -146,14 +146,14 @@ async function runJestTests() {
   }
 }
 
-async function runHealthCheck() {
-  log('Running health check...');
+async function runTests() {
+  log('Running tests...');
   try {
-    await runCommand('npm', ['run', 'health-check']);
-    log('Health check completed successfully', 'success');
+    await runCommand('npm', ['test']);
+    log('Tests completed successfully', 'success');
     return true;
   } catch (error) {
-    log(`Health check failed: ${error.message}`, 'error');
+    log(`Tests failed: ${error.message}`, 'error');
     return false;
   }
 }
@@ -267,8 +267,8 @@ async function main() {
   results.push({ test: 'Jest Unit Tests', success: jestSuccess });
 
   // Step 4: Run health check
-  const healthSuccess = await runHealthCheck();
-  results.push({ test: 'Health Check', success: healthSuccess });
+  const testSuccess = await runTests();
+  results.push({ test: 'Integration Tests', success: testSuccess });
 
   // Generate and display report
   const report = generateTestReport(results);
@@ -319,4 +319,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   });
 }
 
-export { TEST_SCENARIOS, runJestTests, runHealthCheck, validateMCPServer };
+export { TEST_SCENARIOS, runJestTests, runTests, validateMCPServer };

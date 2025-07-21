@@ -55,9 +55,9 @@ This project adheres to a code of conduct. By participating, you are expected to
    npm run build:extension
    ```
 
-7. Test dynamic content discovery:
+7. Test the server functionality:
    ```bash
-   npm run health-check
+   npm test
    ```
 
 ## Making Changes
@@ -95,9 +95,9 @@ Our pure dynamic architecture discovers content in real-time. The most valuable 
 
 **How to improve content discovery:**
 
-1. **Test content discovery:**
+1. **Test server functionality:**
    ```bash
-   npm run health-check
+   npm test
    ```
 
 2. **Test specific content extraction:**
@@ -123,9 +123,9 @@ The dynamic architecture relies on robust content processing. Important for reli
 
 1. Identify failed content extraction patterns
 2. Update `ContentProcessor` for new page structures
-3. Test with dynamic discovery:
+3. Test the functionality:
    ```bash
-   npm run health-check      # Test content discovery
+   npm test                  # Test server functionality
    npm run test:automation   # Test processing pipeline
    ```
 
@@ -221,7 +221,7 @@ scraper.discoverSections().then(console.log);
    - [ ] Linting passes (`npm run lint`)
    - [ ] Build succeeds (`npm run build`)
    - [ ] Desktop Extension builds (`npm run build:extension`)
-   - [ ] Health check passes (`npm run health-check`)
+   - [ ] Tests pass (`npm test`)
 
 4. **Wait for review** - Maintainers will review PRs within a few days
 
@@ -282,8 +282,8 @@ Our architecture uses live content discovery:
 ### Content Discovery Workflow
 
 ```bash
-# Test dynamic content discovery
-npm run health-check
+# Test server functionality
+npm test
 
 # Test content processing pipeline
 npm run test:automation

@@ -137,7 +137,7 @@ Create `.cursor/mcp.json`, windsurf config, or `.vscode/mcp.json`:
 
 ```bash
 npm test                # Run test suite
-npm run health-check    # Test functionality
+npm test               # Test functionality
 
 # Interactive testing
 npx @modelcontextprotocol/inspector apple-dev-mcp

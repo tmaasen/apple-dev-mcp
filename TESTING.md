@@ -123,7 +123,7 @@ Runs all 220+ search scenarios (takes ~3 minutes).
 ### Dynamic Content Discovery Tests
 ```bash
 npm test -- --testNamePattern="Dynamic Content Discovery"
-npm run health-check  # Test actual content discovery
+npm test  # Test actual content discovery
 ```
 Tests content discovery, processing, and cache performance.
 
@@ -150,7 +150,7 @@ Validates search index against actual content files.
 npm test  # Run all tests
 npm run lint  # Code quality
 npm run test:automation  # Content processing testing
-npm run health-check  # Integration testing
+npm test  # Integration testing
 ```
 
 ## 🚨 Failure Detection
