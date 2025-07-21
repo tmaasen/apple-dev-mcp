@@ -58,16 +58,24 @@ export class StaticContentSearchService {
       }
     }
 
+    // Debug: log the current directory for troubleshooting
+    console.error(`🔍 Resolving content directory from: ${currentDir}`);
+    console.error(`🔍 Process CWD: ${process.cwd()}`);
+    
     // Try different possible locations for content directory
     const possiblePaths = [
-      // When installed as npm package globally: /usr/local/lib/node_modules/apple-dev-mcp/dist/services -> /usr/local/lib/node_modules/apple-dev-mcp/content
+      // DXT Environment: /dist/services -> /content (go up 2 levels from dist/services)
       path.resolve(currentDir, '../../content'),
-      // When installed as npm package locally: ./node_modules/apple-dev-mcp/dist/services -> ./node_modules/apple-dev-mcp/content  
+      // DXT Environment alt: /dist -> /content (go up 1 level from dist)  
       path.resolve(currentDir, '../content'),
-      // Test environment - relative to project root
-      path.resolve(process.cwd(), 'content'),
-      // Development environment - when running from dist
+      // DXT Environment fallback: check if we're in a services subdirectory
       path.resolve(currentDir, '../../../content'),
+      // Process CWD + content (DXT root level)
+      path.resolve(process.cwd(), 'content'),
+      // When installed as npm package globally
+      path.resolve(currentDir, '../../../../content'),
+      // Test environment - relative to project root  
+      path.resolve(process.cwd(), '../content'),
       // Last resort - relative path
       'content'
     ];
@@ -77,9 +85,13 @@ export class StaticContentSearchService {
       try {
         // Check if this path has the expected structure
         const metadataPath = path.join(contentPath, 'metadata', 'search-index.json');
+        console.error(`🔍 Checking path: ${contentPath}`);
+        console.error(`🔍 Metadata path: ${metadataPath}`);
         if (this.fileSystem.existsSync(metadataPath)) {
           console.error(`📁 Found content directory: ${contentPath}`);
           return contentPath;
+        } else {
+          console.error(`❌ Search index not found at: ${metadataPath}`);
         }
       } catch (error) {
         console.error(`❌ Content path failed: ${contentPath} - ${error}`);
