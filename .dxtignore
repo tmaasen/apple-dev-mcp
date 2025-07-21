@@ -30,8 +30,18 @@ eslint.config.js
 docs/
 !README.md
 
-# Dependencies - include essential runtime dependencies for DXT
-node_modules/
+# Dependencies - include ALL runtime dependencies for DXT to work
+# Note: DXT extensions need runtime dependencies to work, only exclude dev deps
+# node_modules/ - COMMENTED OUT: DXT needs these dependencies to run
+node_modules/.cache/
+node_modules/@types/
+node_modules/@jest/
+node_modules/jest*/
+node_modules/typescript/
+node_modules/@typescript-eslint/
+node_modules/eslint*/
+node_modules/prettier/ 
+node_modules/chromium*/
 .npm/
 
 # Git and IDE

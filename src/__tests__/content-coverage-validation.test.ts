@@ -6,25 +6,21 @@
  */
 
 import { HIGToolProvider } from '../tools.js';
-import { CrawleeHIGService } from '../services/crawlee-hig.service.js';
 import { HIGCache } from '../cache.js';
 import { StaticContentSearchService } from '../services/static-content-search.service.js';
 
 describe('Content Coverage Validation', () => {
   let cache: HIGCache;
-  let crawleeService: CrawleeHIGService;
   let toolProvider: HIGToolProvider;
   let searchService: StaticContentSearchService;
 
   beforeEach(() => {
     cache = new HIGCache(60);
-    crawleeService = new CrawleeHIGService(cache);
-    toolProvider = new HIGToolProvider(crawleeService, cache);
+    toolProvider = new HIGToolProvider(cache);
     searchService = new StaticContentSearchService('content');
   });
 
-  afterEach(async () => {
-    await crawleeService.teardown();
+  afterEach(() => {
     cache.clear();
   });
 

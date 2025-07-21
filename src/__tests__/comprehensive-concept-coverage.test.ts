@@ -7,23 +7,19 @@
  */
 
 import { HIGToolProvider } from '../tools.js';
-import { CrawleeHIGService } from '../services/crawlee-hig.service.js';
 import { HIGCache } from '../cache.js';
 // import type { UnifiedSearchResult } from '../types.js';
 
 describe('Comprehensive Concept Coverage', () => {
   let cache: HIGCache;
-  let crawleeService: CrawleeHIGService;
   let toolProvider: HIGToolProvider;
 
   beforeEach(() => {
     cache = new HIGCache(60);
-    crawleeService = new CrawleeHIGService(cache);
-    toolProvider = new HIGToolProvider(crawleeService, cache);
+    toolProvider = new HIGToolProvider(cache);
   });
 
-  afterEach(async () => {
-    await crawleeService.teardown();
+  afterEach(() => {
     cache.clear();
   });
 

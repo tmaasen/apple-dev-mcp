@@ -19,7 +19,7 @@
 - **⚡ Smart Caching**: Fast responses via intelligent caching with graceful degradation
 - **🔍 Smart Search**: Unified search across design and technical content
 - **🤖 Enhanced Search**: Advanced search combining design principles with technical implementation
-- **🔄 Always Current**: Dynamic content discovery ensures latest Apple guidelines
+- **📚 Pre-built Content**: 113+ pre-processed Apple HIG sections for instant access
 
 ## 🚀 Quick Start
 

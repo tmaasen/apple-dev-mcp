@@ -41,17 +41,19 @@ export class StaticContentSearchService {
       // CommonJS environment (Jest tests)
       currentDir = __dirname;
     } else {
+      // ES Module environment (runtime)
       try {
-        // ES Module environment (runtime) - use dynamic evaluation to avoid Jest parsing issues
-        const importMetaUrl = (globalThis as any).eval?.('import.meta.url') || '';
-        if (importMetaUrl) {
-          const currentFilePath = fileURLToPath(importMetaUrl);
+        // Check for import.meta availability without direct reference during parsing
+        const metaCheck = eval('typeof import !== "undefined" && import.meta && import.meta.url');
+        if (metaCheck) {
+          const metaUrl = eval('import.meta.url');
+          const currentFilePath = fileURLToPath(metaUrl);
           currentDir = path.dirname(currentFilePath);
         } else {
           currentDir = process.cwd();
         }
       } catch {
-        // Fallback
+        // Fallback to process.cwd()
         currentDir = process.cwd();
       }
     }
@@ -76,20 +78,21 @@ export class StaticContentSearchService {
         // Check if this path has the expected structure
         const metadataPath = path.join(contentPath, 'metadata', 'search-index.json');
         if (this.fileSystem.existsSync(metadataPath)) {
-          console.log(`📁 Found content directory: ${contentPath}`);
+          console.error(`📁 Found content directory: ${contentPath}`);
           return contentPath;
         }
       } catch (error) {
-        console.log(`❌ Content path failed: ${contentPath} - ${error}`);
+        console.error(`❌ Content path failed: ${contentPath} - ${error}`);
         continue;
       }
     }
 
     // Log all attempted paths for debugging
-    console.log('⚠️ No content directory found. Tried:', possiblePaths);
+    console.error('⚠️ No content directory found. Tried:', possiblePaths);
     // Default fallback
     return possiblePaths[0];
   }
+
 
   /**
    * Initialize synonym mappings for better search relevance

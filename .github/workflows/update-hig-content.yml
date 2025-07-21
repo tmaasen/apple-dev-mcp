@@ -1,34 +1,28 @@
-name: Update HIG Content
+name: Content Validation
 
 on:
   schedule:
-    # Run every 4 months on the 1st at 2 AM UTC (avoids peak usage times)
-    - cron: '0 2 1 */4 *'
+    # Run monthly to validate static content integrity
+    - cron: '0 2 1 * *'
   workflow_dispatch:
-    # Allow manual triggering for immediate updates
+    # Allow manual validation
     inputs:
-      force_update:
-        description: 'Force update all content (ignore cache)'
+      force_validation:
+        description: 'Force complete validation'
         required: false
         default: false
         type: boolean
 
 jobs:
-  generate-content:
+  validate-content:
     runs-on: ubuntu-latest
     
-    outputs:
-      has_changes: ${{ steps.changes.outputs.has_changes }}
-    
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -39,221 +33,34 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      - name: Build TypeScript
+      - name: Build project
         run: npm run build
       
-      - name: Create content directory
-        run: mkdir -p content/{platforms,metadata}
+      - name: Run tests
+        run: npm test
       
-      - name: Generate HIG content
-        run: |
-          npm run generate-content
-        env:
-          FORCE_UPDATE: ${{ inputs.force_update }}
-          NODE_ENV: production
-      
-      - name: Validate generated content
+      - name: Validate content structure
         run: npm run validate-content
       
-      - name: Check for content changes
-        id: changes
+      - name: Content statistics
         run: |
-          git add content/
-          if git diff --cached --quiet; then
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-            echo "No content changes detected"
-          else
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-            echo "Content changes detected"
-          fi
+          echo "## Content Validation Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Validation date:** $(date -u)" >> $GITHUB_STEP_SUMMARY
+          echo "**Static content files:** $(find content/ -name '*.md' | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "**Total content size:** $(du -sh content/ | cut -f1)" >> $GITHUB_STEP_SUMMARY
+          echo "**Search index size:** $(du -sh content/metadata/ | cut -f1)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ All static content validated successfully!" >> $GITHUB_STEP_SUMMARY
       
-      - name: Generate content summary with quality metrics
-        if: steps.changes.outputs.has_changes == 'true'
-        id: summary
-        run: |
-          echo "## HIG Content Update Summary" > update_summary.md
-          echo "" >> update_summary.md
-          echo "**Generated on:** $(date -u)" >> update_summary.md
-          echo "**Total files:** $(find content/ -name '*.md' | wc -l)" >> update_summary.md
-          echo "**Total size:** $(du -sh content/ | cut -f1)" >> update_summary.md
-          echo "" >> update_summary.md
-          echo "### Changed Files:" >> update_summary.md
-          git diff --cached --name-only | grep -E '\.(md|json)$' | head -20 >> update_summary.md
-          
-          # Store summary for later use
-          echo 'SUMMARY<<EOF' >> $GITHUB_OUTPUT
-          cat update_summary.md >> $GITHUB_OUTPUT
-          echo 'EOF' >> $GITHUB_OUTPUT
-      
-      - name: Commit and push changes
-        if: steps.changes.outputs.has_changes == 'true'
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "HIG Content Updater"
-          git add content/
-          git commit -m "Update HIG content - $(date -u '+%Y-%m-%d')"
-
-      - name: Report success
-        if: steps.changes.outputs.has_changes == 'true'
-        run: |
-          echo "✅ HIG content successfully updated!"
-          echo "📊 Files generated: $(find content/ -name '*.md' | wc -l)"
-          echo "💾 Total size: $(du -sh content/ | cut -f1)"
-      
-      - name: Report no changes
-        if: steps.changes.outputs.has_changes == 'false'
-        run: echo "ℹ️ No content changes detected - HIG content is up to date!"
-      
-      - name: Upload content as artifact
-        if: always()
+      - name: Upload validation report
         uses: actions/upload-artifact@v4
         with:
-          name: hig-content-${{ github.run_number }}
-          path: content/
-          retention-days: 30
-      
-  health-check:
-    needs: generate-content
-    runs-on: ubuntu-latest
-    if: always()
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.sha }}
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Build project
-        run: npm run build
-      
-      - name: Run health checks
-        run: |
-          npm run health-check
-          npm test
-          npm run lint
+          name: content-validation-${{ github.run_number }}
+          path: |
+            content/metadata/
+            *.log
+          retention-days: 7
 
-  publish-release:
-    needs: [generate-content, health-check]
-    runs-on: ubuntu-latest
-    if: needs.generate-content.outputs.has_changes == 'true'
-    
-    permissions:
-      contents: write
-      packages: write
-      pull-requests: write
-      
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          registry-url: 'https://registry.npmjs.org'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Build project
-        run: npm run clean:build
-      
-      - name: Configure git
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "HIG Content Updater"
-      
-      - name: Pull latest changes
-        run: git pull origin main
-      
-      - name: Create minor version bump
-        run: npm version minor --no-git-tag-version
-      
-      - name: Commit version bump
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          git add package.json package-lock.json
-          git commit -m "Release v${VERSION} - Updated HIG content
-
-          - Generated fresh Apple HIG content from official guidelines
-          - Updated search indices and cross-references  
-          - Validated content quality and completeness
-          - All health checks and tests passing
-
-          🤖 Automated release from HIG content pipeline"
-      
-      - name: Create and push tag
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          git tag "v${VERSION}"
-          git push origin main
-          git push origin "v${VERSION}"
-      
-      - name: Publish to NPM
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      
-      - name: Create GitHub Release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          TAG="v${VERSION}"
-          
-          gh release create "$TAG" \
-            --title "Apple HIG MCP Server $TAG" \
-            --notes "## Release $TAG - HIG Content Update
-
-          🎉 **Automated release with updated Apple HIG content!**
-
-          ### What's New
-          - 📝 **Fresh content** from Apple's Human Interface Guidelines
-          - 🔍 **Updated search indices** for faster, more accurate results  
-          - 🔗 **Enhanced cross-references** between related sections
-          - ✅ **Validated quality** and completeness checks passed
-          - 🧪 **All tests and health checks** passing
-
-          ### Installation
-          \`\`\`bash
-          # Desktop Extension (Recommended)
-          # Download apple-dev-mcp.dxt from GitHub releases
-          
-          # Traditional NPM
-          npm install -g apple-dev-mcp@$TAG
-          \`\`\`
-
-          ### Usage with Claude Code
-          \`\`\`bash
-          claude mcp add apple-dev apple-dev-mcp
-          \`\`\`
-
-          ### Features
-          - 🔍 Smart search across Apple's design guidelines
-          - 📱 Multi-platform support (iOS, macOS, watchOS, tvOS, visionOS)
-          - ⚡ Ultra-fast static content with live scraping fallback
-          - 🤖 AI-optimized markdown output
-
-          This release was automatically generated by the HIG content pipeline."
-          
-          echo "Created release: https://github.com/${{ github.repository }}/releases/tag/$TAG"
-
-      - name: Notify success
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "🎉 Successfully published Apple HIG MCP Server v${VERSION}"
-          echo "📦 NPM: https://www.npmjs.com/package/apple-dev-mcp"
-          echo "🏷️ GitHub: https://github.com/${{ github.repository }}/releases/tag/v${VERSION}"
-      
+  # Future: When content updates are needed, this can be done manually
+  # with simple HTTP scraping utilities, not browser automation

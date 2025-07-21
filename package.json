@@ -22,7 +22,6 @@
     "test:concepts": "jest src/__tests__/comprehensive-concept-coverage.test.ts",
     "test:content": "jest src/__tests__/content-coverage-validation.test.ts",
     "test:mcp": "jest src/__tests__/field-test.test.ts src/__tests__/search-improvements.test.ts src/__tests__/comprehensive-concept-coverage.test.ts src/__tests__/content-coverage-validation.test.ts",
-    "health-check": "node dist/health-check.js",
     "security-audit": "npm audit --audit-level=moderate",
     "validate": "npm run lint && npm run test && npm run build",
     "format": "prettier --write \"src/**/*.ts\"",
@@ -31,7 +30,6 @@
     "debug": "node scripts/debug-mcp.js",
     "build:extension": "npm run build && npx @anthropic-ai/dxt pack",
     "package:extension": "npx @anthropic-ai/dxt pack",
-    "generate:content": "tsx src/generators/content-generator.ts",
     "validate-content": "echo 'Content validation passed - $(find content/ -name \"*.md\" | wc -l) markdown files generated'",
     "release:patch": "npm version patch && git push origin main --follow-tags",
     "release:minor": "npm version minor && git push origin main --follow-tags",
@@ -65,12 +63,10 @@
   },
   "homepage": "https://github.com/tmaasen/apple-dev-mcp#readme",
   "dependencies": {
-    "@crawlee/playwright": "^3.13.8",
     "@modelcontextprotocol/sdk": "^1.0.0",
     "axios": "^1.6.0",
     "markdown-it": "^14.1.0",
     "node-cache": "^5.1.2",
-    "playwright": "^1.53.1",
     "turndown": "^7.2.0"
   },
   "devDependencies": {

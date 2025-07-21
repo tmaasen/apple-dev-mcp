@@ -2,7 +2,6 @@
  * MCP Tools implementation for Apple HIG interactive functionality
  */
 
-import type { CrawleeHIGService } from './services/crawlee-hig.service.js';
 import type { HIGCache } from './cache.js';
 import { AppleContentAPIClient } from './services/apple-content-api-client.service.js';
 import { StaticContentSearchService } from './services/static-content-search.service.js';
@@ -15,13 +14,11 @@ import type {
 } from './types.js';
 
 export class HIGToolProvider {
-  private crawleeService: CrawleeHIGService;
   private _cache: HIGCache;
   private appleContentAPIClient: AppleContentAPIClient;
   private staticContentSearch: StaticContentSearchService;
 
-  constructor(crawleeService: CrawleeHIGService, cache: HIGCache, appleContentAPIClient?: AppleContentAPIClient) {
-    this.crawleeService = crawleeService;
+  constructor(cache: HIGCache, appleContentAPIClient?: AppleContentAPIClient) {
     this._cache = cache;
     this.appleContentAPIClient = appleContentAPIClient || new AppleContentAPIClient(cache);
     this.staticContentSearch = new StaticContentSearchService();

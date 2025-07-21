@@ -6,34 +6,28 @@
  */
 
 import { HIGCache } from '../cache.js';
-import { CrawleeHIGService } from '../services/crawlee-hig.service.js';
 import { HIGToolProvider } from '../tools.js';
 
 describe('Server Component Integration', () => {
   let cache: HIGCache;
-  let crawleeService: CrawleeHIGService;
   let toolProvider: HIGToolProvider;
 
   beforeEach(() => {
     cache = new HIGCache(60);
-    crawleeService = new CrawleeHIGService(cache);
-    toolProvider = new HIGToolProvider(crawleeService, cache);
+    toolProvider = new HIGToolProvider(cache);
   });
 
-  afterEach(async () => {
-    await crawleeService.teardown();
+  afterEach(() => {
     cache.clear();
   });
 
   test('should initialize all server components', () => {
     expect(cache).toBeInstanceOf(HIGCache);
-    expect(crawleeService).toBeInstanceOf(CrawleeHIGService);
     expect(toolProvider).toBeInstanceOf(HIGToolProvider);
   });
 
   test('should have proper component dependencies', () => {
     // Test that components are properly connected
-    expect(crawleeService).toBeDefined();
     expect(toolProvider).toBeDefined();
     
     // Verify cache is shared

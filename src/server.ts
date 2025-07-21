@@ -10,34 +10,30 @@
  * @license MIT
  */
 
+// Very first debug message to test if stderr works at all
+console.error('🎬 Apple Dev MCP Server script starting - VERY FIRST MESSAGE');
+
 // Aggressively silence all logging to prevent MCP protocol interference
-process.env.CRAWLEE_LOG_LEVEL = 'OFF';
 process.env.DEBUG = '';
-process.env.PLAYWRIGHT_BROWSERS_PATH = '';
-process.env.PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = '1';
-process.env.CRAWLEE_VERBOSE_LOG = '0';
-process.env.PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = '1';
 
-// Silence console methods during MCP mode
-if (process.env.NODE_ENV !== 'development') {
-  console.log = () => {};
-  console.warn = () => {};
-  console.info = () => {};
-  console.debug = () => {};
-  console.error = () => {}; // Also silence error logs
-}
+// NEVER silence console.error for debugging
+// Temporarily disable ALL console silencing to debug
+// if (process.env.NODE_ENV !== 'development') {
+//   console.log = () => {};
+//   console.warn = () => {};
+//   console.info = () => {};
+//   console.debug = () => {};
+//   // Keep console.error for MCP debugging as per documentation
+// }
+console.error('🔍 NODE_ENV:', process.env.NODE_ENV);
+console.error('🔍 DEBUG MODE: console.error should work now');
 
-// Override process.stderr.write to catch any stderr leakage
-const originalStderrWrite = process.stderr.write;
-process.stderr.write = function(chunk: any, encoding?: any, callback?: any) {
-  // Only allow MCP protocol errors through, block everything else
-  if (typeof chunk === 'string' && chunk.includes('jsonrpc')) {
-    return originalStderrWrite.call(this, chunk, encoding, callback);
-  }
-  // Silently ignore all other stderr output
-  if (typeof callback === 'function') callback();
-  return true;
-};
+// TEMPORARILY DISABLE ALL STDERR FILTERING FOR DEBUGGING
+// const originalStderrWrite = process.stderr.write;
+// process.stderr.write = function(chunk: any, encoding?: any, callback?: any) {
+//   // Let ALL messages through for debugging
+//   return originalStderrWrite.call(this, chunk, encoding, callback);
+// };
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
@@ -49,14 +45,12 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 
 import { HIGCache } from './cache.js';
-import { CrawleeHIGService } from './services/crawlee-hig.service.js';
 import { HIGToolProvider } from './tools.js';
 import { AppleContentAPIClient } from './services/apple-content-api-client.service.js';
 
 class AppleHIGMCPServer {
   private server: Server;
   private cache: HIGCache;
-  private crawleeService: CrawleeHIGService;
   private toolProvider: HIGToolProvider;
   private appleContentAPIClient: AppleContentAPIClient;
 
@@ -79,23 +73,38 @@ class AppleHIGMCPServer {
    * Initialize the server asynchronously
    */
   async initialize(): Promise<void> {
-      // Only do minimal validation during startup to avoid DXT timeout
-      // All heavy initialization is deferred until first request
-      
-      // Quick environment check (no external dependencies or imports)
-      const requiredNodeVersion = '18.0.0';
-      const currentVersion = process.version.slice(1);
-      if (this.compareVersions(currentVersion, requiredNodeVersion) < 0) {
-        throw new Error(`Node.js ${requiredNodeVersion} or higher is required. Current version: ${process.version}`);
+      try {
+        console.error('🔧 Starting initialization...');
+        // Only do minimal validation during startup to avoid DXT timeout
+        // All heavy initialization is deferred until first request
+        
+        // Quick environment check (no external dependencies or imports)
+        console.error('📋 Checking Node.js version...');
+        const requiredNodeVersion = '18.0.0';
+        const currentVersion = process.version.slice(1);
+        if (this.compareVersions(currentVersion, requiredNodeVersion) < 0) {
+          throw new Error(`Node.js ${requiredNodeVersion} or higher is required. Current version: ${process.version}`);
+        }
+        console.error(`✅ Node.js version OK: ${process.version}`);
+
+        // Initialize components with lazy loading - don't access content directory yet
+        console.error('🏗️ Creating server components...');
+        this.cache = new HIGCache(3600);
+        console.error('✅ Cache created');
+        
+        this.appleContentAPIClient = new AppleContentAPIClient(this.cache);
+        console.error('✅ API client created');
+        
+        this.toolProvider = new HIGToolProvider(this.cache, this.appleContentAPIClient);
+        console.error('✅ Tool provider created');
+
+        console.error('🔌 Setting up request handlers...');
+        this.setupHandlers();
+        console.error('✅ Request handlers configured');
+      } catch (error) {
+        console.error('💥 Initialization failed:', error);
+        throw error;
       }
-
-      // Initialize components with lazy loading - don't access content directory yet
-      this.cache = new HIGCache(3600);
-      this.crawleeService = new CrawleeHIGService(this.cache);
-      this.appleContentAPIClient = new AppleContentAPIClient(this.cache);
-      this.toolProvider = new HIGToolProvider(this.crawleeService, this.cache, this.appleContentAPIClient);
-
-      this.setupHandlers();
   }
 
   /**
@@ -279,21 +288,28 @@ class AppleHIGMCPServer {
   async run(): Promise<void> {
     try {
       // Minimal startup logging for fast DXT validation
+      console.error('🚀 Apple Dev MCP Server starting...');
       
       // Initialize the server components (minimal, fast startup)
       await this.initialize();
+      console.error('✅ Server initialized successfully');
 
       const transport = new StdioServerTransport();
       
       // Add error handling for transport
       transport.onclose = () => {
+        console.error('🔌 Transport closed');
       };
 
-      transport.onerror = (_error) => {
+      transport.onerror = (error) => {
+        console.error('❌ Transport error:', error);
       };
 
+      console.error('🔗 Connecting to transport...');
       await this.server.connect(transport);
-    } catch {
+      console.error('✅ Server connected and ready');
+    } catch (error) {
+      console.error('💥 Server startup failed:', error);
       process.exit(1);
     }
   }
@@ -308,11 +324,10 @@ process.on('SIGTERM', async () => {
   process.exit(0);
 });
 
-// Start the server
-if (import.meta.url === `file://${process.argv[1]}`) {
-  // Always start the server regardless of arguments
-  const server = new AppleHIGMCPServer();
-  server.run().catch(() => {
-    process.exit(1);
-  });
-}
+// Start the server immediately (remove conditional for DXT compatibility)
+console.error('🎯 Creating Apple Dev MCP Server instance...');
+const server = new AppleHIGMCPServer();
+server.run().catch((error) => {
+  console.error('💀 Fatal server error:', error);
+  process.exit(1);
+});
